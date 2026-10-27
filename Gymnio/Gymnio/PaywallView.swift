@@ -1,13 +1,17 @@
 import SwiftUI
 import RevenueCat
+import PostHog
 
 struct PaywallView: View {
+    let source: String
+
     @EnvironmentObject var premium: PremiumManager
     @EnvironmentObject var store: AppStore
     @Environment(\.colorScheme) var scheme
     @Environment(\.dismiss) private var dismiss
 
     @State private var selected: Package?
+    @State private var appearDate = Date()
 
     private let features: [(String, String)] = [
         ("chart.line.uptrend.xyaxis", "paywall.feature.metrics"),
@@ -43,8 +47,16 @@ struct PaywallView: View {
             }
         }
         .onAppear {
+            appearDate = Date()
+            PostHogSDK.shared.capture("paywall_viewed", properties: ["source": source])
             if selected == nil { selected = premium.annual ?? premium.packages.first }
-            Task { await premium.loadOfferings() }
+            Task { await premium.loadOfferings(source: source) }
+        }
+        .onDisappear {
+            PostHogSDK.shared.capture("paywall_closed", properties: [
+                "source": source,
+                "time_on_paywall_ms": Int(Date().timeIntervalSince(appearDate) * 1000)
+            ])
         }
         .onChange(of: premium.packages.count) { _, _ in
             if selected == nil { selected = premium.annual ?? premium.packages.first }
@@ -126,6 +138,14 @@ struct PaywallView: View {
                             ) { selected = pkg }
                         }
                     }
+                }
+
+                if let sel = selected, hasFreeTrial(sel) {
+                    Text(store.t("paywall.trialNote"))
+                        .font(.system(size: 13, weight: .semibold))
+                        .secondaryText()
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 12)
                 }
 
                 Button { purchase() } label: {
@@ -230,7 +250,7 @@ struct PaywallView: View {
     private func purchase() {
         guard let pkg = selected else { return }
         Task {
-            await premium.purchase(pkg)
+            await premium.purchase(pkg, source: source)
             if premium.isPro { dismiss() }
         }
     }

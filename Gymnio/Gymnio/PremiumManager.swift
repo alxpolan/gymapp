@@ -10,6 +10,8 @@ final class PremiumManager: ObservableObject {
 
     static let revenueCatAPIKey = "appl_oHLkiQEDhlOYMGMfQLTfuesBoKx"
     static let entitlementID = "pro"
+    static let freeEntryLimitFlag = "free_entry_limit"
+    static let defaultFreeEntryLimit = 30
 
     @Published private(set) var packages: [Package] = []
     @Published private(set) var isPro: Bool = false
@@ -62,12 +64,29 @@ final class PremiumManager: ObservableObject {
         return formatter.string(from: perMonth as NSDecimalNumber)
     }
 
+    // MARK: - Paywall rules
+
+    var freeEntryLimit: Int {
+        let raw = PostHogSDK.shared.getFeatureFlag(Self.freeEntryLimitFlag)
+        if let number = raw as? NSNumber { return max(number.intValue, 0) }
+        if let text = raw as? String, let value = Int(text) { return max(value, 0) }
+        return Self.defaultFreeEntryLimit
+    }
+
+    var isPaywallSuppressedRegion: Bool {
+        Locale.current.region?.identifier == "RU"
+    }
+
     // MARK: - Loading
 
-    func loadOfferings() async {
+    func loadOfferings(source: String? = nil) async {
         do {
             let offerings = try await Purchases.shared.offerings()
-            if let current = offerings.current {
+            var resolved = offerings.current
+            if let source, let named = offerings.offering(identifier: "paywall_" + source) {
+                resolved = named
+            }
+            if let current = resolved {
                 let order: [PackageType] = [.annual, .monthly, .lifetime]
                 packages = current.availablePackages.sorted { a, b in
                     (order.firstIndex(of: a.packageType) ?? 99) < (order.firstIndex(of: b.packageType) ?? 99)
@@ -80,20 +99,40 @@ final class PremiumManager: ObservableObject {
 
     // MARK: - Purchase / restore
 
-    func purchase(_ package: Package) async {
+    func purchase(_ package: Package, source: String) async {
+        let tapDate = Date()
         purchaseInFlight = true
         defer { purchaseInFlight = false }
+        PostHogSDK.shared.capture("paywall_subscribe_tapped", properties: [
+            "source": source,
+            "package": package.identifier
+        ])
         do {
             let result = try await Purchases.shared.purchase(package: package)
+            let elapsedMs = Int(Date().timeIntervalSince(tapDate) * 1000)
             if result.userCancelled {
-                PostHogSDK.shared.capture("pro_purchase_cancelled", properties: ["package": package.identifier])
+                PostHogSDK.shared.capture("purchase_cancelled", properties: [
+                    "source": source,
+                    "package": package.identifier,
+                    "time_since_tap_ms": elapsedMs
+                ])
             } else {
                 apply(customerInfo: result.customerInfo)
-                PostHogSDK.shared.capture("pro_purchase_success", properties: ["package": package.identifier])
+                PostHogSDK.shared.capture("purchase_completed", properties: [
+                    "source": source,
+                    "package": package.identifier,
+                    "time_since_tap_ms": elapsedMs
+                ])
             }
         } catch {
             lastError = error.localizedDescription
-            PostHogSDK.shared.capture("pro_purchase_failed", properties: ["package": package.identifier])
+            let elapsedMs = Int(Date().timeIntervalSince(tapDate) * 1000)
+            PostHogSDK.shared.capture("purchase_failed", properties: [
+                "source": source,
+                "package": package.identifier,
+                "error": error.localizedDescription,
+                "time_since_tap_ms": elapsedMs
+            ])
         }
     }
 

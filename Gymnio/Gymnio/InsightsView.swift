@@ -40,30 +40,30 @@ struct InsightsView: View {
 
                         if let recap { CoachRecapCard(insight: recap) }
 
-                        if !premium.isPro { UpgradeCTACard() }
+                        if !premium.isPro { UpgradeCTACard(source: "insights") }
 
                         InsightSectionHeader(title: store.t("insights.coach"), isPro: true)
-                        ProGate(titleKey: "prolock.title", subtitleKey: "prolock.coach") {
+                        ProGate(titleKey: "prolock.title", subtitleKey: "prolock.coach", source: "feature") {
                             CoachFeedCard(insights: premium.isPro ? coachFeed : Coach.insights(store: store))
                         }
 
                         InsightSectionHeader(title: store.t("insights.est1rm"), isPro: true)
-                        ProGate(titleKey: "prolock.title", subtitleKey: "prolock.est1rm") {
+                        ProGate(titleKey: "prolock.title", subtitleKey: "prolock.est1rm", source: "feature") {
                             OneRMCard(groups: groups, selected: $selected1RM)
                         }
 
                         InsightSectionHeader(title: store.t("insights.records"), isPro: true)
-                        ProGate(titleKey: "prolock.title", subtitleKey: "prolock.records") {
+                        ProGate(titleKey: "prolock.title", subtitleKey: "prolock.records", source: "feature") {
                             RecordsCard(records: records)
                         }
 
                         InsightSectionHeader(title: store.t("insights.muscle"), isPro: true)
-                        ProGate(titleKey: "prolock.title", subtitleKey: "prolock.muscle") {
+                        ProGate(titleKey: "prolock.title", subtitleKey: "prolock.muscle", source: "feature") {
                             MuscleSplitCard(muscles: muscles)
                         }
 
                         InsightSectionHeader(title: store.t("insights.trends"), isPro: true)
-                        ProGate(titleKey: "prolock.title", subtitleKey: "prolock.trends") {
+                        ProGate(titleKey: "prolock.title", subtitleKey: "prolock.trends", source: "feature") {
                             TrendsCard(trends: trends)
                         }
                     }

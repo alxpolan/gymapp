@@ -25,7 +25,7 @@ struct SettingsView: View {
                         }
                     }
                 } else {
-                    UpgradeCTACard()
+                    UpgradeCTACard(source: "settings")
                 }
 
                 GlassCard {
@@ -61,6 +61,13 @@ struct SettingsView: View {
                             )) {
                                 Text(store.t("settings.language.de")).tag("de")
                                 Text(store.t("settings.language.en")).tag("en")
+                                Text(store.t("settings.language.es")).tag("es")
+                                Text(store.t("settings.language.fr")).tag("fr")
+                                Text(store.t("settings.language.it")).tag("it")
+                                Text(store.t("settings.language.ja")).tag("ja")
+                                Text(store.t("settings.language.ko")).tag("ko")
+                                Text(store.t("settings.language.nl")).tag("nl")
+                                Text(store.t("settings.language.pt")).tag("pt")
                             }
                             .pickerStyle(.menu)
                             .foregroundColor(.statBlue)
@@ -148,14 +155,13 @@ struct SettingsView: View {
         }
         .navigationTitle(store.t("settings.title"))
         .navigationBarTitleDisplayMode(.large)
-        .sheet(isPresented: $showPaywall) { PaywallView() }
+        .sheet(isPresented: $showPaywall) { PaywallView(source: "settings") }
         .sheet(isPresented: $showShare) {
             if let shareURL {
                 ShareSheet(items: [shareURL], isPresented: $showShare)
             } else {
                 VStack(spacing: 12) {
                     Text("DEBUG: shareURL nil").font(.title)
-                    Text("isPro=\(premium.isPro)")
                     Text("entries=\(store.entries.count)")
                     Text("error=\(DataExport.debugLastError ?? "none")")
                 }

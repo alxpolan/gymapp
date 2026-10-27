@@ -22,6 +22,7 @@ struct ProBadge: View {
 struct ProGate<Content: View>: View {
     let titleKey: String
     let subtitleKey: String
+    let source: String
     @ViewBuilder let content: () -> Content
 
     @EnvironmentObject var premium: PremiumManager
@@ -56,22 +57,24 @@ struct ProGate<Content: View>: View {
                         .secondaryText()
                         .multilineTextAlignment(.center)
                         .padding(.horizontal, 24)
-                    Button { showPaywall = true } label: {
-                        Text(store.t("pro.unlock"))
-                            .font(.system(size: 15, weight: .semibold))
-                            .foregroundColor(.white)
-                            .padding(.horizontal, 22)
-                            .padding(.vertical, 11)
-                            .background(
-                                LinearGradient(colors: [Color(hex: "5B8DEF"), Color(hex: "A06BFF")],
-                                               startPoint: .leading, endPoint: .trailing),
-                                in: Capsule())
+                    if !premium.isPaywallSuppressedRegion {
+                        Button { showPaywall = true } label: {
+                            Text(store.t("pro.unlock"))
+                                .font(.system(size: 15, weight: .semibold))
+                                .foregroundColor(.white)
+                                .padding(.horizontal, 22)
+                                .padding(.vertical, 11)
+                                .background(
+                                    LinearGradient(colors: [Color(hex: "5B8DEF"), Color(hex: "A06BFF")],
+                                                   startPoint: .leading, endPoint: .trailing),
+                                    in: Capsule())
+                        }
+                        .buttonStyle(.plain)
                     }
-                    .buttonStyle(.plain)
                 }
                 .padding(.vertical, 8)
             }
-            .sheet(isPresented: $showPaywall) { PaywallView() }
+            .sheet(isPresented: $showPaywall) { PaywallView(source: source) }
         }
     }
 }
@@ -79,12 +82,19 @@ struct ProGate<Content: View>: View {
 // MARK: - Upgrade CTA card (marketing entry point)
 
 struct UpgradeCTACard: View {
+    let source: String
+
     @EnvironmentObject var store: AppStore
+    @EnvironmentObject var premium: PremiumManager
     @Environment(\.colorScheme) var scheme
     @State private var showPaywall = false
 
     var body: some View {
-        Button { showPaywall = true } label: {
+        Group {
+            if premium.isPaywallSuppressedRegion {
+                EmptyView()
+            } else {
+                Button { showPaywall = true } label: {
             HStack(spacing: 14) {
                 ZStack {
                     Circle()
@@ -112,10 +122,12 @@ struct UpgradeCTACard: View {
                     .font(.system(size: 14, weight: .semibold))
                     .secondaryText()
             }
-            .frame(maxWidth: .infinity)
-            .contentShape(Rectangle())
+                    .frame(maxWidth: .infinity)
+                    .contentShape(Rectangle())
+                }
+                .buttonStyle(.plain)
+            }
         }
-        .buttonStyle(.plain)
         .padding(16)
         .background(
             RoundedRectangle(cornerRadius: 16, style: .continuous)
@@ -129,7 +141,7 @@ struct UpgradeCTACard: View {
                 .stroke(LinearGradient(colors: [Color(hex: "5B8DEF").opacity(0.4), Color(hex: "A06BFF").opacity(0.4)],
                                        startPoint: .leading, endPoint: .trailing), lineWidth: 1)
         )
-        .sheet(isPresented: $showPaywall) { PaywallView() }
+        .sheet(isPresented: $showPaywall) { PaywallView(source: source) }
     }
 }
 

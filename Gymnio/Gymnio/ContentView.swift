@@ -53,6 +53,11 @@ struct ContentView: View {
             }
         }
         .animation(.easeInOut(duration: 0.18), value: store.showAddExercise)
+        .sheet(item: $store.paywallRequest) { request in
+            PaywallView(source: request.source)
+                .environmentObject(store)
+                .environmentObject(PremiumManager.shared)
+        }
         .preferredColorScheme(store.colorScheme)
 
         if forceTabBar {

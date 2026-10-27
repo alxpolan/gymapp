@@ -18,6 +18,9 @@ final class AppStore: ObservableObject {
     @Published var weightUnit: String = "kg"
     @Published var showAddExercise: Bool = false
     @Published var forceMorningGreeting: Bool = false
+    @Published var paywallRequest: PaywallRequest?
+
+    static let supportedLanguages = ["de", "en", "es", "fr", "it", "ja", "ko", "nl", "pt"]
 
     private let languageKey     = "@language_override"
     private let homeSettingsKey = "homeViewSettings"
@@ -79,7 +82,7 @@ final class AppStore: ObservableObject {
 
     private var deviceLanguage: String {
         let code = Locale.current.language.languageCode?.identifier ?? "en"
-        return ["de", "en"].contains(code) ? code : "en"
+        return Self.supportedLanguages.contains(code) ? code : "en"
     }
 
     // MARK: - Exercises
@@ -107,6 +110,11 @@ final class AppStore: ObservableObject {
     // MARK: - Entries
 
     func addEntry(exercise: String, weight: Double, reps: Int, date: Date) {
+        let premium = PremiumManager.shared
+        if !premium.isPro && !premium.isPaywallSuppressedRegion && entries.count >= premium.freeEntryLimit {
+            paywallRequest = PaywallRequest(source: "entry_limit")
+            return
+        }
         let entry = WorkoutEntry.create(exercise: exercise, weight: weight, reps: reps, date: date)
         storage.saveEntry(entry)
         entries = storage.getAllEntries()
@@ -204,7 +212,7 @@ final class AppStore: ObservableObject {
         var uiTestLang = "en"
         if let langIdx = args.firstIndex(of: "-ui_test_language"), args.indices.contains(langIdx + 1) {
             let lang = args[langIdx + 1]
-            if ["de", "en"].contains(lang) {
+            if Self.supportedLanguages.contains(lang) {
                 uiTestLang = lang
                 language = lang
                 languageOverride = lang
@@ -232,4 +240,11 @@ final class AppStore: ObservableObject {
             }
         }
     }
+}
+
+// MARK: - Paywall request
+
+struct PaywallRequest: Identifiable {
+    let id = UUID()
+    let source: String
 }

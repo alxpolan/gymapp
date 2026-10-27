@@ -100,7 +100,7 @@ struct ExerciseDetailView: View {
                         }
 
                         if let suggestion = Coach.nextSetSuggestion(store: store, group: currentGroup) {
-                            ProGate(titleKey: "prolock.title", subtitleKey: "prolock.coach") {
+                            ProGate(titleKey: "prolock.title", subtitleKey: "prolock.coach", source: "feature") {
                                 CoachRecapCard(insight: suggestion)
                             }
                         }
