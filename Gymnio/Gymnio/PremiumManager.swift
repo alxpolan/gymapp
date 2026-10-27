@@ -14,6 +14,7 @@ final class PremiumManager: ObservableObject {
     static let defaultFreeEntryLimit = 30
 
     @Published private(set) var packages: [Package] = []
+    @Published private(set) var currentOffering: Offering?
     @Published private(set) var isPro: Bool = false
     @Published private(set) var purchaseInFlight: Bool = false
     @Published var lastError: String?
@@ -86,6 +87,7 @@ final class PremiumManager: ObservableObject {
             if let source, let named = offerings.offering(identifier: "paywall_" + source) {
                 resolved = named
             }
+            currentOffering = resolved
             if let current = resolved {
                 let order: [PackageType] = [.annual, .monthly, .lifetime]
                 packages = current.availablePackages.sorted { a, b in
@@ -99,7 +101,13 @@ final class PremiumManager: ObservableObject {
 
     // MARK: - Purchase / restore
 
-    func purchase(_ package: Package, source: String) async {
+    nonisolated static func isEntryLimitReached(entryCount: Int, limit: Int, isPro: Bool, suppressedRegion: Bool) -> Bool {
+        guard !isPro && !suppressedRegion else { return false }
+        return entryCount >= limit
+    }
+
+    @discardableResult
+    func purchase(_ package: Package, source: String) async -> (userCancelled: Bool, error: Error?) {
         let tapDate = Date()
         purchaseInFlight = true
         defer { purchaseInFlight = false }
@@ -116,6 +124,7 @@ final class PremiumManager: ObservableObject {
                     "package": package.identifier,
                     "time_since_tap_ms": elapsedMs
                 ])
+                return (true, nil)
             } else {
                 apply(customerInfo: result.customerInfo)
                 PostHogSDK.shared.capture("purchase_completed", properties: [
@@ -123,6 +132,7 @@ final class PremiumManager: ObservableObject {
                     "package": package.identifier,
                     "time_since_tap_ms": elapsedMs
                 ])
+                return (false, nil)
             }
         } catch {
             lastError = error.localizedDescription
@@ -133,16 +143,20 @@ final class PremiumManager: ObservableObject {
                 "error": error.localizedDescription,
                 "time_since_tap_ms": elapsedMs
             ])
+            return (false, error)
         }
     }
 
-    func restore() async {
+    @discardableResult
+    func restore() async -> (success: Bool, error: Error?) {
         do {
             let info = try await Purchases.shared.restorePurchases()
             apply(customerInfo: info)
             PostHogSDK.shared.capture("pro_restore")
+            return (true, nil)
         } catch {
             lastError = error.localizedDescription
+            return (false, error)
         }
     }
 

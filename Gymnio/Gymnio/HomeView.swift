@@ -184,7 +184,8 @@ struct HomeView: View {
         .onAppear(perform: reload)
         .onChange(of: store.entries.count) { _, count in
             let key = "review_requested_at_10"
-            if count >= 20 && !UserDefaults.standard.bool(forKey: key) {
+            let days = Set(store.entries.map { Calendar.current.startOfDay(for: $0.date) }).count
+            if AppStore.shouldRequestReview(entryCount: count, distinctDays: days, alreadyAsked: UserDefaults.standard.bool(forKey: key)) {
                 UserDefaults.standard.set(true, forKey: key)
                 requestReview()
             }

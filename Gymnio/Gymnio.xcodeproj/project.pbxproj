@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		3252C9C93B4098F4D4812724 /* PostHog in Frameworks */ = {isa = PBXBuildFile; productRef = B301C5BE980504EC562F93EC /* PostHog */; };
 		AA01C5BE980504EC562F0001 /* RevenueCat in Frameworks */ = {isa = PBXBuildFile; productRef = AA01C5BE980504EC562F0002 /* RevenueCat */; };
+		AA01C5BE980504EC562F0004 /* RevenueCatUI in Frameworks */ = {isa = PBXBuildFile; productRef = AA01C5BE980504EC562F0005 /* RevenueCatUI */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -59,6 +60,7 @@
 			files = (
 				3252C9C93B4098F4D4812724 /* PostHog in Frameworks */,
 				AA01C5BE980504EC562F0001 /* RevenueCat in Frameworks */,
+				AA01C5BE980504EC562F0004 /* RevenueCatUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -121,6 +123,7 @@
 			packageProductDependencies = (
 				B301C5BE980504EC562F93EC /* PostHog */,
 				AA01C5BE980504EC562F0002 /* RevenueCat */,
+				AA01C5BE980504EC562F0005 /* RevenueCatUI */,
 			);
 			productName = Gymnio;
 			productReference = D9FED0562F72024100B8CB60 /* Gymnio.app */;
@@ -619,6 +622,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = AA01C5BE980504EC562F0003 /* XCRemoteSwiftPackageReference "purchases-ios" */;
 			productName = RevenueCat;
+		};
+		AA01C5BE980504EC562F0005 /* RevenueCatUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AA01C5BE980504EC562F0003 /* XCRemoteSwiftPackageReference "purchases-ios" */;
+			productName = RevenueCatUI;
 		};
 		B301C5BE980504EC562F93EC /* PostHog */ = {
 			isa = XCSwiftPackageProductDependency;

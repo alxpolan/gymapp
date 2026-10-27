@@ -111,7 +111,7 @@ final class AppStore: ObservableObject {
 
     func addEntry(exercise: String, weight: Double, reps: Int, date: Date) {
         let premium = PremiumManager.shared
-        if !premium.isPro && !premium.isPaywallSuppressedRegion && entries.count >= premium.freeEntryLimit {
+        if PremiumManager.isEntryLimitReached(entryCount: entries.count, limit: premium.freeEntryLimit, isPro: premium.isPro, suppressedRegion: premium.isPaywallSuppressedRegion) {
             paywallRequest = PaywallRequest(source: "entry_limit")
             return
         }
@@ -173,6 +173,13 @@ final class AppStore: ObservableObject {
 
     func groupedExercises() -> [ExerciseGroup] {
         storage.groupByExercise()
+    }
+
+    // MARK: - Review prompt
+
+    static func shouldRequestReview(entryCount: Int, distinctDays: Int, alreadyAsked: Bool) -> Bool {
+        guard !alreadyAsked else { return false }
+        return distinctDays >= 2 || entryCount >= 20
     }
 
     // MARK: - Milestones
