@@ -50,6 +50,10 @@ struct ExerciseDetailView: View {
                         .padding(.top, -16)
                         .padding(.bottom, 8)
 
+                    if let videoURL = ExerciseCatalog.videoURL(for: exerciseName) {
+                        ExerciseVideoView(url: videoURL)
+                    }
+
                     GlassCard {
                         VStack(alignment: .leading, spacing: 14) {
                             Text(store.t("detail.new_entry"))
