@@ -4,7 +4,7 @@ import Charts
 struct ExerciseDetailView: View {
     @EnvironmentObject var store: AppStore
     @Environment(\.colorScheme) var scheme
-    let exerciseName: String
+    @State private var exerciseName: String
 
     @State private var entries: [WorkoutEntry] = []
     @State private var weightText = ""
@@ -15,8 +15,14 @@ struct ExerciseDetailView: View {
     @State private var deleteTarget: String?
     @State private var showDeleteAlert = false
     @State private var showDeleteExerciseAlert = false
+    @State private var showRenameAlert = false
+    @State private var renameText = ""
     @Environment(\.dismiss) private var dismiss
     @FocusState private var focusedField: Field?
+
+    init(exerciseName: String) {
+        _exerciseName = State(initialValue: exerciseName)
+    }
 
     enum Field { case weight, reps }
 
@@ -25,6 +31,10 @@ struct ExerciseDetailView: View {
     private var isFilled: Bool { weightValue != nil && repsValue != nil }
     private var maxWeight: Double { entries.map { $0.weight }.max() ?? 0 }
     private var maxReps: Int { entries.map { $0.reps }.max() ?? 0 }
+    private var bestOneRM: Double { AdvancedAnalytics.bestOneRepMax(entries: entries) }
+    private var currentGroup: ExerciseGroup {
+        ExerciseGroup(exercise: exerciseName, entries: entries.sorted(by: WorkoutEntry.chronological))
+    }
 
     var body: some View {
         ZStack {
@@ -83,17 +93,21 @@ struct ExerciseDetailView: View {
                         GlassCard {
                             HStack(spacing: 0) {
                                 SummaryItem(value: "\(entries.count)", label: store.t("detail.stats.total"))
-                                SummaryItem(value: String(format: "%.1f \(store.unitLabel)", store.displayWeight(maxWeight)), label: store.t("detail.stats.maxWeight"))
+                                SummaryItem(value: "\(formatWeightValue(store.displayWeight(maxWeight))) \(store.unitLabel)", label: store.t("detail.stats.maxWeight"))
                                 SummaryItem(value: "\(maxReps)", label: store.t("detail.stats.maxReps"))
+                                SummaryItem(value: "\(formatWeightValue(store.displayWeight(bestOneRM))) \(store.unitLabel)", label: store.t("detail.stats.e1rm"))
+                            }
+                        }
+
+                        if let suggestion = Coach.nextSetSuggestion(store: store, group: currentGroup) {
+                            ProGate(titleKey: "prolock.title", subtitleKey: "prolock.coach") {
+                                CoachRecapCard(insight: suggestion)
                             }
                         }
                     }
 
                     if entries.count >= 3 {
-                        // entries is sorted newest-first for the list below; charts need
-                        // chronological order (oldest → newest) so the X-axis runs forward.
-                        let chronological = entries.sorted { $0.date < $1.date }
-                        // Chart data is stored in kg — convert weight/volume to the user's unit.
+                        let chronological = entries.sorted(by: WorkoutEntry.chronological)
                         let charts: [(String, String, [ChartDataPoint])] = [
                             (store.t("detail.chart.weight"), store.unitLabel,
                              Analytics.weightChartData(entries: chronological).map(convertWeight)),
@@ -159,6 +173,12 @@ struct ExerciseDetailView: View {
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Menu {
+                    Button {
+                        renameText = exerciseName
+                        showRenameAlert = true
+                    } label: {
+                        Label(store.t("exercises.rename.title"), systemImage: "pencil")
+                    }
                     Button(role: .destructive) {
                         showDeleteExerciseAlert = true
                     } label: {
@@ -187,9 +207,22 @@ struct ExerciseDetailView: View {
         } message: {
             Text(String(format: store.t("exercises.delete.message"), exerciseName))
         }
+        .alert(store.t("exercises.rename.title"), isPresented: $showRenameAlert) {
+            TextField(store.t("exercises.rename.placeholder"), text: $renameText)
+            Button(store.t("common.cancel"), role: .cancel) {}
+            Button(store.t("common.save")) { performRename() }
+        }
     }
 
-    private func reload() { entries = store.entriesForExercise(exerciseName).sorted { $0.date > $1.date } }
+    private func performRename() {
+        let trimmed = renameText.trimmingCharacters(in: .whitespaces)
+        guard !trimmed.isEmpty, trimmed != exerciseName else { return }
+        store.renameExercise(exerciseName, to: trimmed)
+        exerciseName = trimmed
+        reload()
+    }
+
+    private func reload() { entries = store.entriesForExercise(exerciseName).sorted(by: WorkoutEntry.reverseChronological) }
 
     private func convertWeight(_ pt: ChartDataPoint) -> ChartDataPoint {
         ChartDataPoint(index: pt.index, value: store.displayWeight(pt.value), label: pt.label)
@@ -301,7 +334,7 @@ struct DetailChartCard: View {
                                 .symbolSize(50)
                                 .annotation(position: .top, spacing: 6,
                                             overflowResolution: .init(x: .fit(to: .chart), y: .automatic)) {
-                                    Text(String(format: "%.1f \(unit)", sel.value))
+                                    Text("\(formatWeightValue(sel.value)) \(unit)")
                                         .font(.system(size: 11, weight: .bold))
                                         .padding(.horizontal, 7)
                                         .padding(.vertical, 4)
@@ -315,7 +348,7 @@ struct DetailChartCard: View {
                     .chartBackground { _ in Color.clear }
                     .frame(height: 120)
                 }
-                Text(selectedPoint.map { pt in "\(String(format: "%.1f", pt.value)) \(unit) • \(pt.label)" } ?? unit)
+                Text(selectedPoint.map { pt in "\(formatWeightValue(pt.value)) \(unit) • \(pt.label)" } ?? unit)
                     .font(.system(size: 14))
                     .secondaryText()
                     .frame(maxWidth: .infinity, alignment: .center)
@@ -339,7 +372,7 @@ struct EntryCard: View {
             HStack {
                 VStack(alignment: .leading, spacing: 4) {
                     HStack(spacing: 4) {
-                        Text(String(format: "%.1f \(store.unitLabel)", store.displayWeight(entry.weight)))
+                        Text("\(formatWeightValue(store.displayWeight(entry.weight))) \(store.unitLabel)")
                             .font(.system(size: 17, weight: .bold))
                             .foregroundColor(scheme == .dark ? Color(hex: "f0f0f0") : Color(hex: "1a1a1a"))
                         Text("× \(entry.reps) \(store.t("common.reps"))")

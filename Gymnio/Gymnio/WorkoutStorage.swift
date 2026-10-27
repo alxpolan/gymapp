@@ -42,6 +42,26 @@ final class WorkoutStorage {
         save(entries: entries)
     }
 
+    func renameExercise(_ oldName: String, to newName: String) {
+        let trimmed = newName.trimmingCharacters(in: .whitespaces)
+        guard !trimmed.isEmpty, trimmed.lowercased() != oldName.lowercased() else { return }
+        var list = getExercises()
+        guard !list.contains(where: { $0.lowercased() == trimmed.lowercased() }) else { return }
+        if let idx = list.firstIndex(where: { $0.lowercased() == oldName.lowercased() }) {
+            list[idx] = trimmed
+        } else {
+            list.append(trimmed)
+        }
+        list.sort()
+        save(exercises: list)
+
+        var entries = getAllEntries()
+        for i in entries.indices where entries[i].exercise.lowercased() == oldName.lowercased() {
+            entries[i].exercise = trimmed
+        }
+        save(entries: entries)
+    }
+
     private func save(exercises: [String]) {
         if let data = try? encoder.encode(exercises) { defaults.set(data, forKey: exercisesKey) }
     }
@@ -78,7 +98,7 @@ final class WorkoutStorage {
         var grouped: [String: [WorkoutEntry]] = [:]
         for e in entries { grouped[e.exercise, default: []].append(e) }
         return exercises.map { ex in
-            let sorted = (grouped[ex] ?? []).sorted { $0.date < $1.date }
+            let sorted = (grouped[ex] ?? []).sorted(by: WorkoutEntry.chronological)
             return ExerciseGroup(exercise: ex, entries: sorted)
         }
     }

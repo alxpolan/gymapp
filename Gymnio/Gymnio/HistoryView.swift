@@ -58,7 +58,7 @@ struct HistoryView: View {
 
     private func reload() {
         store.reload()
-        allEntries = store.entries.sorted { $0.date > $1.date }
+        allEntries = store.entries.sorted(by: WorkoutEntry.reverseChronological)
     }
 }
 
@@ -77,7 +77,7 @@ struct HistoryEntryCard: View {
                     Text(entry.exercise)
                         .font(.system(size: 16, weight: .bold))
                         .foregroundColor(scheme == .dark ? Color(hex: "f0f0f0") : Color(hex: "1a1a1a"))
-                    Text("\(store.displayWeight(entry.weight), specifier: "%.1f") \(store.unitLabel) × \(entry.reps) \(store.t("common.reps"))")
+                    Text("\(formatWeightValue(store.displayWeight(entry.weight))) \(store.unitLabel) × \(entry.reps) \(store.t("common.reps"))")
                         .font(.system(size: 15))
                         .secondaryText()
                     Text(fmt(entry.date))

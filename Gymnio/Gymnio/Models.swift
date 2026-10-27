@@ -1,5 +1,12 @@
 import Foundation
 
+func formatWeightValue(_ value: Double) -> String {
+    var s = String(format: "%.2f", value)
+    while s.hasSuffix("0") { s.removeLast() }
+    if s.hasSuffix(".") { s.removeLast() }
+    return s
+}
+
 // MARK: - WorkoutEntry
 
 struct WorkoutEntry: Codable, Identifiable, Equatable {
@@ -8,9 +15,39 @@ struct WorkoutEntry: Codable, Identifiable, Equatable {
     var weight: Double
     var reps: Int
     var date: Date
+    var createdAt: Date = Date()
 
     static func create(exercise: String, weight: Double, reps: Int, date: Date = Date()) -> WorkoutEntry {
-        WorkoutEntry(id: UUID().uuidString, exercise: exercise, weight: weight, reps: reps, date: date)
+        WorkoutEntry(id: UUID().uuidString, exercise: exercise, weight: weight, reps: reps, date: date, createdAt: Date())
+    }
+
+    enum CodingKeys: String, CodingKey { case id, exercise, weight, reps, date, createdAt }
+
+    init(id: String, exercise: String, weight: Double, reps: Int, date: Date, createdAt: Date) {
+        self.id = id
+        self.exercise = exercise
+        self.weight = weight
+        self.reps = reps
+        self.date = date
+        self.createdAt = createdAt
+    }
+
+    init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        id = try c.decode(String.self, forKey: .id)
+        exercise = try c.decode(String.self, forKey: .exercise)
+        weight = try c.decode(Double.self, forKey: .weight)
+        reps = try c.decode(Int.self, forKey: .reps)
+        date = try c.decode(Date.self, forKey: .date)
+        createdAt = try c.decodeIfPresent(Date.self, forKey: .createdAt) ?? date
+    }
+
+    static func chronological(_ a: WorkoutEntry, _ b: WorkoutEntry) -> Bool {
+        a.date != b.date ? a.date < b.date : a.createdAt < b.createdAt
+    }
+
+    static func reverseChronological(_ a: WorkoutEntry, _ b: WorkoutEntry) -> Bool {
+        a.date != b.date ? a.date > b.date : a.createdAt > b.createdAt
     }
 }
 
@@ -50,7 +87,6 @@ struct WorkoutStats {
 struct ProgressionAlert: Identifiable {
     var id: String { exercise }
     var exercise: String
-    /// Stored in kg. The suggested increment is unit-dependent and applied at display time.
     var currentWeight: Double
 }
 

@@ -3,7 +3,8 @@
     "allow": [
       "Bash(python3 -c ' *)",
       "Bash(python3 -)",
-      "Bash(xcodebuild -project Gymnio.xcodeproj -scheme Gymnio -destination 'generic/platform=iOS Simulator' build)"
+      "Bash(xcodebuild -project Gymnio.xcodeproj -scheme Gymnio -destination 'generic/platform=iOS Simulator' build)",
+      "Bash(xcodebuild -project Gymnio.xcodeproj -list)"
     ]
   }
 }

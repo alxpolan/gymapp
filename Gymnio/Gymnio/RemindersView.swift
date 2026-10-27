@@ -1,11 +1,12 @@
 import SwiftUI
 import UserNotifications
+import PostHog
 
 // MARK: - Model
 
 struct ReminderDay: Codable, Identifiable {
     var id: Int { weekday }
-    var weekday: Int   // 2=Mon … 7=Sat, 1=Sun (Calendar convention)
+    var weekday: Int
     var enabled: Bool
     var hour: Int
     var minute: Int
@@ -36,7 +37,6 @@ struct RemindersView: View {
     private let masterKey  = "daily_reminder_enabled"
 
     private static func defaultDays() -> [ReminderDay] {
-        // Mon–Fri enabled at 18:00, Sat/Sun disabled
         let schedule: [(Int, Bool)] = [
             (2, true), (3, true), (4, true), (5, true), (6, true), (7, false), (1, false)
         ]
@@ -51,7 +51,6 @@ struct RemindersView: View {
             ScrollView(showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 20) {
 
-                    // Master toggle
                     GlassCard {
                         SettingsRow(
                             icon: "bell.fill",
@@ -64,7 +63,6 @@ struct RemindersView: View {
                         }
                     }
 
-                    // Per-day schedule
                     if masterEnabled {
                         SettingsSectionTitle(
                             title: store.language == "de" ? "Wochentage" : "Schedule"
@@ -88,7 +86,6 @@ struct RemindersView: View {
                             }
                         }
 
-                        // Summary
                         let active = days.filter { $0.enabled }
                         if !active.isEmpty {
                             GlassCard {
@@ -135,12 +132,15 @@ struct RemindersView: View {
             NotificationManager.shared.requestPermissions()
         }
         NotificationManager.shared.scheduleReminders(masterEnabled ? days : [])
+        PostHogSDK.shared.capture("reminders_updated", properties: [
+            "enabled": masterEnabled,
+            "active_days": days.filter { $0.enabled }.count
+        ])
     }
 
     // MARK: - Helpers
 
     private func dayName(_ weekday: Int) -> String {
-        // weekday: 2=Mon…7=Sat, 1=Sun
         if store.language == "de" {
             return ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"][weekday == 1 ? 0 : weekday - 1]
         } else {
@@ -167,7 +167,6 @@ struct ReminderDayRow: View {
 
     var body: some View {
         HStack(spacing: 12) {
-            // Weekday label as icon-style badge
             RoundedRectangle(cornerRadius: 8)
                 .fill(day.enabled ? Color.statBlue : Color.gray.opacity(0.3))
                 .frame(width: 32, height: 32)

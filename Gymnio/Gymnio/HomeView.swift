@@ -11,6 +11,7 @@ struct HomeView: View {
     @State private var topGroups: [ExerciseGroup] = []
     @State private var chartIndex: Int = 0
     @State private var navPath = NavigationPath()
+    @State private var coachInsight: CoachInsight?
 
     private var greeting: String {
         if store.forceMorningGreeting { return store.t("home.greeting.morning") }
@@ -59,21 +60,29 @@ struct HomeView: View {
                         } else {
                             VStack(spacing: 12) {
 
+                            if let coachInsight {
+                                CoachRecapCard(insight: coachInsight)
+                            }
+
                             if store.homeSettings.showProgressionAlert, let alert = alerts.first {
                                 ProgressionAlertCard(alert: alert)
                             }
 
                             if store.homeSettings.showStats {
-                                HStack(spacing: 12) {
-                                    HomeStatCard(value: "\(stats.totalWorkouts)",
-                                                 label: store.t("home.stats.workouts"),
-                                                 color: Color.tint(scheme))
-                                    HomeStatCard(value: "\(Int(store.displayWeight(stats.totalVolumeKg) / 1000))k",
-                                                 label: String(format: store.t("home.stats.kg"), store.unitLabel),
-                                                 color: .statRed)
-                                    HomeStatCard(value: "\(stats.uniqueExercises)",
-                                                 label: store.t("home.stats.exercises"),
-                                                 color: .statTeal)
+                                GlassCard {
+                                    HStack(spacing: 0) {
+                                        HomeStatCard(value: "\(stats.totalWorkouts)",
+                                                     label: store.t("home.stats.workouts"),
+                                                     color: Color.tint(scheme))
+                                        HomeStatDivider()
+                                        HomeStatCard(value: "\(Int(store.displayWeight(stats.totalVolumeKg) / 1000))k",
+                                                     label: String(format: store.t("home.stats.kg"), store.unitLabel),
+                                                     color: .statRed)
+                                        HomeStatDivider()
+                                        HomeStatCard(value: "\(stats.uniqueExercises)",
+                                                     label: store.t("home.stats.exercises"),
+                                                     color: .statTeal)
+                                    }
                                 }
                             }
 
@@ -188,6 +197,7 @@ struct HomeView: View {
         stats = Analytics.workoutStats(entries: store.entries)
         alerts = Analytics.progressionAlerts(groups: groups)
         topGroups = Analytics.topExercisesByVolume(groups: groups)
+        coachInsight = Coach.weeklyRecap(store: store)
     }
 }
 
@@ -206,10 +216,9 @@ struct ProgressionAlertCard: View {
     private var bodyText: AttributedString {
         let isLbs = store.weightUnit == "lbs"
         let current = store.displayWeight(alert.currentWeight)
-        // Suggest a clean step in the user's unit: +2.5 kg or +5 lbs.
         let suggested = current + (isLbs ? 5.0 : 2.5)
         let raw = String(format: store.t(isLbs ? "home.progression.body.lbs" : "home.progression.body"),
-                         alert.exercise, current, suggested)
+                         alert.exercise, formatWeightValue(current), formatWeightValue(suggested))
         return (try? AttributedString(markdown: raw)) ?? AttributedString(raw)
     }
 
@@ -249,21 +258,28 @@ struct HomeStatCard: View {
     let label: String
     let color: Color
     var body: some View {
-        GlassCard {
-            VStack(spacing: 2) {
-                Text(value)
-                    .font(.system(size: 30, weight: .heavy))
-                    .foregroundColor(color)
-                    .minimumScaleFactor(0.5)
-                    .lineLimit(1)
-                Text(label)
-                    .font(.system(size: 12))
-                    .secondaryText()
-                    .multilineTextAlignment(.center)
-            }
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, 4)
+        VStack(spacing: 2) {
+            Text(value)
+                .font(.system(size: 30, weight: .heavy))
+                .foregroundColor(color)
+                .minimumScaleFactor(0.5)
+                .lineLimit(1)
+            Text(label)
+                .font(.system(size: 12))
+                .secondaryText()
+                .multilineTextAlignment(.center)
         }
+        .frame(maxWidth: .infinity)
+    }
+}
+
+struct HomeStatDivider: View {
+    @Environment(\.colorScheme) var scheme
+    var body: some View {
+        Rectangle()
+            .fill(scheme == .dark ? Color.white.opacity(0.12) : Color.black.opacity(0.08))
+            .frame(width: 1)
+            .padding(.vertical, 6)
     }
 }
 
@@ -306,7 +322,7 @@ struct HomeChartCard: View {
                                 .symbolSize(50)
                                 .annotation(position: .top, spacing: 6,
                                             overflowResolution: .init(x: .fit(to: .chart), y: .automatic)) {
-                                    Text(String(format: "%.1f \(store.unitLabel)", store.displayWeight(sel.value)))
+                                    Text("\(formatWeightValue(store.displayWeight(sel.value))) \(store.unitLabel)")
                                         .font(.system(size: 11, weight: .bold))
                                         .padding(.horizontal, 7)
                                         .padding(.vertical, 4)
@@ -322,7 +338,7 @@ struct HomeChartCard: View {
                 }
 
                 Text(selectedPoint.map { pt in
-                    String(format: "%.1f \(store.unitLabel) • \(pt.label)", store.displayWeight(pt.value))
+                    "\(formatWeightValue(store.displayWeight(pt.value))) \(store.unitLabel) • \(pt.label)"
                 } ?? "\(store.t("detail.chart.weight")) (\(store.unitLabel))")
                     .font(.system(size: 14))
                     .secondaryText()

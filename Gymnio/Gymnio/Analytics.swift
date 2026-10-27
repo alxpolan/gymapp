@@ -19,11 +19,9 @@ enum Analytics {
 
     // MARK: - Progression alerts
 
-    /// Detects when the last 5 entries for an exercise all have the same weight → suggest a step up.
-    /// The suggested increment is unit-dependent, so it is applied at display time, not here.
     static func progressionAlerts(groups: [ExerciseGroup]) -> [ProgressionAlert] {
         groups.compactMap { group in
-            let sorted = group.entries.sorted { $0.date < $1.date }
+            let sorted = group.entries.sorted(by: WorkoutEntry.chronological)
             guard sorted.count >= 5 else { return nil }
             let last5 = sorted.suffix(5)
             let weight = last5.first!.weight

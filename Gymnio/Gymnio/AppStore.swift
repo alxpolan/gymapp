@@ -1,6 +1,7 @@
 import Foundation
 import SwiftUI
 import Combine
+import PostHog
 
 final class AppStore: ObservableObject {
     static let shared = AppStore()
@@ -86,12 +87,21 @@ final class AppStore: ObservableObject {
     func addExercise(_ name: String) {
         storage.addExercise(name)
         exercises = storage.getExercises()
+        PostHogSDK.shared.capture("exercise_added")
     }
 
     func deleteExercise(_ name: String) {
         storage.deleteExercise(name)
         exercises = storage.getExercises()
         entries   = storage.getAllEntries()
+        PostHogSDK.shared.capture("exercise_deleted")
+    }
+
+    func renameExercise(_ oldName: String, to newName: String) {
+        storage.renameExercise(oldName, to: newName)
+        exercises = storage.getExercises()
+        entries   = storage.getAllEntries()
+        PostHogSDK.shared.capture("exercise_renamed")
     }
 
     // MARK: - Entries
@@ -100,12 +110,18 @@ final class AppStore: ObservableObject {
         let entry = WorkoutEntry.create(exercise: exercise, weight: weight, reps: reps, date: date)
         storage.saveEntry(entry)
         entries = storage.getAllEntries()
+        PostHogSDK.shared.capture("workout_entry_added", properties: [
+            "weight": weight,
+            "reps": reps,
+            "unit": weightUnit
+        ])
         checkMilestones()
     }
 
     func deleteEntry(id: String) {
         storage.deleteEntry(id: id)
         entries = storage.getAllEntries()
+        PostHogSDK.shared.capture("workout_entry_deleted")
     }
 
     // MARK: - Settings
@@ -113,21 +129,21 @@ final class AppStore: ObservableObject {
     func setThemeMode(_ mode: String) {
         themeMode = mode
         defaults.set(mode, forKey: themeKey)
+        PostHogSDK.shared.capture("theme_changed", properties: ["mode": mode])
     }
 
     func setWeightUnit(_ unit: String) {
         weightUnit = unit
         defaults.set(unit, forKey: weightUnitKey)
+        PostHogSDK.shared.capture("weight_unit_changed", properties: ["unit": unit])
     }
 
     // MARK: - Weight conversion
 
-    /// Converts a stored kg value to the user's display unit
     func displayWeight(_ kg: Double) -> Double {
         weightUnit == "lbs" ? kg * 2.20462 : kg
     }
 
-    /// Converts a user-entered value in their unit back to kg for storage
     func toKg(_ value: Double) -> Double {
         weightUnit == "lbs" ? value / 2.20462 : value
     }
@@ -144,7 +160,7 @@ final class AppStore: ObservableObject {
     // MARK: - Derived data
 
     func entriesForExercise(_ name: String) -> [WorkoutEntry] {
-        entries.filter { $0.exercise == name }.sorted { $0.date < $1.date }
+        entries.filter { $0.exercise == name }.sorted(by: WorkoutEntry.chronological)
     }
 
     func groupedExercises() -> [ExerciseGroup] {
@@ -157,6 +173,7 @@ final class AppStore: ObservableObject {
         let count = entries.count
         if [10, 25, 50, 100, 200].contains(count) {
             NotificationManager.shared.sendCelebrationNotification(entryCount: count)
+            PostHogSDK.shared.capture("milestone_reached", properties: ["entry_count": count])
         }
         if count == 5 {
             NotificationManager.shared.requestPermissions()

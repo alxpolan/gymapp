@@ -43,7 +43,7 @@ struct ExercisesView: View {
                 }
                 .padding(.horizontal, 16)
                 .padding(.top, 40)
-                .padding(.bottom, 120)
+                .padding(.bottom, 32)
             }
         }
         .navigationBarHidden(true)
@@ -80,7 +80,7 @@ struct ExerciseCard: View {
                         .frame(maxWidth: .infinity, alignment: .leading)
                 } else {
                     HStack(spacing: 0) {
-                        ExerciseStat(value: String(format: "%.1f", store.displayWeight(group.lastWeight)), label: store.unitLabel)
+                        ExerciseStat(value: formatWeightValue(store.displayWeight(group.lastWeight)), label: store.unitLabel)
                         ExerciseStat(value: "\(group.lastReps)", label: store.t("common.reps"))
                         ExerciseStat(value: "\(group.entries.count)", label: store.t("exercises.entries"))
                     }

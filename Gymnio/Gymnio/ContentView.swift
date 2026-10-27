@@ -21,16 +21,20 @@ struct ContentView: View {
                     NavigationStack { ExercisesView() }
                 }
 
-                Tab(store.t("nav.history"), systemImage: "clock.arrow.trianglehead.counterclockwise.rotate.90", value: 2) {
+                Tab(store.t("nav.insights"), systemImage: "chart.line.uptrend.xyaxis", value: 2) {
+                    NavigationStack { InsightsView() }
+                }
+
+                Tab(store.t("nav.history"), systemImage: "clock.arrow.trianglehead.counterclockwise.rotate.90", value: 3) {
                     HistoryView()
                 }
 
-                Tab(store.t("nav.add"), systemImage: "plus", value: 3, role: .search) {
+                Tab(store.t("nav.add"), systemImage: "plus", value: 4, role: .search) {
                     Color.clear
                 }
             }
             .onChange(of: selectedTab) { _, new in
-                if new == 3 {
+                if new == 4 {
                     store.showAddExercise = true
                     DispatchQueue.main.async { selectedTab = 1 }
                 }

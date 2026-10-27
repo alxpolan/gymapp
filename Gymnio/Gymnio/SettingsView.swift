@@ -2,7 +2,11 @@ import SwiftUI
 
 struct SettingsView: View {
     @EnvironmentObject var store: AppStore
+    @EnvironmentObject var premium: PremiumManager
     @Environment(\.colorScheme) var scheme
+    @State private var showPaywall = false
+    @State private var shareURL: URL?
+    @State private var showShare = false
 
     var body: some View {
         ZStack {
@@ -10,6 +14,41 @@ struct SettingsView: View {
                 .ignoresSafeArea()
         ScrollView(showsIndicators: false) {
             VStack(alignment: .leading, spacing: 20) {
+
+                // MARK: Gymnio Pro
+                SettingsSectionTitle(title: store.t("settings.section.pro"))
+                if premium.isPro {
+                    GlassCard {
+                        SettingsRow(icon: "bolt.fill", iconColor: Color(hex: "A06BFF"),
+                                    label: store.t("pro.active.title")) {
+                            ProBadge()
+                        }
+                    }
+                } else {
+                    UpgradeCTACard()
+                }
+
+                GlassCard {
+                    Button {
+                        if premium.isPro {
+                            shareURL = DataExport.writeTempFile(store: store)
+                            showShare = shareURL != nil
+                        } else {
+                            showPaywall = true
+                        }
+                    } label: {
+                        SettingsRow(icon: "square.and.arrow.up", iconColor: Color(hex: "34c759"),
+                                    label: store.t("settings.export")) {
+                            if premium.isPro {
+                                Image(systemName: "chevron.right")
+                                    .font(.system(size: 13, weight: .semibold)).foregroundColor(.secondary)
+                            } else {
+                                ProBadge()
+                            }
+                        }
+                    }
+                    .buttonStyle(.plain)
+                }
 
                 SettingsSectionTitle(title: store.t("settings.section.preferences"))
 
@@ -109,6 +148,19 @@ struct SettingsView: View {
         }
         .navigationTitle(store.t("settings.title"))
         .navigationBarTitleDisplayMode(.large)
+        .sheet(isPresented: $showPaywall) { PaywallView() }
+        .sheet(isPresented: $showShare) {
+            if let shareURL {
+                ShareSheet(items: [shareURL], isPresented: $showShare)
+            } else {
+                VStack(spacing: 12) {
+                    Text("DEBUG: shareURL nil").font(.title)
+                    Text("isPro=\(premium.isPro)")
+                    Text("entries=\(store.entries.count)")
+                    Text("error=\(DataExport.debugLastError ?? "none")")
+                }
+            }
+        }
     }
 
     private var appVersion: String {

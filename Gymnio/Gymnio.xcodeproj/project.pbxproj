@@ -6,6 +6,11 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		3252C9C93B4098F4D4812724 /* PostHog in Frameworks */ = {isa = PBXBuildFile; productRef = B301C5BE980504EC562F93EC /* PostHog */; };
+		AA01C5BE980504EC562F0001 /* RevenueCat in Frameworks */ = {isa = PBXBuildFile; productRef = AA01C5BE980504EC562F0002 /* RevenueCat */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		D9FED0642F72024200B8CB60 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -52,6 +57,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3252C9C93B4098F4D4812724 /* PostHog in Frameworks */,
+				AA01C5BE980504EC562F0001 /* RevenueCat in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -112,6 +119,8 @@
 			);
 			name = Gymnio;
 			packageProductDependencies = (
+				B301C5BE980504EC562F93EC /* PostHog */,
+				AA01C5BE980504EC562F0002 /* RevenueCat */,
 			);
 			productName = Gymnio;
 			productReference = D9FED0562F72024100B8CB60 /* Gymnio.app */;
@@ -134,8 +143,6 @@
 				D9FED0662F72024200B8CB60 /* GymnioTests */,
 			);
 			name = GymnioTests;
-			packageProductDependencies = (
-			);
 			productName = GymnioTests;
 			productReference = D9FED0632F72024200B8CB60 /* GymnioTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
@@ -157,8 +164,6 @@
 				D9FED0702F72024200B8CB60 /* GymnioUITests */,
 			);
 			name = GymnioUITests;
-			packageProductDependencies = (
-			);
 			productName = GymnioUITests;
 			productReference = D9FED06D2F72024200B8CB60 /* GymnioUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
@@ -196,6 +201,10 @@
 			);
 			mainGroup = D9FED04D2F72024100B8CB60;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				899476CF17322EAB2147BE23 /* XCRemoteSwiftPackageReference "posthog-ios" */,
+				AA01C5BE980504EC562F0003 /* XCRemoteSwiftPackageReference "purchases-ios" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = D9FED0572F72024100B8CB60 /* Products */;
 			projectDirPath = "";
@@ -413,7 +422,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.fringelo.gymnio.Gymnio;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -448,7 +457,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.fringelo.gymnio.Gymnio;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
@@ -470,7 +479,7 @@
 				DEVELOPMENT_TEAM = AS5BHHK5AW;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.fringelo.gymnio.GymnioTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = NO;
@@ -492,7 +501,7 @@
 				DEVELOPMENT_TEAM = AS5BHHK5AW;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.fringelo.gymnio.GymnioTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = NO;
@@ -512,7 +521,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = AS5BHHK5AW;
 				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.fringelo.gymnio.GymnioUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = NO;
@@ -532,7 +541,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = AS5BHHK5AW;
 				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.fringelo.gymnio.GymnioUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = NO;
@@ -585,6 +594,38 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		899476CF17322EAB2147BE23 /* XCRemoteSwiftPackageReference "posthog-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/PostHog/posthog-ios";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.62.3;
+			};
+		};
+		AA01C5BE980504EC562F0003 /* XCRemoteSwiftPackageReference "purchases-ios" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/RevenueCat/purchases-ios";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.14.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		AA01C5BE980504EC562F0002 /* RevenueCat */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AA01C5BE980504EC562F0003 /* XCRemoteSwiftPackageReference "purchases-ios" */;
+			productName = RevenueCat;
+		};
+		B301C5BE980504EC562F93EC /* PostHog */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 899476CF17322EAB2147BE23 /* XCRemoteSwiftPackageReference "posthog-ios" */;
+			productName = PostHog;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = D9FED04E2F72024100B8CB60 /* Project object */;
 }
