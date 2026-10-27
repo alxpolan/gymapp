@@ -4,8 +4,9 @@
     "bgColor2": "#1a1a1a",
     "textColor": "#ffffff",
     "scheme": "Gymnio",
-    "devices": ["iPhone 16 Pro Max", "iPad Pro 13-inch (M4)"],
-    "languages": ["en-US", "de-DE"]
+    "devices": ["iPhone 16 Pro Max", "iPad Pro (12.9-inch) (4th generation)"],
+    "languages": ["en-US", "de-DE"],
+    "appearance": "dark"
   },
   "01_HomeDashboard": "Home dashboard with stats, progression alerts and charts based on demo workouts",
   "02_ExercisesOverview": "Exercise overview with latest values and entry count",

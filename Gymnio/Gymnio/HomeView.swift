@@ -218,8 +218,11 @@ struct ProgressionAlertCard: View {
         let isLbs = store.weightUnit == "lbs"
         let current = store.displayWeight(alert.currentWeight)
         let suggested = current + (isLbs ? 5.0 : 2.5)
-        let raw = String(format: store.t(isLbs ? "home.progression.body.lbs" : "home.progression.body"),
+        var raw = String(format: store.t(isLbs ? "home.progression.body.lbs" : "home.progression.body"),
                          alert.exercise, formatWeightValue(current), formatWeightValue(suggested))
+        if CommandLine.arguments.contains("-ui_testing") {
+            raw = raw.replacingOccurrences(of: " 💪", with: "")
+        }
         return (try? AttributedString(markdown: raw)) ?? AttributedString(raw)
     }
 

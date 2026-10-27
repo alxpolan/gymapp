@@ -1,0 +1,15 @@
+{
+  "_config": {
+    "bgColor1": "#000000",
+    "bgColor2": "#1a1a1a",
+    "textColor": "#ffffff",
+    "scheme": "Gymnio",
+    "devices": ["iPhone 16 Pro Max", "iPad Pro 13-inch (M4)"],
+    "languages": ["en-US", "de-DE"]
+  },
+  "01_HomeDashboard": "Home dashboard with stats, progression alerts and charts based on demo workouts",
+  "02_ExercisesOverview": "Exercise overview with latest values and entry count",
+  "03_ExerciseDetail": "Exercise detail with log form, key metrics and history chart",
+  "04_History": "Chronological log of all training entries",
+  "05_AddExerciseModal": "Modal for adding a new exercise"
+}

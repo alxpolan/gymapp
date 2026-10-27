@@ -2,87 +2,80 @@
 //  GymnioUITests.swift
 //  GymnioUITests
 //
-//  Created by Alex Polan on 3/24/26.
+//  Marteso screenshot pipeline - see config.json for device/language config.
+//  Demo data: seeded via -ui_test_seed_demo_data (handled in AppDelegate).
 //
 
 import XCTest
 
 @MainActor
 final class GymnioUITests: XCTestCase {
+
     var app: XCUIApplication!
 
     override func setUpWithError() throws {
         continueAfterFailure = false
         app = XCUIApplication()
-        setupSnapshot(app)
+        setupScreenshots(app)
     }
 
     override func tearDownWithError() throws {
         app = nil
     }
 
-    // Home/Dashbaord view
-    func testScreenshot01_HomeDashboard() throws {
-        launchAppWithDemoData()
-        XCTAssertTrue(app.staticTexts[t("Guten Morgen!", "Good morning!")].waitForExistence(timeout: 6))
-        snapshot("01_HomeDashboard")
-    }
-
-    // Exercise overview
-    func testScreenshot02_ExercisesOverview() throws {
-        launchAppWithDemoData()
-        tapTab(t("Übungen", "Exercises"))
-        XCTAssertTrue(app.staticTexts[demoExercise].firstMatch.waitForExistence(timeout: 6))
-        snapshot("02_ExercisesOverview")
-    }
-
-    // Exercise detail view
-    func testScreenshot03_ExerciseDetail() throws {
-        launchAppWithDemoData()
-        tapTab(t("Übungen", "Exercises"))
-        let exercise = app.staticTexts[demoExercise].firstMatch
-        XCTAssertTrue(exercise.waitForExistence(timeout: 6))
-        exercise.tap()
-        XCTAssertTrue(app.buttons[t("Eintrag hinzufügen", "Add Entry")].waitForExistence(timeout: 6))
-        snapshot("03_ExerciseDetail")
-    }
-
-    // History view
-    func testScreenshot04_History() throws {
-        launchAppWithDemoData()
-        tapTab(t("Verlauf", "History"))
-        XCTAssertTrue(app.staticTexts[demoExercise].firstMatch.waitForExistence(timeout: 6))
-        snapshot("04_History")
-    }
-
-    // Add exercise modal
-    func testScreenshot05_AddExerciseModal() throws {
-        launchAppWithDemoData()
-        tapTab(t("Hinzufügen", "Add"))
-        XCTAssertTrue(app.staticTexts[t("Übung hinzufügen", "Add Exercise")].waitForExistence(timeout: 6))
-        snapshot("05_AddExerciseModal")
-    }
-
-    private var testLanguage: String {
-        Snapshot.deviceLanguage.hasPrefix("de") ? "de" : "en"
-    }
-
-    private var demoExercise: String { t("Bankdrücken", "Bench Press") }
-
-    private func t(_ de: String, _ en: String) -> String {
-        testLanguage == "de" ? de : en
-    }
-
-    private func launchAppWithDemoData() {
+    private func launchWithDemoData() {
         app.launchArguments += [
             "-ui_testing",
             "-ui_test_seed_demo_data",
             "-ui_test_force_morning",
             "-ui_test_force_tab_bar",
-            "-ui_test_language", testLanguage
         ]
         app.launch()
         XCTAssertTrue(app.tabBars.firstMatch.waitForExistence(timeout: 10))
+    }
+
+    func testScreenshot01_HomeDashboard() throws {
+        launchWithDemoData()
+        XCTAssertTrue(app.staticTexts[t("Guten Morgen!", "Good morning!")].waitForExistence(timeout: 6))
+        takeScreenshot("testScreenshot01_HomeDashboard")
+    }
+
+    func testScreenshot02_ExercisesOverview() throws {
+        launchWithDemoData()
+        tapTab(t("Übungen", "Exercises"))
+        XCTAssertTrue(app.staticTexts[demoExercise].firstMatch.waitForExistence(timeout: 6))
+        takeScreenshot("testScreenshot02_ExercisesOverview")
+    }
+
+    func testScreenshot03_ExerciseDetail() throws {
+        launchWithDemoData()
+        tapTab(t("Übungen", "Exercises"))
+        let exercise = app.staticTexts[demoExercise].firstMatch
+        XCTAssertTrue(exercise.waitForExistence(timeout: 6))
+        exercise.tap()
+        XCTAssertTrue(app.buttons[t("Eintrag hinzufügen", "Add Entry")].waitForExistence(timeout: 6))
+        takeScreenshot("testScreenshot03_ExerciseDetail")
+    }
+
+    func testScreenshot04_History() throws {
+        launchWithDemoData()
+        tapTab(t("Verlauf", "History"))
+        XCTAssertTrue(app.staticTexts[demoExercise].firstMatch.waitForExistence(timeout: 6))
+        takeScreenshot("testScreenshot04_History")
+    }
+
+    func testScreenshot05_AddExerciseModal() throws {
+        launchWithDemoData()
+        tapTab(t("Hinzufügen", "Add"))
+        XCTAssertTrue(app.staticTexts[t("Übung hinzufügen", "Add Exercise")].waitForExistence(timeout: 6))
+        takeScreenshot("testScreenshot05_AddExerciseModal")
+    }
+
+    private var demoExercise: String { t("Bankdrücken", "Bench Press") }
+
+    private func t(_ de: String, _ en: String) -> String {
+        let language = ProcessInfo.processInfo.environment["XCUITESTS_LANGUAGE"] ?? "en"
+        return language.hasPrefix("de") ? de : en
     }
 
     private func tapTab(_ name: String) {
