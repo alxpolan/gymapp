@@ -32,7 +32,13 @@
             "value": "%1$@ (%2$@)"
           }
         },
-        "pt": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ (%2$@)"
+          }
+        },
+        "ko": {
           "stringUnit": {
             "state": "translated",
             "value": "%1$@ (%2$@)"
@@ -44,13 +50,7 @@
             "value": "%1$@ (%2$@)"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ (%2$@)"
-          }
-        },
-        "ko": {
+        "pt": {
           "stringUnit": {
             "state": "translated",
             "value": "%1$@ (%2$@)"
@@ -218,7 +218,13 @@
             "value": "%1$@ %2$@"
           }
         },
-        "pt": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ %2$@"
+          }
+        },
+        "ko": {
           "stringUnit": {
             "state": "translated",
             "value": "%1$@ %2$@"
@@ -230,13 +236,7 @@
             "value": "%1$@ %2$@"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ %2$@"
-          }
-        },
-        "ko": {
+        "pt": {
           "stringUnit": {
             "state": "translated",
             "value": "%1$@ %2$@"
@@ -404,7 +404,13 @@
             "value": "%1$@ %2$@ • %3$@"
           }
         },
-        "pt": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ %2$@ • %3$@"
+          }
+        },
+        "ko": {
           "stringUnit": {
             "state": "translated",
             "value": "%1$@ %2$@ • %3$@"
@@ -416,13 +422,7 @@
             "value": "%1$@ %2$@ • %3$@"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ %2$@ • %3$@"
-          }
-        },
-        "ko": {
+        "pt": {
           "stringUnit": {
             "state": "translated",
             "value": "%1$@ %2$@ • %3$@"
@@ -590,7 +590,13 @@
             "value": "%1$@ %2$@ × %3$lld %4$@"
           }
         },
-        "pt": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ %2$@ × %3$lld %4$@"
+          }
+        },
+        "ko": {
           "stringUnit": {
             "state": "translated",
             "value": "%1$@ %2$@ × %3$lld %4$@"
@@ -602,13 +608,7 @@
             "value": "%1$@ %2$@ × %3$lld %4$@"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ %2$@ × %3$lld %4$@"
-          }
-        },
-        "ko": {
+        "pt": {
           "stringUnit": {
             "state": "translated",
             "value": "%1$@ %2$@ × %3$lld %4$@"
@@ -781,7 +781,13 @@
             "value": "× %1$lld %2$@"
           }
         },
-        "pt": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "× %1$lld %2$@"
+          }
+        },
+        "ko": {
           "stringUnit": {
             "state": "translated",
             "value": "× %1$lld %2$@"
@@ -793,13 +799,7 @@
             "value": "× %1$lld %2$@"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "× %1$lld %2$@"
-          }
-        },
-        "ko": {
+        "pt": {
           "stringUnit": {
             "state": "translated",
             "value": "× %1$lld %2$@"
@@ -976,18 +976,6 @@
             "value": "Aggiungi"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Adicionar"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Toevoegen"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -998,6 +986,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "추가"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Toevoegen"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Adicionar"
           }
         },
         "da": {
@@ -1167,18 +1167,6 @@
             "value": "Annulla"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Cancelar"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Annuleren"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -1189,6 +1177,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "취소"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Annuleren"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cancelar"
           }
         },
         "da": {
@@ -1325,6 +1325,65 @@
         }
       }
     },
+    "add.custom": {
+      "extractionState": "stale",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Eigene Übung"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Custom exercise"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ejercicio personalizado"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Exercice personnalisé"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Esercizio personalizzato"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "カスタム種目"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "사용자 지정 운동"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Eigen oefening"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Exercício personalizado"
+          }
+        }
+      }
+    },
     "add.duplicate": {
       "extractionState": "stale",
       "localizations": {
@@ -1358,18 +1417,6 @@
             "value": "Questo esercizio esiste già."
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Este exercício já existe."
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Deze oefening bestaat al."
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -1380,6 +1427,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "이미 있는 운동입니다."
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deze oefening bestaat al."
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Este exercício já existe."
           }
         },
         "da": {
@@ -1549,18 +1608,6 @@
             "value": "Nome esercizio"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nome do exercício"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Naam van oefening"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -1571,6 +1618,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "운동 이름"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Naam van oefening"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nome do exercício"
           }
         },
         "da": {
@@ -1707,6 +1766,65 @@
         }
       }
     },
+    "add.search": {
+      "extractionState": "stale",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Suchen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Search"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Buscar"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rechercher"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cerca"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "検索"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "검색"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zoeken"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Buscar"
+          }
+        }
+      }
+    },
     "add.title": {
       "extractionState": "stale",
       "localizations": {
@@ -1740,18 +1858,6 @@
             "value": "Aggiungi esercizio"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Adicionar exercício"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Oefening toevoegen"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -1762,6 +1868,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "운동 추가"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Oefening toevoegen"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Adicionar exercício"
           }
         },
         "da": {
@@ -1926,18 +2044,6 @@
             "value": "Grafici da %1$lld voci (%2$lld/%3$lld)"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Gráficos a partir de %1$lld registros (%2$lld/%3$lld)"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Grafieken vanaf %1$lld items (%2$lld/%3$lld)"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -1948,6 +2054,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "%1$lld개부터 그래프 (%2$lld/%3$lld)"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Grafieken vanaf %1$lld items (%2$lld/%3$lld)"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gráficos a partir de %1$lld registros (%2$lld/%3$lld)"
           }
         },
         "da": {
@@ -2112,18 +2230,6 @@
             "value": "Grafici da %1$lld voci (%2$lld/%3$lld)"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Gráficos a partir de %1$lld registros (%2$lld/%3$lld)"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Grafieken vanaf %1$lld items (%2$lld/%3$lld)"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -2134,6 +2240,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "%1$lld개부터 그래프 (%2$lld/%3$lld)"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Grafieken vanaf %1$lld items (%2$lld/%3$lld)"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gráficos a partir de %1$lld registros (%2$lld/%3$lld)"
           }
         },
         "da": {
@@ -2303,18 +2421,6 @@
             "value": "Annulla"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Cancelar"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Annuleren"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -2325,6 +2431,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "취소"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Annuleren"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cancelar"
           }
         },
         "da": {
@@ -2494,18 +2612,6 @@
             "value": "Elimina"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Excluir"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Verwijderen"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -2516,6 +2622,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "삭제"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Verwijderen"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Excluir"
           }
         },
         "da": {
@@ -2685,18 +2803,6 @@
             "value": "Fine"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Concluir"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Gereed"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -2707,6 +2813,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "완료"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gereed"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Concluir"
           }
         },
         "da": {
@@ -2876,18 +2994,6 @@
             "value": "kg"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "kg"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "kg"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -2900,133 +3006,13 @@
             "value": "kg"
           }
         },
-        "da": {
+        "nl": {
           "stringUnit": {
             "state": "translated",
             "value": "kg"
           }
         },
-        "sv": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "kg"
-          }
-        },
-        "nb": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "kg"
-          }
-        },
-        "fi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "kg"
-          }
-        },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "kg"
-          }
-        },
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "kg"
-          }
-        },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "kg"
-          }
-        },
-        "pl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "kg"
-          }
-        },
-        "cs": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "kg"
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "kg"
-          }
-        },
-        "hu": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "kg"
-          }
-        },
-        "ro": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "kg"
-          }
-        },
-        "bg": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "kg"
-          }
-        },
-        "el": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "kg"
-          }
-        },
-        "hr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "kg"
-          }
-        },
-        "sr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "kg"
-          }
-        },
-        "sl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "kg"
-          }
-        },
-        "et": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "kg"
-          }
-        },
-        "lv": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "kg"
-          }
-        },
-        "lt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "kg"
-          }
-        },
-        "is": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "kg"
-          }
-        },
-        "ca": {
+        "pt": {
           "stringUnit": {
             "state": "translated",
             "value": "kg"
@@ -3067,18 +3053,6 @@
             "value": "rip."
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "reps"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "reps"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -3089,6 +3063,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "회"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "reps"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "reps"
           }
         },
         "da": {
@@ -3258,18 +3244,6 @@
             "value": "Salva"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Salvar"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Opslaan"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -3280,6 +3254,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "저장"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Opslaan"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Salvar"
           }
         },
         "da": {
@@ -3448,18 +3434,6 @@
             "value": "Grafici"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Gráficos"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Grafieken"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -3470,6 +3444,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "그래프"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Grafieken"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gráficos"
           }
         },
         "da": {
@@ -3639,18 +3625,6 @@
             "value": "Scegli quali sezioni mostrare nella dashboard."
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Escolha quais seções aparecem no seu painel."
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Kies welke onderdelen op je dashboard verschijnen."
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -3661,6 +3635,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "대시보드에 표시할 항목을 선택하세요."
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Kies welke onderdelen op je dashboard verschijnen."
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Escolha quais seções aparecem no seu painel."
           }
         },
         "da": {
@@ -3829,18 +3815,6 @@
             "value": "Avviso di progressione"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Alerta de progressão"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Progressiemelding"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -3851,6 +3825,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "프로그레션 알림"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Progressiemelding"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alerta de progressão"
           }
         },
         "da": {
@@ -4019,18 +4005,6 @@
             "value": "Statistiche"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Estatísticas"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Statistieken"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -4041,6 +4015,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "통계"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Statistieken"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Estatísticas"
           }
         },
         "da": {
@@ -4210,18 +4196,6 @@
             "value": "Suggerimento: attiva l’avviso di progressione per suggerimenti di carico personalizzati."
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Dica: ative o alerta de progressão para sugestões de carga personalizadas."
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tip: schakel de progressiemelding in voor persoonlijke gewichtssuggesties."
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -4232,6 +4206,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "팁: 맞춤형 중량 제안을 위해 프로그레션 알림을 켜세요."
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tip: schakel de progressiemelding in voor persoonlijke gewichtssuggesties."
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dica: ative o alerta de progressão para sugestões de carga personalizadas."
           }
         },
         "da": {
@@ -4400,18 +4386,6 @@
             "value": "Personalizza dashboard"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Personalizar painel"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Dashboard aanpassen"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -4422,6 +4396,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "대시보드 꾸미기"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dashboard aanpassen"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Personalizar painel"
           }
         },
         "da": {
@@ -4590,18 +4576,6 @@
             "value": "Migliori esercizi"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Melhores exercícios"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Topoefeningen"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -4612,6 +4586,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "상위 운동"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Topoefeningen"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Melhores exercícios"
           }
         },
         "da": {
@@ -4748,6 +4734,7 @@
         }
       }
     },
+    "DEBUG: shareURL nil": {},
     "detail.add": {
       "extractionState": "stale",
       "localizations": {
@@ -4781,18 +4768,6 @@
             "value": "Aggiungi voce"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Adicionar registro"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Item toevoegen"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -4803,6 +4778,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "기록 추가"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Item toevoegen"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Adicionar registro"
           }
         },
         "da": {
@@ -4972,18 +4959,6 @@
             "value": "Rip."
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Reps"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Reps"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -4994,6 +4969,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "횟수"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reps"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reps"
           }
         },
         "da": {
@@ -5163,18 +5150,6 @@
             "value": "Volume"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Volume"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Volume"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -5185,6 +5160,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "볼륨"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Volume"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Volume"
           }
         },
         "da": {
@@ -5354,18 +5341,6 @@
             "value": "Peso"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Peso"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Gewicht"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -5376,6 +5351,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "무게"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gewicht"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Peso"
           }
         },
         "da": {
@@ -5545,18 +5532,6 @@
             "value": "Eliminare questa voce?"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Excluir este registro?"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Dit item verwijderen?"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -5567,6 +5542,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "이 기록을 삭제할까요?"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dit item verwijderen?"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Excluir este registro?"
           }
         },
         "da": {
@@ -5736,18 +5723,6 @@
             "value": "Elimina voce"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Excluir registro"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Item verwijderen"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -5758,6 +5733,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "기록 삭제"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Item verwijderen"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Excluir registro"
           }
         },
         "da": {
@@ -5927,18 +5914,6 @@
             "value": "Fine"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Concluir"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Gereed"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -5949,6 +5924,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "완료"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gereed"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Concluir"
           }
         },
         "da": {
@@ -6118,18 +6105,6 @@
             "value": "Nessuna voce ancora."
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nenhum registro ainda."
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nog geen items."
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -6140,6 +6115,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "아직 기록이 없습니다."
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nog geen items."
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nenhum registro ainda."
           }
         },
         "da": {
@@ -6309,18 +6296,6 @@
             "value": "Cronologia"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Histórico"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Geschiedenis"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -6331,6 +6306,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "히스토리"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Geschiedenis"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Histórico"
           }
         },
         "da": {
@@ -6500,18 +6487,6 @@
             "value": "Nuova voce"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Novo registro"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nieuw item"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -6522,6 +6497,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "새 기록"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nieuw item"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Novo registro"
           }
         },
         "da": {
@@ -6691,18 +6678,6 @@
             "value": "Record personale"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Recorde pessoal"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Persoonlijk record"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -6713,6 +6688,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "개인 최고"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Persoonlijk record"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recorde pessoal"
           }
         },
         "da": {
@@ -6882,18 +6869,6 @@
             "value": "Rip."
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Reps"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Reps"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -6904,6 +6879,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "횟수"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reps"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reps"
           }
         },
         "da": {
@@ -7073,18 +7060,6 @@
             "value": "Numero"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Quantidade"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Aantal"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -7095,6 +7070,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "개수"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aantal"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quantidade"
           }
         },
         "da": {
@@ -7264,18 +7251,6 @@
             "value": "e1RM"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "e1RM"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "e1RM"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -7288,133 +7263,13 @@
             "value": "e1RM"
           }
         },
-        "da": {
+        "nl": {
           "stringUnit": {
             "state": "translated",
             "value": "e1RM"
           }
         },
-        "sv": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "e1RM"
-          }
-        },
-        "nb": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "e1RM"
-          }
-        },
-        "fi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "e1RM"
-          }
-        },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "e1RM"
-          }
-        },
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "e1RM"
-          }
-        },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "e1RM"
-          }
-        },
-        "pl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "e1RM"
-          }
-        },
-        "cs": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "e1RM"
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "e1RM"
-          }
-        },
-        "hu": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "e1RM"
-          }
-        },
-        "ro": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "e1RM"
-          }
-        },
-        "bg": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "e1RM"
-          }
-        },
-        "el": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "e1RM"
-          }
-        },
-        "hr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "e1RM"
-          }
-        },
-        "sr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "e1RM"
-          }
-        },
-        "sl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "e1RM"
-          }
-        },
-        "et": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "e1RM"
-          }
-        },
-        "lv": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "e1RM"
-          }
-        },
-        "lt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "e1RM"
-          }
-        },
-        "is": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "e1RM"
-          }
-        },
-        "ca": {
+        "pt": {
           "stringUnit": {
             "state": "translated",
             "value": "e1RM"
@@ -7455,18 +7310,6 @@
             "value": "Rip. max"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Reps máx."
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Max reps"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -7477,6 +7320,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "최대 횟수"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Max reps"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reps máx."
           }
         },
         "da": {
@@ -7646,18 +7501,6 @@
             "value": "Peso max"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Peso máx."
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Max gewicht"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -7668,6 +7511,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "최대 무게"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Max gewicht"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Peso máx."
           }
         },
         "da": {
@@ -7837,18 +7692,6 @@
             "value": "Voci"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Registros"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Items"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -7859,6 +7702,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "기록 수"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Items"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Registros"
           }
         },
         "da": {
@@ -8028,18 +7883,6 @@
             "value": "Peso"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Peso"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Gewicht"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -8050,6 +7893,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "무게"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gewicht"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Peso"
           }
         },
         "da": {
@@ -8186,10 +8041,12 @@
         }
       }
     },
+    "entries=%lld": {},
     "Erinnerungen": {
       "comment": "The navigation bar title.",
       "isCommentAutoGenerated": true
     },
+    "error=%@": {},
     "exercises.delete.message": {
       "extractionState": "stale",
       "localizations": {
@@ -8223,18 +8080,6 @@
             "value": "Eliminare \"%@\" e tutte le sue voci?"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Excluir \"%@\" e todos os seus registros?"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "\"%@\" en alle items verwijderen?"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -8245,6 +8090,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "\"%@\"와 모든 기록을 삭제할까요?"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "\"%@\" en alle items verwijderen?"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Excluir \"%@\" e todos os seus registros?"
           }
         },
         "da": {
@@ -8414,18 +8271,6 @@
             "value": "Elimina esercizio"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Excluir exercício"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Oefening verwijderen"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -8436,6 +8281,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "운동 삭제"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Oefening verwijderen"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Excluir exercício"
           }
         },
         "da": {
@@ -8605,18 +8462,6 @@
             "value": "Nessun esercizio. Tocca + per aggiungerne uno."
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nenhum exercício ainda. Toque em + para adicionar um."
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nog geen oefeningen. Tik op + om er een toe te voegen."
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -8627,6 +8472,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "아직 운동이 없습니다. +를 눌러 추가하세요."
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nog geen oefeningen. Tik op + om er een toe te voegen."
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nenhum exercício ainda. Toque em + para adicionar um."
           }
         },
         "da": {
@@ -8796,18 +8653,6 @@
             "value": "Voci"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Registros"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Items"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -8818,6 +8663,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "기록"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Items"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Registros"
           }
         },
         "da": {
@@ -8987,18 +8844,6 @@
             "value": "Ultimo"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Último"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Laatste"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -9009,6 +8854,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "최근"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Laatste"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Último"
           }
         },
         "da": {
@@ -9178,18 +9035,6 @@
             "value": "Nessuna voce – tocca per aggiungere"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nenhum registro ainda – toque para adicionar"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nog geen items – tik om toe te voegen"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -9200,6 +9045,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "기록 없음 – 눌러서 추가"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nog geen items – tik om toe te voegen"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nenhum registro ainda – toque para adicionar"
           }
         },
         "da": {
@@ -9336,6 +9193,388 @@
         }
       }
     },
+    "exercises.rename.placeholder": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Name der Übung"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Exercise name"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nombre del ejercicio"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nom de l'exercice"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nome esercizio"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "種目名"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "운동 이름"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Naam van oefening"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nome do exercício"
+          }
+        },
+        "da": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Øvelsesnavn"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Övningsnamn"
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Øvelsesnavn"
+          }
+        },
+        "fi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Liikkeen nimi"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Egzersiz adı"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Назва вправи"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Название упражнения"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nazwa ćwiczenia"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Název cvičení"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Názov cvičenia"
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gyakorlat neve"
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Numele exercițiului"
+          }
+        },
+        "bg": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Име на упражнението"
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Όνομα άσκησης"
+          }
+        },
+        "hr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Naziv vježbe"
+          }
+        },
+        "sr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Назив вежбе"
+          }
+        },
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ime vaje"
+          }
+        },
+        "et": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Harjutuse nimi"
+          }
+        },
+        "lv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vingrinājuma nosaukums"
+          }
+        },
+        "lt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pratimo pavadinimas"
+          }
+        },
+        "is": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Heiti æfingar"
+          }
+        },
+        "ca": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nom de l'exercici"
+          }
+        }
+      }
+    },
+    "exercises.rename.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Übung umbenennen"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rename Exercise"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Renombrar ejercicio"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Renommer l'exercice"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rinomina esercizio"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "種目名を変更"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "운동 이름 바꾸기"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Oefening hernoemen"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Renomear exercício"
+          }
+        },
+        "da": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Omdøb øvelse"
+          }
+        },
+        "sv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Byt namn på övning"
+          }
+        },
+        "nb": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Endre navn på øvelse"
+          }
+        },
+        "fi": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nimeä liike uudelleen"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Egzersizi Yeniden Adlandır"
+          }
+        },
+        "uk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Перейменувати вправу"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Переименовать упражнение"
+          }
+        },
+        "pl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Zmień nazwę ćwiczenia"
+          }
+        },
+        "cs": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Přejmenovat cvičení"
+          }
+        },
+        "sk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Premenovať cvičenie"
+          }
+        },
+        "hu": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gyakorlat átnevezése"
+          }
+        },
+        "ro": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Redenumește exercițiul"
+          }
+        },
+        "bg": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Преименувай упражнението"
+          }
+        },
+        "el": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Μετονομασία άσκησης"
+          }
+        },
+        "hr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Preimenuj vježbu"
+          }
+        },
+        "sr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Преименуј вежбу"
+          }
+        },
+        "sl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Preimenuj vajo"
+          }
+        },
+        "et": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nimeta harjutus ümber"
+          }
+        },
+        "lv": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pārdēvēt vingrinājumu"
+          }
+        },
+        "lt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pervadinti pratimą"
+          }
+        },
+        "is": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Endurnefna æfingu"
+          }
+        },
+        "ca": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Canvia el nom de l'exercici"
+          }
+        }
+      }
+    },
     "history.delete.message": {
       "extractionState": "stale",
       "localizations": {
@@ -9369,18 +9608,6 @@
             "value": "Eliminare questa voce?"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Excluir este registro?"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Dit item verwijderen?"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -9391,6 +9618,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "이 기록을 삭제할까요?"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dit item verwijderen?"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Excluir este registro?"
           }
         },
         "da": {
@@ -9560,18 +9799,6 @@
             "value": "Elimina voce"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Excluir registro"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Item verwijderen"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -9582,6 +9809,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "기록 삭제"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Item verwijderen"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Excluir registro"
           }
         },
         "da": {
@@ -9751,18 +9990,6 @@
             "value": "Nessuna voce ancora."
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nenhum registro ainda."
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nog geen items."
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -9773,6 +10000,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "아직 기록이 없습니다."
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nog geen items."
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nenhum registro ainda."
           }
         },
         "da": {
@@ -9942,18 +10181,6 @@
             "value": "Peso (kg)"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Peso (kg)"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Gewicht (kg)"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -9964,6 +10191,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "무게 (kg)"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gewicht (kg)"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Peso (kg)"
           }
         },
         "da": {
@@ -10133,18 +10372,6 @@
             "value": "Personalizza dashboard"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Personalizar painel"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Dashboard aanpassen"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -10155,6 +10382,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "대시보드 꾸미기"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dashboard aanpassen"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Personalizar painel"
           }
         },
         "da": {
@@ -10324,18 +10563,6 @@
             "value": "Nessuna voce. Aggiungi il tuo primo esercizio!"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nenhum registro ainda. Adicione seu primeiro exercício!"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nog geen items. Voeg je eerste oefening toe!"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -10346,6 +10573,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "아직 기록이 없습니다. 첫 운동을 추가하세요!"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nog geen items. Voeg je eerste oefening toe!"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nenhum registro ainda. Adicione seu primeiro exercício!"
           }
         },
         "da": {
@@ -10515,18 +10754,6 @@
             "value": "Buon pomeriggio!"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Boa tarde!"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Goedemiddag!"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -10537,6 +10764,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "안녕하세요!"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goedemiddag!"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Boa tarde!"
           }
         },
         "da": {
@@ -10706,18 +10945,6 @@
             "value": "Buonasera!"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Boa noite!"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Goedenavond!"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -10728,6 +10955,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "좋은 저녁입니다!"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goedenavond!"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Boa noite!"
           }
         },
         "da": {
@@ -10897,18 +11136,6 @@
             "value": "Buongiorno!"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bom dia!"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Goedemorgen!"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -10919,6 +11146,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "좋은 아침입니다!"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Goedemorgen!"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bom dia!"
           }
         },
         "da": {
@@ -11088,18 +11327,6 @@
             "value": "Esercizi pronti! Tocca un esercizio e registra la prima voce."
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Exercícios prontos! Toque em um exercício e registre sua primeira entrada."
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Oefeningen klaar! Tik op een oefening en log je eerste item."
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -11110,6 +11337,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "운동 준비 완료! 운동을 눌러 첫 기록을 남기세요."
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Oefeningen klaar! Tik op een oefening en log je eerste item."
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Exercícios prontos! Toque em um exercício e registre sua primeira entrada."
           }
         },
         "da": {
@@ -11279,18 +11518,6 @@
             "value": "**%@** 5× con %@ kg → Prova %@ kg! 💪"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "**%@** 5× com %@ kg → Tente %@ kg! 💪"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "**%@** 5× met %@ kg → Probeer %@ kg! 💪"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -11301,6 +11528,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "**%@** %@ kg × 5 → %@ kg에 도전! 💪"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "**%@** 5× met %@ kg → Probeer %@ kg! 💪"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "**%@** 5× com %@ kg → Tente %@ kg! 💪"
           }
         },
         "da": {
@@ -11470,18 +11709,6 @@
             "value": "**%@** 5× con %@ lbs → Prova %@ lbs! 💪"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "**%@** 5× com %@ lbs → Tente %@ lbs! 💪"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "**%@** 5× met %@ lbs → Probeer %@ lbs! 💪"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -11492,6 +11719,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "**%@** %@ lbs × 5 → %@ lbs에 도전! 💪"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "**%@** 5× met %@ lbs → Probeer %@ lbs! 💪"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "**%@** 5× com %@ lbs → Tente %@ lbs! 💪"
           }
         },
         "da": {
@@ -11661,18 +11900,6 @@
             "value": "Pronto a fare di più?"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Pronto para mais?"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Klaar voor meer?"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -11683,6 +11910,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "더 높이 도전하세요!"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Klaar voor meer?"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pronto para mais?"
           }
         },
         "da": {
@@ -11852,18 +12091,6 @@
             "value": "Esercizi"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Exercícios"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Oefeningen"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -11874,6 +12101,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "운동"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Oefeningen"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Exercícios"
           }
         },
         "da": {
@@ -12043,18 +12282,6 @@
             "value": "Totale %@"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Total %@"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Totaal %@"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -12065,6 +12292,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "합계 %@"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Totaal %@"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Total %@"
           }
         },
         "da": {
@@ -12234,18 +12473,6 @@
             "value": "Allenamenti"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Treinos"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Trainingen"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -12256,6 +12483,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "운동"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Trainingen"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Treinos"
           }
         },
         "da": {
@@ -12425,18 +12664,6 @@
             "value": "Migliori esercizi"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Melhores exercícios"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Topoefeningen"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -12447,6 +12674,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "상위 운동"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Topoefeningen"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Melhores exercícios"
           }
         },
         "da": {
@@ -12620,18 +12859,6 @@
             "value": "Coach IA"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Coach IA"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "AI-coach"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -12642,6 +12869,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "AI 코치"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "AI-coach"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Coach IA"
           }
         },
         "da": {
@@ -12811,18 +13050,6 @@
             "value": "Registra qualche allenamento per sbloccare i tuoi insight."
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Registre alguns treinos para desbloquear seus insights."
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Log een paar workouts om je inzichten te ontgrendelen."
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -12833,6 +13060,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "운동을 기록해 인사이트를 해제하세요."
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Log een paar workouts om je inzichten te ontgrendelen."
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Registre alguns treinos para desbloquear seus insights."
           }
         },
         "da": {
@@ -13002,18 +13241,6 @@
             "value": "1RM stimata"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "1RM estimada"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Geschatte 1RM"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -13024,6 +13251,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "추정 1RM"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Geschatte 1RM"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "1RM estimada"
           }
         },
         "da": {
@@ -13193,18 +13432,6 @@
             "value": "Migliore 1RM stimata"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Melhor 1RM estimada"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Beste geschatte 1RM"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -13215,6 +13442,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "최고 추정 1RM"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Beste geschatte 1RM"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Melhor 1RM estimada"
           }
         },
         "da": {
@@ -13384,18 +13623,6 @@
             "value": "Registra più sessioni per vedere il trend 1RM."
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Registre mais sessões para ver sua tendência de 1RM."
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Log meer sessies om je 1RM-trend te zien."
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -13406,6 +13633,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "1RM 추이를 보려면 세션을 더 기록하세요."
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Log meer sessies om je 1RM-trend te zien."
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Registre mais sessões para ver sua tendência de 1RM."
           }
         },
         "da": {
@@ -13575,18 +13814,6 @@
             "value": "Distribuzione muscolare"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Divisão muscular"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Spierverdeling"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -13597,6 +13824,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "근육 분포"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Spierverdeling"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Divisão muscular"
           }
         },
         "da": {
@@ -13766,18 +14005,6 @@
             "value": "Costanza"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Consistência"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Consistentie"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -13788,6 +14015,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "꾼준함"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Consistentie"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Consistência"
           }
         },
         "da": {
@@ -13957,18 +14196,6 @@
             "value": "Giorni attivi"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Dias ativos"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Actieve dagen"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -13979,6 +14206,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "활동일"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Actieve dagen"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dias ativos"
           }
         },
         "da": {
@@ -14148,18 +14387,6 @@
             "value": "Serie settimanale"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sequência semanal"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Weekreeks"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -14170,6 +14397,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "주간 연속"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Weekreeks"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sequência semanal"
           }
         },
         "da": {
@@ -14339,18 +14578,6 @@
             "value": "Record"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Recordes"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Records"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -14361,6 +14588,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "기록"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Records"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recordes"
           }
         },
         "da": {
@@ -14530,18 +14769,6 @@
             "value": "e1RM"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "e1RM"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "e1RM"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -14554,133 +14781,13 @@
             "value": "e1RM"
           }
         },
-        "da": {
+        "nl": {
           "stringUnit": {
             "state": "translated",
             "value": "e1RM"
           }
         },
-        "sv": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "e1RM"
-          }
-        },
-        "nb": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "e1RM"
-          }
-        },
-        "fi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "e1RM"
-          }
-        },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "e1RM"
-          }
-        },
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "e1RM"
-          }
-        },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "e1RM"
-          }
-        },
-        "pl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "e1RM"
-          }
-        },
-        "cs": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "e1RM"
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "e1RM"
-          }
-        },
-        "hu": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "e1RM"
-          }
-        },
-        "ro": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "e1RM"
-          }
-        },
-        "bg": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "e1RM"
-          }
-        },
-        "el": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "e1RM"
-          }
-        },
-        "hr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "e1RM"
-          }
-        },
-        "sr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "e1RM"
-          }
-        },
-        "sl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "e1RM"
-          }
-        },
-        "et": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "e1RM"
-          }
-        },
-        "lv": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "e1RM"
-          }
-        },
-        "lt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "e1RM"
-          }
-        },
-        "is": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "e1RM"
-          }
-        },
-        "ca": {
+        "pt": {
           "stringUnit": {
             "state": "translated",
             "value": "e1RM"
@@ -14721,18 +14828,6 @@
             "value": "Max %1$@ %2$@ · %3$lld rip."
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Máx %1$@ %2$@ · %3$lld reps"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Max %1$@ %2$@ · %3$lld reps"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -14743,6 +14838,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "최고 %1$@ %2$@ · %3$lld회"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Max %1$@ %2$@ · %3$lld reps"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Máx %1$@ %2$@ · %3$lld reps"
           }
         },
         "da": {
@@ -14912,18 +15019,6 @@
             "value": "Insights"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Insights"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Insights"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -14934,6 +15029,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "인사이트"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Insights"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Insights"
           }
         },
         "da": {
@@ -15103,18 +15210,6 @@
             "value": "Trend di progresso"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tendências de progresso"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Progressietrends"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -15125,6 +15220,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "진행 추이"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Progressietrends"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tendências de progresso"
           }
         },
         "da": {
@@ -15294,18 +15401,6 @@
             "value": "sett."
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "sem."
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "wk"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -15316,6 +15411,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "주"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "wk"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "sem."
           }
         },
         "da": {
@@ -15485,18 +15592,6 @@
             "value": "Volume settimanale (8 sett.)"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Volume semanal (8 sem.)"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Weekvolume (8 wk)"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -15507,6 +15602,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "주간 볼륨 (8주)"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Weekvolume (8 wk)"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Volume semanal (8 sem.)"
           }
         },
         "da": {
@@ -15676,18 +15783,6 @@
             "value": "Non ci sono ancora abbastanza dati."
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ainda não há dados suficientes."
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nog niet genoeg gegevens."
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -15698,6 +15793,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "아직 데이터가 부족합니다."
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nog niet genoeg gegevens."
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ainda não há dados suficientes."
           }
         },
         "da": {
@@ -15875,18 +15982,6 @@
             "value": "Braccia"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Braços"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Armen"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -15897,6 +15992,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "팔"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Armen"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Braços"
           }
         },
         "da": {
@@ -16066,18 +16173,6 @@
             "value": "Schiena"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Costas"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Rug"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -16088,6 +16183,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "등"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rug"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Costas"
           }
         },
         "da": {
@@ -16257,18 +16364,6 @@
             "value": "Petto"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Peito"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Borst"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -16279,6 +16374,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "가슴"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Borst"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Peito"
           }
         },
         "da": {
@@ -16448,18 +16555,6 @@
             "value": "Core"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Core"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Core"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -16470,6 +16565,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "코어"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Core"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Core"
           }
         },
         "da": {
@@ -16639,18 +16746,6 @@
             "value": "Gambe"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Pernas"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Benen"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -16661,6 +16756,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "다리"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Benen"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pernas"
           }
         },
         "da": {
@@ -16830,18 +16937,6 @@
             "value": "Altri"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Outros"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Overig"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -16852,6 +16947,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "기타"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Overig"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Outros"
           }
         },
         "da": {
@@ -17021,18 +17128,6 @@
             "value": "Spalle"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ombros"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Schouders"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -17043,6 +17138,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "어깨"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Schouders"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ombros"
           }
         },
         "da": {
@@ -17212,18 +17319,6 @@
             "value": "Aggiungi"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Adicionar"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Toevoegen"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -17234,6 +17329,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "추가"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Toevoegen"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Adicionar"
           }
         },
         "da": {
@@ -17403,18 +17510,6 @@
             "value": "Esercizi"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Exercícios"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Oefeningen"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -17425,6 +17520,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "운동"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Oefeningen"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Exercícios"
           }
         },
         "da": {
@@ -17594,18 +17701,6 @@
             "value": "Cronologia"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Histórico"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Geschiedenis"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -17616,6 +17711,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "히스토리"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Geschiedenis"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Histórico"
           }
         },
         "da": {
@@ -17785,18 +17892,6 @@
             "value": "Home"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Início"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Start"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -17807,6 +17902,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "홈"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Start"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Início"
           }
         },
         "da": {
@@ -17976,18 +18083,6 @@
             "value": "Insights"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Insights"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Insights"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -17998,6 +18093,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "인사이트"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Insights"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Insights"
           }
         },
         "da": {
@@ -18166,18 +18273,6 @@
             "value": "Hai raggiunto %lld voci. Continua così!"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Você alcançou %lld registros. Continue assim!"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Je hebt %lld items bereikt. Ga zo door!"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -18188,6 +18283,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "%lld개의 기록을 달성했습니다! 계속하세요!"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Je hebt %lld items bereikt. Ga zo door!"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Você alcançou %lld registros. Continue assim!"
           }
         },
         "da": {
@@ -18356,18 +18463,6 @@
             "value": "Congratulazioni! 🎉"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Parabéns! 🎉"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Gefeliciteerd! 🎉"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -18378,6 +18473,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "축하합니다! 🎉"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gefeliciteerd! 🎉"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Parabéns! 🎉"
           }
         },
         "da": {
@@ -18546,18 +18653,6 @@
             "value": "Non dimenticare di registrare l’allenamento di oggi."
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Não se esqueça de registrar o treino de hoje."
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Vergeet niet je training van vandaag te loggen."
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -18568,6 +18663,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "오늘 운동 기록을 잊지 마세요."
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vergeet niet je training van vandaag te loggen."
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Não se esqueça de registrar o treino de hoje."
           }
         },
         "da": {
@@ -18736,18 +18843,6 @@
             "value": "È ora di allenarsi! 💪"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Hora de treinar! 💪"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Tijd om te trainen! 💪"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -18758,6 +18853,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "운동할 시간입니다! 💪"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tijd om te trainen! 💪"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hora de treinar! 💪"
           }
         },
         "da": {
@@ -18927,18 +19034,6 @@
             "value": "OFFERTA MIGLIORE"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "MELHOR OFERTA"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "BESTE DEAL"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -18949,6 +19044,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "최고의 혜택"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "BESTE DEAL"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "MELHOR OFERTA"
           }
         },
         "da": {
@@ -19118,18 +19225,6 @@
             "value": "Continua"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Continuar"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Doorgaan"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -19140,6 +19235,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "계속하기"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Doorgaan"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Continuar"
           }
         },
         "da": {
@@ -19309,18 +19416,6 @@
             "value": "Sblocca l’accesso a vita"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Desbloquear acesso vitalício"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Levenslang ontgrendelen"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -19331,6 +19426,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "평생 해제하기"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Levenslang ontgrendelen"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Desbloquear acesso vitalício"
           }
         },
         "da": {
@@ -19500,18 +19607,6 @@
             "value": "Prova gratuita"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Testar grátis"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Gratis proberen"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -19522,6 +19617,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "무료로 체험하기"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gratis proberen"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Testar grátis"
           }
         },
         "da": {
@@ -19691,18 +19798,6 @@
             "value": "Gli abbonamenti si rinnovano automaticamente salvo disdetta almeno 24 ore prima della scadenza. Gestisci nelle Impostazioni."
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "As assinaturas renovam automaticamente, salvo cancelamento até 24 h antes do fim do período. Gerencie nos Ajustes."
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Abonnementen worden automatisch verlengd, tenzij je uiterlijk 24 uur voor afloop opzegt. Beheer in Instellingen."
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -19713,6 +19808,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "구독은 기간 종료 24시간 전까지 취소하지 않으면 자동 갱신됩니다. 설정에서 관리하세요."
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Abonnementen worden automatisch verlengd, tenzij je uiterlijk 24 uur voor afloop opzegt. Beheer in Instellingen."
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "As assinaturas renovam automaticamente, salvo cancelamento até 24 h antes do fim do período. Gerencie nos Ajustes."
           }
         },
         "da": {
@@ -19882,18 +19989,6 @@
             "value": "Coach IA: riepiloghi, avvisi di stallo e consigli"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Coach IA: resumos, alertas de platô e dicas"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "AI-coach: terugblikken, plateauwaarschuwingen en tips"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -19904,6 +19999,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "AI 코치: 회고, 정체 알림 및 팁"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "AI-coach: terugblikken, plateauwaarschuwingen en tips"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Coach IA: resumos, alertas de platô e dicas"
           }
         },
         "da": {
@@ -20073,18 +20180,6 @@
             "value": "Esporta tutti i dati in CSV"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Exporte todos os seus dados em CSV"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Exporteer al je gegevens als CSV"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -20095,6 +20190,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "모든 데이터를 CSV로 내보내기"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Exporteer al je gegevens als CSV"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Exporte todos os seus dados em CSV"
           }
         },
         "da": {
@@ -20264,18 +20371,6 @@
             "value": "Tutte le future funzioni Pro incluse"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Todos os futuros recursos Pro incluídos"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Alle toekomstige Pro-functies inbegrepen"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -20286,6 +20381,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "모든 향후 Pro 기능 포함"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Alle toekomstige Pro-functies inbegrepen"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Todos os futuros recursos Pro incluídos"
           }
         },
         "da": {
@@ -20455,18 +20562,6 @@
             "value": "Metriche avanzate e trend 1RM stimata"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Métricas avançadas e tendências de 1RM estimada"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Geavanceerde statistieken en geschatte 1RM-trends"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -20477,6 +20572,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "고급 지표 및 추정 1RM 추이"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Geavanceerde statistieken en geschatte 1RM-trends"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Métricas avançadas e tendências de 1RM estimada"
           }
         },
         "da": {
@@ -20646,18 +20753,6 @@
             "value": "Distribuzione muscolare e analisi del volume"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Divisão muscular e análise de volume"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Spierverdeling en volumeanalyse"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -20668,6 +20763,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "근육 분포 및 볼륨 분석"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Spierverdeling en volumeanalyse"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Divisão muscular e análise de volume"
           }
         },
         "da": {
@@ -20837,18 +20944,6 @@
             "value": "Bacheca record completa e trend"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Quadro completo de recordes e tendências"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Compleet recordbord en progressietrends"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -20859,6 +20954,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "전체 기록 보드 및 진행 추이"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Compleet recordbord en progressietrends"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quadro completo de recordes e tendências"
           }
         },
         "da": {
@@ -21028,18 +21135,6 @@
             "value": "pagamento unico"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "pagamento único"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "eenmalige betaling"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -21050,6 +21145,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "일회성 결제"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "eenmalige betaling"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "pagamento único"
           }
         },
         "da": {
@@ -21219,18 +21326,6 @@
             "value": "%@ / mese"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ / mês"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%@ / maand"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -21241,6 +21336,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "%@ / 월"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ / maand"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%@ / mês"
           }
         },
         "da": {
@@ -21410,18 +21517,6 @@
             "value": "%1$@ · %2$@/mese"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ · %2$@/mês"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "%1$@ · %2$@/mnd."
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -21432,6 +21527,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "%1$@ · %2$@/월"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ · %2$@/mnd."
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%1$@ · %2$@/mês"
           }
         },
         "da": {
@@ -21601,18 +21708,6 @@
             "value": "Annuale"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Anual"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Jaarlijks"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -21623,6 +21718,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "연간"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Jaarlijks"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Anual"
           }
         },
         "da": {
@@ -21792,18 +21899,6 @@
             "value": "A vita"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Vitalício"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Levenslang"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -21814,6 +21909,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "평생"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Levenslang"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vitalício"
           }
         },
         "da": {
@@ -21983,18 +22090,6 @@
             "value": "Mensile"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Mensal"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Maandelijks"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -22005,6 +22100,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "월간"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Maandelijks"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mensal"
           }
         },
         "da": {
@@ -22174,18 +22281,6 @@
             "value": "Ripristina"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Restaurar"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Herstellen"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -22196,6 +22291,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "복원"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Herstellen"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Restaurar"
           }
         },
         "da": {
@@ -22365,18 +22472,6 @@
             "value": "RISPARMIA %lld%%"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ECONOMIZE %lld%%"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "BESPAAR %lld%%"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -22387,6 +22482,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "%lld%% 절약"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "BESPAAR %lld%%"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ECONOMIZE %lld%%"
           }
         },
         "da": {
@@ -22556,18 +22663,6 @@
             "value": "Allenati in modo più intelligente, con metriche avanzate e un coach in tasca."
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Treine de forma mais inteligente, com métricas avançadas e um coach no bolso."
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Train slimmer – met geavanceerde statistieken en een coach in je zak."
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -22578,6 +22673,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "고급 지표와 포켓 코치로 더 스마트하게 운동하세요."
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Train slimmer – met geavanceerde statistieken en een coach in je zak."
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Treine de forma mais inteligente, com métricas avançadas e um coach no bolso."
           }
         },
         "da": {
@@ -22747,18 +22854,6 @@
             "value": "Gymnio Pro"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Gymnio Pro"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Gymnio Pro"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -22771,136 +22866,207 @@
             "value": "Gymnio Pro"
           }
         },
-        "da": {
+        "nl": {
           "stringUnit": {
             "state": "translated",
             "value": "Gymnio Pro"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gymnio Pro"
+          }
+        }
+      }
+    },
+    "paywall.trialNote": {
+      "extractionState": "stale",
+      "localizations": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Heute 0 € · 7 Tage gratis · jederzeit kündbar"
+          }
+        },
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "€0 today · 7 days free · cancel anytime"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hoy 0 € · 7 días gratis · cancela cuando quieras"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "0 € aujourd'hui · 7 jours gratuits · résiliable à tout moment"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Oggi 0 € · 7 giorni gratis · disdici quando vuoi"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "今日は0円 · 7日間無料 · いつでも解約可"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "오늘 0원 · 7일 무료 · 언제든 취소 가능"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vandaag € 0 · 7 dagen gratis · altijd opzegbaar"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hoje € 0 · 7 dias grátis · cancele quando quiser"
+          }
+        },
+        "da": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "0 kr. i dag · 7 dage gratis · opsig når som helst"
           }
         },
         "sv": {
           "stringUnit": {
             "state": "translated",
-            "value": "Gymnio Pro"
+            "value": "0 kr idag · 7 dagar gratis · avsluta när som helst"
           }
         },
         "nb": {
           "stringUnit": {
             "state": "translated",
-            "value": "Gymnio Pro"
+            "value": "0 kr i dag · 7 dager gratis · avslutt når som helst"
           }
         },
         "fi": {
           "stringUnit": {
             "state": "translated",
-            "value": "Gymnio Pro"
+            "value": "0 € tänään · 7 päivää ilmaiseksi · peruuta milloin tahansa"
           }
         },
         "tr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Gymnio Pro"
+            "value": "Bugün ₺0 · 7 gün ücretsiz · istediğin zaman iptal et"
           }
         },
         "uk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Gymnio Pro"
+            "value": "0 ₴ сьогодні · 7 днів безкоштовно · скасуйте будь-коли"
           }
         },
         "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Gymnio Pro"
+            "value": "0 ₽ сегодня · 7 дней бесплатно · отмена в любой момент"
           }
         },
         "pl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Gymnio Pro"
+            "value": "Dziś 0 zł · 7 dni za darmo · anuluj w dowolnej chwili"
           }
         },
         "cs": {
           "stringUnit": {
             "state": "translated",
-            "value": "Gymnio Pro"
+            "value": "Dnes 0 Kč · 7 dní zdarma · zrušte kdykoli"
           }
         },
         "sk": {
           "stringUnit": {
             "state": "translated",
-            "value": "Gymnio Pro"
+            "value": "Dnes 0 € · 7 dní zadarmo · zrušte kedykoľvek"
           }
         },
         "hu": {
           "stringUnit": {
             "state": "translated",
-            "value": "Gymnio Pro"
+            "value": "Ma 0 Ft · 7 nap ingyen · bármikor lemondható"
           }
         },
         "ro": {
           "stringUnit": {
             "state": "translated",
-            "value": "Gymnio Pro"
+            "value": "0 lei azi · 7 zile gratuit · anulezi oricând"
           }
         },
         "bg": {
           "stringUnit": {
             "state": "translated",
-            "value": "Gymnio Pro"
+            "value": "0 лв. днес · 7 дни безплатно · отказ по всяко време"
           }
         },
         "el": {
           "stringUnit": {
             "state": "translated",
-            "value": "Gymnio Pro"
+            "value": "0 € σήμερα · 7 ημέρες δωρεάν · ακύρωση οποιαδήποτε στιγμή"
           }
         },
         "hr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Gymnio Pro"
+            "value": "Danas 0 € · 7 dana besplatno · otkaži bilo kada"
           }
         },
         "sr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Gymnio Pro"
+            "value": "Данас 0 дин · 7 дана бесплатно · откажи било када"
           }
         },
         "sl": {
           "stringUnit": {
             "state": "translated",
-            "value": "Gymnio Pro"
+            "value": "Danes 0 € · 7 dni brezplačno · prekliči kadar koli"
           }
         },
         "et": {
           "stringUnit": {
             "state": "translated",
-            "value": "Gymnio Pro"
+            "value": "Täna 0 € · 7 päeva tasuta · tühista igal ajal"
           }
         },
         "lv": {
           "stringUnit": {
             "state": "translated",
-            "value": "Gymnio Pro"
+            "value": "Šodien 0 € · 7 dienas bez maksas · atcel jebkurā laikā"
           }
         },
         "lt": {
           "stringUnit": {
             "state": "translated",
-            "value": "Gymnio Pro"
+            "value": "Šiandien 0 € · 7 dienos nemokamai · atšauk bet kada"
           }
         },
         "is": {
           "stringUnit": {
             "state": "translated",
-            "value": "Gymnio Pro"
+            "value": "0 kr. í dag · 7 dagar ókeypis · hættu hvenær sem er"
           }
         },
         "ca": {
           "stringUnit": {
             "state": "translated",
-            "value": "Gymnio Pro"
+            "value": "0 € avui · 7 dies gratis · cancel·la quan vulguis"
           }
         }
       }
@@ -22942,18 +23108,6 @@
             "value": "Grazie per supportare Gymnio. Tutte le metriche avanzate e le funzioni del Coach IA sono sbloccate."
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Obrigado por apoiar o Gymnio. Todas as métricas avançadas e funções do Coach IA estão desbloqueadas."
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bedankt voor je steun aan Gymnio. Alle geavanceerde statistieken en AI-coachfuncties zijn ontgrendeld."
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -22964,6 +23118,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "Gymnio를 응원해 주셔서 감사합니다. 모든 고급 지표와 AI 코치 기능이 해제되었습니다."
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bedankt voor je steun aan Gymnio. Alle geavanceerde statistieken en AI-coachfuncties zijn ontgrendeld."
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Obrigado por apoiar o Gymnio. Todas as métricas avançadas e funções do Coach IA estão desbloqueadas."
           }
         },
         "da": {
@@ -23133,18 +23299,6 @@
             "value": "Sei Pro ✨"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Você é Pro ✨"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Je bent Pro ✨"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -23155,6 +23309,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "Pro 회원입니다 ✨"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Je bent Pro ✨"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Você é Pro ✨"
           }
         },
         "da": {
@@ -23324,18 +23490,6 @@
             "value": "Metriche avanzate, Coach IA, record ed esportazione dati."
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Métricas avançadas, Coach IA, recordes e exportação de dados."
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Geavanceerde statistieken, AI-coach, records en gegevensexport."
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -23346,6 +23500,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "고급 지표, AI 코치, 기록 및 데이터 내보내기."
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Geavanceerde statistieken, AI-coach, records en gegevensexport."
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Métricas avançadas, Coach IA, recordes e exportação de dados."
           }
         },
         "da": {
@@ -23515,18 +23681,6 @@
             "value": "Gymnio Pro"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Gymnio Pro"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Gymnio Pro"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -23539,133 +23693,13 @@
             "value": "Gymnio Pro"
           }
         },
-        "da": {
+        "nl": {
           "stringUnit": {
             "state": "translated",
             "value": "Gymnio Pro"
           }
         },
-        "sv": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Gymnio Pro"
-          }
-        },
-        "nb": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Gymnio Pro"
-          }
-        },
-        "fi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Gymnio Pro"
-          }
-        },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Gymnio Pro"
-          }
-        },
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Gymnio Pro"
-          }
-        },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Gymnio Pro"
-          }
-        },
-        "pl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Gymnio Pro"
-          }
-        },
-        "cs": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Gymnio Pro"
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Gymnio Pro"
-          }
-        },
-        "hu": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Gymnio Pro"
-          }
-        },
-        "ro": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Gymnio Pro"
-          }
-        },
-        "bg": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Gymnio Pro"
-          }
-        },
-        "el": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Gymnio Pro"
-          }
-        },
-        "hr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Gymnio Pro"
-          }
-        },
-        "sr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Gymnio Pro"
-          }
-        },
-        "sl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Gymnio Pro"
-          }
-        },
-        "et": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Gymnio Pro"
-          }
-        },
-        "lv": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Gymnio Pro"
-          }
-        },
-        "lt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Gymnio Pro"
-          }
-        },
-        "is": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Gymnio Pro"
-          }
-        },
-        "ca": {
+        "pt": {
           "stringUnit": {
             "state": "translated",
             "value": "Gymnio Pro"
@@ -23706,18 +23740,6 @@
             "value": "Sblocca con Pro"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Desbloquear com o Pro"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ontgrendel met Pro"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -23728,6 +23750,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "Pro로 해제하기"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ontgrendel met Pro"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Desbloquear com o Pro"
           }
         },
         "da": {
@@ -23897,18 +23931,6 @@
             "value": "Ricevi coaching IA per il tuo allenamento."
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Receba coaching de IA para o seu treino."
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Krijg AI-coaching voor je training."
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -23919,6 +23941,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "운동에 대한 AI 코칭을 받으세요."
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Krijg AI-coaching voor je training."
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Receba coaching de IA para o seu treino."
           }
         },
         "da": {
@@ -24088,18 +24122,6 @@
             "value": "Vedi la tua 1RM stimata nel tempo."
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Veja sua 1RM estimada ao longo do tempo."
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bekijk je geschatte 1RM in de tijd."
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -24110,6 +24132,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "시간에 따른 추정 1RM을 확인하세요."
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bekijk je geschatte 1RM in de tijd."
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Veja sua 1RM estimada ao longo do tempo."
           }
         },
         "da": {
@@ -24279,18 +24313,6 @@
             "value": "Vedi come si distribuisce il tuo volume."
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Veja como seu volume se distribui."
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bekijk hoe je volume is verdeeld."
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -24301,6 +24323,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "볼륨 분포를 확인하세요."
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bekijk hoe je volume is verdeeld."
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Veja como seu volume se distribui."
           }
         },
         "da": {
@@ -24470,18 +24504,6 @@
             "value": "Vedi tutti i tuoi record personali."
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Veja todos os seus recordes pessoais."
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bekijk al je persoonlijke records."
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -24492,6 +24514,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "모든 개인 기록을 확인하세요."
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bekijk al je persoonlijke records."
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Veja todos os seus recordes pessoais."
           }
         },
         "da": {
@@ -24661,18 +24695,6 @@
             "value": "Sblocca con Gymnio Pro"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Desbloquear com o Gymnio Pro"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ontgrendel met Gymnio Pro"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -24683,6 +24705,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "Gymnio Pro로 해제하기"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ontgrendel met Gymnio Pro"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Desbloquear com o Gymnio Pro"
           }
         },
         "da": {
@@ -24852,18 +24886,6 @@
             "value": "Tieni traccia degli esercizi che migliorano."
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Acompanhe quais exercícios estão melhorando."
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Volg welke oefeningen vooruitgaan."
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -24874,6 +24896,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "좋아지고 있는 운동을 추적하세요."
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Volg welke oefeningen vooruitgaan."
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Acompanhe quais exercícios estão melhorando."
           }
         },
         "da": {
@@ -25047,18 +25081,6 @@
             "value": "Esporta dati (CSV)"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Exportar dados (CSV)"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Gegevens exporteren (CSV)"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -25069,6 +25091,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "데이터 내보내기 (CSV)"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gegevens exporteren (CSV)"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Exportar dados (CSV)"
           }
         },
         "da": {
@@ -25238,18 +25272,6 @@
             "value": "Open source su GitHub"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Código aberto no GitHub"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Open source op GitHub"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -25260,6 +25282,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "GitHub 오픈소스"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Open source op GitHub"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Código aberto no GitHub"
           }
         },
         "da": {
@@ -25429,18 +25463,6 @@
             "value": "Lingua"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Idioma"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Taal"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -25451,6 +25473,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "언어"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Taal"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Idioma"
           }
         },
         "da": {
@@ -25620,18 +25654,6 @@
             "value": "Automatica"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Automático"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Automatisch"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -25642,6 +25664,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "자동"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Automatisch"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Automático"
           }
         },
         "da": {
@@ -25811,7 +25845,13 @@
             "value": "Deutsch"
           }
         },
-        "pt": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deutsch"
+          }
+        },
+        "ko": {
           "stringUnit": {
             "state": "translated",
             "value": "Deutsch"
@@ -25823,13 +25863,7 @@
             "value": "Deutsch"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Deutsch"
-          }
-        },
-        "ko": {
+        "pt": {
           "stringUnit": {
             "state": "translated",
             "value": "Deutsch"
@@ -26002,7 +26036,13 @@
             "value": "English"
           }
         },
-        "pt": {
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "English"
+          }
+        },
+        "ko": {
           "stringUnit": {
             "state": "translated",
             "value": "English"
@@ -26014,13 +26054,7 @@
             "value": "English"
           }
         },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "English"
-          }
-        },
-        "ko": {
+        "pt": {
           "stringUnit": {
             "state": "translated",
             "value": "English"
@@ -26193,18 +26227,6 @@
             "value": "Promemoria giornaliero"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Lembrete diário"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Dagelijkse herinnering"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -26215,6 +26237,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "일일 알림"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dagelijkse herinnering"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lembrete diário"
           }
         },
         "da": {
@@ -26384,18 +26418,6 @@
             "value": "Informativa sulla privacy"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Política de privacidade"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Privacybeleid"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -26406,6 +26428,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "개인정보처리방침"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Privacybeleid"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Política de privacidade"
           }
         },
         "da": {
@@ -26575,18 +26609,6 @@
             "value": "Info"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sobre"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Over"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -26597,6 +26619,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "정보"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Over"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sobre"
           }
         },
         "da": {
@@ -26766,18 +26800,6 @@
             "value": "Link"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Links"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Links"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -26788,6 +26810,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "링크"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Links"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Links"
           }
         },
         "da": {
@@ -26957,18 +26991,6 @@
             "value": "Impostazioni"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ajustes"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Instellingen"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -26979,6 +27001,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "설정"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Instellingen"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ajustes"
           }
         },
         "da": {
@@ -27148,18 +27182,6 @@
             "value": "GYMNIO PRO"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "GYMNIO PRO"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "GYMNIO PRO"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -27172,133 +27194,13 @@
             "value": "GYMNIO PRO"
           }
         },
-        "da": {
+        "nl": {
           "stringUnit": {
             "state": "translated",
             "value": "GYMNIO PRO"
           }
         },
-        "sv": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "GYMNIO PRO"
-          }
-        },
-        "nb": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "GYMNIO PRO"
-          }
-        },
-        "fi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "GYMNIO PRO"
-          }
-        },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "GYMNIO PRO"
-          }
-        },
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "GYMNIO PRO"
-          }
-        },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "GYMNIO PRO"
-          }
-        },
-        "pl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "GYMNIO PRO"
-          }
-        },
-        "cs": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "GYMNIO PRO"
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "GYMNIO PRO"
-          }
-        },
-        "hu": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "GYMNIO PRO"
-          }
-        },
-        "ro": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "GYMNIO PRO"
-          }
-        },
-        "bg": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "GYMNIO PRO"
-          }
-        },
-        "el": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "GYMNIO PRO"
-          }
-        },
-        "hr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "GYMNIO PRO"
-          }
-        },
-        "sr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "GYMNIO PRO"
-          }
-        },
-        "sl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "GYMNIO PRO"
-          }
-        },
-        "et": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "GYMNIO PRO"
-          }
-        },
-        "lv": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "GYMNIO PRO"
-          }
-        },
-        "lt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "GYMNIO PRO"
-          }
-        },
-        "is": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "GYMNIO PRO"
-          }
-        },
-        "ca": {
+        "pt": {
           "stringUnit": {
             "state": "translated",
             "value": "GYMNIO PRO"
@@ -27339,18 +27241,6 @@
             "value": "Termini di utilizzo"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Termos de uso"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Gebruiksvoorwaarden"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -27361,6 +27251,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "이용약관"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gebruiksvoorwaarden"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Termos de uso"
           }
         },
         "da": {
@@ -27530,18 +27432,6 @@
             "value": "Aspetto"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Aparência"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Weergave"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -27552,6 +27442,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "외관"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Weergave"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aparência"
           }
         },
         "da": {
@@ -27721,18 +27623,6 @@
             "value": "Scuro"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Escuro"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Donker"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -27743,6 +27633,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "다크"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Donker"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Escuro"
           }
         },
         "da": {
@@ -27912,18 +27814,6 @@
             "value": "Chiaro"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Claro"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Licht"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -27934,6 +27824,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "라이트"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Licht"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Claro"
           }
         },
         "da": {
@@ -28103,18 +28005,6 @@
             "value": "Sistema"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sistema"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Systeem"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -28125,6 +28015,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "시스템"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Systeem"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sistema"
           }
         },
         "da": {
@@ -28294,18 +28196,6 @@
             "value": "Impostazioni"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ajustes"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Instellingen"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -28316,6 +28206,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "설정"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Instellingen"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ajustes"
           }
         },
         "da": {
@@ -28485,18 +28387,6 @@
             "value": "Unità di peso"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Unidade de peso"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Gewichtseenheid"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -28507,6 +28397,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "무게 단위"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gewichtseenheid"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unidade de peso"
           }
         },
         "da": {
@@ -28676,18 +28578,6 @@
             "value": "In calo"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Em queda"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Dalend"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -28698,6 +28588,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "하락 중"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Dalend"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Em queda"
           }
         },
         "da": {
@@ -28867,18 +28769,6 @@
             "value": "In crescita"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Em alta"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Stijgend"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -28889,6 +28779,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "상승 중"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stijgend"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Em alta"
           }
         },
         "da": {
@@ -29058,18 +28960,6 @@
             "value": "Nuovo"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Novo"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nieuw"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -29080,6 +28970,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "신규"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nieuw"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Novo"
           }
         },
         "da": {
@@ -29249,18 +29151,6 @@
             "value": "Stabile"
           }
         },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Estável"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Stabiel"
-          }
-        },
         "ja": {
           "stringUnit": {
             "state": "translated",
@@ -29271,6 +29161,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "유지 중"
+          }
+        },
+        "nl": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stabiel"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Estável"
           }
         },
         "da": {
@@ -29419,579 +29321,8 @@
       "comment": "Label for the x-axis in the weekly volume chart.",
       "isCommentAutoGenerated": true
     },
-    "exercises.rename.title": {
-      "extractionState": "manual",
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Übung umbenennen"
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Rename Exercise"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Renombrar ejercicio"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Renommer l'exercice"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Rinomina esercizio"
-          }
-        },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Renomear exercício"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Oefening hernoemen"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "種目名を変更"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "운동 이름 바꾸기"
-          }
-        },
-        "da": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Omdøb øvelse"
-          }
-        },
-        "sv": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Byt namn på övning"
-          }
-        },
-        "nb": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Endre navn på øvelse"
-          }
-        },
-        "fi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nimeä liike uudelleen"
-          }
-        },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Egzersizi Yeniden Adlandır"
-          }
-        },
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Перейменувати вправу"
-          }
-        },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Переименовать упражнение"
-          }
-        },
-        "pl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Zmień nazwę ćwiczenia"
-          }
-        },
-        "cs": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Přejmenovat cvičení"
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Premenovať cvičenie"
-          }
-        },
-        "hu": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Gyakorlat átnevezése"
-          }
-        },
-        "ro": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Redenumește exercițiul"
-          }
-        },
-        "bg": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Преименувай упражнението"
-          }
-        },
-        "el": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Μετονομασία άσκησης"
-          }
-        },
-        "hr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Preimenuj vježbu"
-          }
-        },
-        "sr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Преименуј вежбу"
-          }
-        },
-        "sl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Preimenuj vajo"
-          }
-        },
-        "et": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nimeta harjutus ümber"
-          }
-        },
-        "lv": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Pārdēvēt vingrinājumu"
-          }
-        },
-        "lt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Pervadinti pratimą"
-          }
-        },
-        "is": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Endurnefna æfingu"
-          }
-        },
-        "ca": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Canvia el nom de l'exercici"
-          }
-        }
-      }
-    },
-    "exercises.rename.placeholder": {
-      "extractionState": "manual",
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Name der Übung"
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Exercise name"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nombre del ejercicio"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nom de l'exercice"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nome esercizio"
-          }
-        },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nome do exercício"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Naam van oefening"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "種目名"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "운동 이름"
-          }
-        },
-        "da": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Øvelsesnavn"
-          }
-        },
-        "sv": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Övningsnamn"
-          }
-        },
-        "nb": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Øvelsesnavn"
-          }
-        },
-        "fi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Liikkeen nimi"
-          }
-        },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Egzersiz adı"
-          }
-        },
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Назва вправи"
-          }
-        },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Название упражнения"
-          }
-        },
-        "pl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nazwa ćwiczenia"
-          }
-        },
-        "cs": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Název cvičení"
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Názov cvičenia"
-          }
-        },
-        "hu": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Gyakorlat neve"
-          }
-        },
-        "ro": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Numele exercițiului"
-          }
-        },
-        "bg": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Име на упражнението"
-          }
-        },
-        "el": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Όνομα άσκησης"
-          }
-        },
-        "hr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Naziv vježbe"
-          }
-        },
-        "sr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Назив вежбе"
-          }
-        },
-        "sl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ime vaje"
-          }
-        },
-        "et": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Harjutuse nimi"
-          }
-        },
-        "lv": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Vingrinājuma nosaukums"
-          }
-        },
-        "lt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Pratimo pavadinimas"
-          }
-        },
-        "is": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Heiti æfingar"
-          }
-        },
-        "ca": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Nom de l'exercici"
-          }
-        }
-      }
-    },
-    "paywall.trialNote": {
-      "localizations": {
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Heute 0 € · 7 Tage gratis · jederzeit kündbar"
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "€0 today · 7 days free · cancel anytime"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Hoy 0 € · 7 días gratis · cancela cuando quieras"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "0 € aujourd'hui · 7 jours gratuits · résiliable à tout moment"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Oggi 0 € · 7 giorni gratis · disdici quando vuoi"
-          }
-        },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Hoje € 0 · 7 dias grátis · cancele quando quiser"
-          }
-        },
-        "nl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Vandaag € 0 · 7 dagen gratis · altijd opzegbaar"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "今日は0円 · 7日間無料 · いつでも解約可"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "오늘 0원 · 7일 무료 · 언제든 취소 가능"
-          }
-        },
-        "da": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "0 kr. i dag · 7 dage gratis · opsig når som helst"
-          }
-        },
-        "sv": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "0 kr idag · 7 dagar gratis · avsluta när som helst"
-          }
-        },
-        "nb": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "0 kr i dag · 7 dager gratis · avslutt når som helst"
-          }
-        },
-        "fi": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "0 € tänään · 7 päivää ilmaiseksi · peruuta milloin tahansa"
-          }
-        },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Bugün ₺0 · 7 gün ücretsiz · istediğin zaman iptal et"
-          }
-        },
-        "uk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "0 ₴ сьогодні · 7 днів безкоштовно · скасуйте будь-коли"
-          }
-        },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "0 ₽ сегодня · 7 дней бесплатно · отмена в любой момент"
-          }
-        },
-        "pl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Dziś 0 zł · 7 dni za darmo · anuluj w dowolnej chwili"
-          }
-        },
-        "cs": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Dnes 0 Kč · 7 dní zdarma · zrušte kdykoli"
-          }
-        },
-        "sk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Dnes 0 € · 7 dní zadarmo · zrušte kedykoľvek"
-          }
-        },
-        "hu": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Ma 0 Ft · 7 nap ingyen · bármikor lemondható"
-          }
-        },
-        "ro": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "0 lei azi · 7 zile gratuit · anulezi oricând"
-          }
-        },
-        "bg": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "0 лв. днес · 7 дни безплатно · отказ по всяко време"
-          }
-        },
-        "el": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "0 € σήμερα · 7 ημέρες δωρεάν · ακύρωση οποιαδήποτε στιγμή"
-          }
-        },
-        "hr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Danas 0 € · 7 dana besplatno · otkaži bilo kada"
-          }
-        },
-        "sr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Данас 0 дин · 7 дана бесплатно · откажи било када"
-          }
-        },
-        "sl": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Danes 0 € · 7 dni brezplačno · prekliči kadar koli"
-          }
-        },
-        "et": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Täna 0 € · 7 päeva tasuta · tühista igal ajal"
-          }
-        },
-        "lv": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Šodien 0 € · 7 dienas bez maksas · atcel jebkurā laikā"
-          }
-        },
-        "lt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Šiandien 0 € · 7 dienos nemokamai · atšauk bet kada"
-          }
-        },
-        "is": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "0 kr. í dag · 7 dagar ókeypis · hættu hvenær sem er"
-          }
-        },
-        "ca": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "0 € avui · 7 dies gratis · cancel·la quan vulguis"
-          }
-        }
-      }
-    },
     "settings.language.es": {
+      "extractionState": "manual",
       "localizations": {
         "de": {
           "stringUnit": {
@@ -30182,6 +29513,7 @@
       }
     },
     "settings.language.fr": {
+      "extractionState": "manual",
       "localizations": {
         "de": {
           "stringUnit": {
@@ -30372,6 +29704,7 @@
       }
     },
     "settings.language.it": {
+      "extractionState": "manual",
       "localizations": {
         "de": {
           "stringUnit": {
@@ -30562,6 +29895,7 @@
       }
     },
     "settings.language.ja": {
+      "extractionState": "manual",
       "localizations": {
         "de": {
           "stringUnit": {
@@ -30752,6 +30086,7 @@
       }
     },
     "settings.language.ko": {
+      "extractionState": "manual",
       "localizations": {
         "de": {
           "stringUnit": {
@@ -30942,6 +30277,7 @@
       }
     },
     "settings.language.nl": {
+      "extractionState": "manual",
       "localizations": {
         "de": {
           "stringUnit": {
@@ -31132,6 +30468,7 @@
       }
     },
     "settings.language.pt": {
+      "extractionState": "manual",
       "localizations": {
         "de": {
           "stringUnit": {
@@ -35519,6 +34856,171 @@
           "stringUnit": {
             "state": "translated",
             "value": "Català"
+          }
+        }
+      }
+    },
+    "onboarding.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Let's get you started"
+          }
+        }
+      }
+    },
+    "onboarding.goal.question": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "What's your main goal?"
+          }
+        }
+      }
+    },
+    "onboarding.goal.strength": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Get stronger"
+          }
+        }
+      }
+    },
+    "onboarding.goal.muscle": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Build muscle"
+          }
+        }
+      }
+    },
+    "onboarding.goal.fitness": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Stay fit"
+          }
+        }
+      }
+    },
+    "starter.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "What do you want to log first?"
+          }
+        }
+      }
+    },
+    "starter.subtitle": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tap an exercise and log your first set in seconds."
+          }
+        }
+      }
+    },
+    "starter.custom": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Add your own exercise"
+          }
+        }
+      }
+    },
+    "quicklog.save": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Save set"
+          }
+        }
+      }
+    },
+    "quicklog.saved.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "First entry saved!"
+          }
+        }
+      }
+    },
+    "quicklog.saved.subtitle": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "That's how progress starts. Log one more set to see your numbers."
+          }
+        }
+      }
+    },
+    "quicklog.saved.more": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Entry saved"
+          }
+        }
+      }
+    },
+    "quicklog.another": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Log another set"
+          }
+        }
+      }
+    },
+    "quicklog.remind": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Remind me on training days"
+          }
+        }
+      }
+    },
+    "quicklog.remind.on": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Reminders on"
           }
         }
       }
