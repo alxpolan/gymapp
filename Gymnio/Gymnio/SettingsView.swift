@@ -59,15 +59,9 @@ struct SettingsView: View {
                                 get: { store.languageOverride },
                                 set: { store.setLanguageOverride($0) }
                             )) {
-                                Text(store.t("settings.language.de")).tag("de")
-                                Text(store.t("settings.language.en")).tag("en")
-                                Text(store.t("settings.language.es")).tag("es")
-                                Text(store.t("settings.language.fr")).tag("fr")
-                                Text(store.t("settings.language.it")).tag("it")
-                                Text(store.t("settings.language.ja")).tag("ja")
-                                Text(store.t("settings.language.ko")).tag("ko")
-                                Text(store.t("settings.language.nl")).tag("nl")
-                                Text(store.t("settings.language.pt")).tag("pt")
+                                ForEach(AppStore.supportedLanguages, id: \.self) { code in
+                                    Text(store.t("settings.language." + code)).tag(code)
+                                }
                             }
                             .pickerStyle(.menu)
                             .foregroundColor(.statBlue)

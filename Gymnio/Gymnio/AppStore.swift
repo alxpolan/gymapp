@@ -20,7 +20,13 @@ final class AppStore: ObservableObject {
     @Published var forceMorningGreeting: Bool = false
     @Published var paywallRequest: PaywallRequest?
 
-    static let supportedLanguages = ["de", "en", "es", "fr", "it", "ja", "ko", "nl", "pt"]
+    static let supportedLanguages = [
+        "de", "en", "fr", "es", "it", "pt", "nl",
+        "da", "sv", "nb", "fi", "is",
+        "tr", "uk", "ru", "pl", "cs", "sk", "hu", "ro", "bg", "el",
+        "hr", "sr", "sl", "et", "lv", "lt", "ca",
+        "ja", "ko"
+    ]
 
     private let languageKey     = "@language_override"
     private let homeSettingsKey = "homeViewSettings"
@@ -81,7 +87,8 @@ final class AppStore: ObservableObject {
     }
 
     private var deviceLanguage: String {
-        let code = Locale.current.language.languageCode?.identifier ?? "en"
+        let raw = Locale.current.language.languageCode?.identifier ?? "en"
+        let code = ["no": "nb", "nn": "nb"][raw] ?? raw
         return Self.supportedLanguages.contains(code) ? code : "en"
     }
 
