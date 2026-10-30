@@ -245,6 +245,9 @@ final class AppStore: ObservableObject {
 
     var unitLabel: String { weightUnit }
 
+    /// Locale for dates and numbers, following the in-app language.
+    var locale: Locale { Locale(identifier: language) }
+
     func saveHomeSettings(_ s: HomeViewSettings) {
         homeSettings = s
         if let data = try? JSONEncoder().encode(s) {

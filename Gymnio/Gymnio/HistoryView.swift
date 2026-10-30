@@ -98,7 +98,7 @@ struct HistoryEntryCard: View {
 
     private func fmt(_ date: Date) -> String {
         let f = DateFormatter()
-        f.locale = Locale(identifier: store.language == "de" ? "de_DE" : "en_US")
+        f.locale = store.locale
         f.dateStyle = .medium
         return f.string(from: date)
     }

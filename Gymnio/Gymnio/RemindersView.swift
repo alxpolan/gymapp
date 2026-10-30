@@ -55,7 +55,7 @@ struct RemindersView: View {
                         SettingsRow(
                             icon: "bell.fill",
                             iconColor: Color(hex: "FF9500"),
-                            label: store.language == "de" ? "Erinnerungen" : "Reminders"
+                            label: store.t("reminders.title")
                         ) {
                             Toggle("", isOn: $masterEnabled)
                                 .labelsHidden()
@@ -65,7 +65,7 @@ struct RemindersView: View {
 
                     if masterEnabled {
                         SettingsSectionTitle(
-                            title: store.language == "de" ? "Wochentage" : "Schedule"
+                            title: store.t("reminders.schedule")
                         )
 
                         GlassCard {
@@ -108,7 +108,7 @@ struct RemindersView: View {
                 .padding(.bottom, 32)
             }
         }
-        .navigationTitle(store.language == "de" ? "Erinnerungen" : "Reminders")
+        .navigationTitle(store.t("reminders.title"))
         .navigationBarTitleDisplayMode(.large)
         .onAppear(perform: load)
     }
@@ -141,20 +141,16 @@ struct RemindersView: View {
     // MARK: - Helpers
 
     private func dayName(_ weekday: Int) -> String {
-        if store.language == "de" {
-            return ["So", "Mo", "Di", "Mi", "Do", "Fr", "Sa"][weekday == 1 ? 0 : weekday - 1]
-        } else {
-            return ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"][weekday == 1 ? 0 : weekday - 1]
-        }
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.locale = store.locale
+        // weekday: 1 = Sunday … 7 = Saturday, matching `shortStandaloneWeekdaySymbols`.
+        let symbols = calendar.shortStandaloneWeekdaySymbols
+        return symbols.indices.contains(weekday - 1) ? symbols[weekday - 1] : ""
     }
 
     private func summaryText(_ active: [ReminderDay]) -> String {
         let names = active.map { dayName($0.weekday) }.joined(separator: ", ")
-        if store.language == "de" {
-            return "Aktive Erinnerungen: \(names)"
-        } else {
-            return "Active reminders: \(names)"
-        }
+        return String(format: store.t("reminders.active"), names)
     }
 }
 

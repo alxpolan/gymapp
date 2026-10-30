@@ -1,4 +1,7 @@
 import SwiftUI
+import RevenueCat
+import RevenueCatUI
+import PostHog
 
 struct SettingsView: View {
     @EnvironmentObject var store: AppStore
@@ -7,6 +10,7 @@ struct SettingsView: View {
     @State private var showPaywall = false
     @State private var shareURL: URL?
     @State private var showShare = false
+    @State private var showCustomerCenter = false
 
     var body: some View {
         ZStack {
@@ -26,6 +30,38 @@ struct SettingsView: View {
                     }
                 } else {
                     UpgradeCTACard(source: "settings")
+                }
+
+                GlassCard {
+                    VStack(spacing: 0) {
+                        if premium.isPro {
+                            Button {
+                                PostHogSDK.shared.capture("customer_center_opened")
+                                showCustomerCenter = true
+                            } label: {
+                                SettingsRow(icon: "creditcard.fill", iconColor: Color(hex: "5B8DEF"),
+                                            label: store.t("settings.manage")) {
+                                    Image(systemName: "chevron.right")
+                                        .font(.system(size: 13, weight: .semibold)).foregroundColor(.secondary)
+                                }
+                            }
+                            .buttonStyle(.plain)
+
+                            Divider().padding(.leading, 44)
+                        }
+
+                        Button {
+                            PostHogSDK.shared.capture("redeem_code_tapped")
+                            Purchases.shared.presentCodeRedemptionSheet()
+                        } label: {
+                            SettingsRow(icon: "gift.fill", iconColor: Color(hex: "FF9500"),
+                                        label: store.t("settings.redeem")) {
+                                Image(systemName: "chevron.right")
+                                    .font(.system(size: 13, weight: .semibold)).foregroundColor(.secondary)
+                            }
+                        }
+                        .buttonStyle(.plain)
+                    }
                 }
 
                 GlassCard {
@@ -166,6 +202,7 @@ struct SettingsView: View {
         .navigationTitle(store.t("settings.title"))
         .navigationBarTitleDisplayMode(.large)
         .sheet(isPresented: $showPaywall) { PaywallView(source: "settings") }
+        .sheet(isPresented: $showCustomerCenter) { CustomerCenterView() }
         .sheet(isPresented: $showShare) {
             if let shareURL {
                 ShareSheet(items: [shareURL], isPresented: $showShare)

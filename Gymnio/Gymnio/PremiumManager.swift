@@ -84,8 +84,11 @@ final class PremiumManager: ObservableObject {
     func offering(for source: String) async -> Offering? {
         guard let offerings = try? await Purchases.shared.offerings() else { return currentOffering }
         // Placements allow RevenueCat experiments per trigger; fall back to the plain offering ID.
-        return offerings.currentOffering(forPlacement: source)
-            ?? offerings.offering(identifier: "paywall_" + source)
+        // All Pro-feature triggers ("feature_coach", "feature_trends", …) share one offering/placement;
+        // the full source stays in the analytics events.
+        let key = source.hasPrefix("feature_") ? "feature" : source
+        return offerings.currentOffering(forPlacement: key)
+            ?? offerings.offering(identifier: "paywall_" + key)
             ?? offerings.current
             ?? currentOffering
     }

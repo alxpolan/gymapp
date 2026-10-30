@@ -104,7 +104,7 @@ struct ExerciseDetailView: View {
                         }
 
                         if let suggestion = Coach.nextSetSuggestion(store: store, group: currentGroup) {
-                            ProGate(titleKey: "prolock.title", subtitleKey: "prolock.coach", source: "feature") {
+                            ProGate(titleKey: "prolock.title", subtitleKey: "prolock.coach", source: "feature_coach") {
                                 CoachRecapCard(insight: suggestion)
                             }
                         }
@@ -234,7 +234,7 @@ struct ExerciseDetailView: View {
 
     private func fmtShort(_ date: Date) -> String {
         let f = DateFormatter()
-        f.locale = Locale(identifier: store.language == "de" ? "de_DE" : "en_US")
+        f.locale = store.locale
         f.dateStyle = .short
         return f.string(from: date)
     }
@@ -403,7 +403,7 @@ struct EntryCard: View {
 
     private func fmtDate(_ date: Date) -> String {
         let f = DateFormatter()
-        f.locale = Locale(identifier: store.language == "de" ? "de_DE" : "en_US")
+        f.locale = store.locale
         f.dateStyle = .medium
         return f.string(from: date)
     }
@@ -435,9 +435,7 @@ struct LockedChartCard: View {
                         Image(systemName: "lock.fill")
                             .font(.system(size: 22, weight: .semibold))
                             .foregroundColor(scheme == .dark ? Color(hex: "98989f") : Color(hex: "888888"))
-                        Text(store.language == "de"
-                             ? "Charts ab \(required) Einträgen (\(current)/\(required))"
-                             : "Charts unlock at \(required) entries (\(current)/\(required))")
+                        Text(String(format: store.t("detail.charts.locked"), required, current, required))
                             .font(.system(size: 14, weight: .medium))
                             .secondaryText()
                             .multilineTextAlignment(.center)
