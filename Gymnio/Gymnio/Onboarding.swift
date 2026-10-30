@@ -87,9 +87,7 @@ struct OnboardingView: View {
                             .foregroundColor(goal == item.id ? Color.tint(scheme) : (Color.gymText))
                             .padding(16)
                             .frame(maxWidth: .infinity)
-                            .glassSurface(RoundedRectangle(cornerRadius: 16, style: .continuous),
-                                          tint: goal == item.id ? Color.tint(scheme).opacity(0.25) : nil,
-                                          interactive: true)
+                            .flatSurface(RoundedRectangle(cornerRadius: 14, style: .continuous), selected: goal == item.id)
                         }
                         .buttonStyle(.plain)
                     }

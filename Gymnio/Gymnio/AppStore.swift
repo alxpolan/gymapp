@@ -21,6 +21,7 @@ final class AppStore: ObservableObject {
     @Published var paywallRequest: PaywallRequest?
     @Published var showOnboarding: Bool = false
     @Published var restSeconds: Int = 90
+    @Published var activeWorkout: ActiveWorkout?
     @Published var quickLogRequest: QuickLogRequest?
 
     static let supportedLanguages = [
@@ -36,6 +37,7 @@ final class AppStore: ObservableObject {
     private let themeKey        = "@theme_mode"
     private let weightUnitKey   = "@weight_unit"
     private let restSecondsKey  = "@rest_seconds"
+    private let activeWorkoutKey = "@active_workout"
     private let onboardingKey   = "@onboarding_done"
     private let goalKey         = "@onboarding_goal"
     private let firstOpenKey    = "@first_open_at"
@@ -71,6 +73,7 @@ final class AppStore: ObservableObject {
            let s = try? JSONDecoder().decode(HomeViewSettings.self, from: data) {
             homeSettings = s
         }
+        activeWorkout = defaults.data(forKey: activeWorkoutKey).flatMap { try? JSONDecoder().decode(ActiveWorkout.self, from: $0) }
         if defaults.object(forKey: restSecondsKey) != nil {
             restSeconds = defaults.integer(forKey: restSecondsKey)
         }
@@ -209,17 +212,111 @@ final class AppStore: ObservableObject {
 
     // MARK: - Entries
 
-    /// Returns false when the free entry limit blocked the save.
-    @discardableResult
-    func addEntry(exercise: String, weight: Double, reps: Int, date: Date,
-                  source: String = "detail", presentPaywall: Bool = true) -> Bool {
+    // MARK: - Workouts
+
+    var workouts: [Workout] { Workout.group(entries) }
+
+    /// Trainings that count against the free limit (the one being logged right now does not).
+    var completedWorkoutCount: Int { workouts.filter { $0.id != activeWorkout?.id }.count }
+
+    private func isFreeLimitReached() -> Bool {
         let premium = PremiumManager.shared
-        if PremiumManager.isEntryLimitReached(entryCount: entries.count, limit: premium.freeEntryLimit, isPro: premium.isPro, suppressedRegion: premium.isPaywallSuppressedRegion) {
-            if presentPaywall { paywallRequest = PaywallRequest(source: "entry_limit") }
+        return PremiumManager.isWorkoutLimitReached(workoutCount: completedWorkoutCount, limit: premium.freeWorkoutLimit,
+                                                    isPro: premium.isPro, suppressedRegion: premium.isPaywallSuppressedRegion)
+    }
+
+    /// Starts a training. Returns false (and shows the paywall) when a free user used up the free trainings.
+    @discardableResult
+    func startWorkout(source: String = "train") -> Bool {
+        if activeWorkout != nil { return true }
+        if isFreeLimitReached() {
+            paywallRequest = PaywallRequest(source: "entry_limit")
             return false
         }
+        setActiveWorkout(ActiveWorkout(id: UUID().uuidString, startedAt: Date(), exercises: []))
+        PostHogSDK.shared.capture("workout_started", properties: ["source": source, "workout_number": completedWorkoutCount + 1])
+        return true
+    }
+
+    func addExerciseToActive(_ name: String) {
+        let trimmed = name.trimmingCharacters(in: .whitespaces)
+        guard var active = activeWorkout, !trimmed.isEmpty,
+              !active.exercises.contains(where: { $0.lowercased() == trimmed.lowercased() }) else { return }
+        if !exercises.contains(where: { $0.lowercased() == trimmed.lowercased() }) {
+            addExercise(trimmed, source: "workout")
+        }
+        active.exercises.append(trimmed)
+        setActiveWorkout(active)
+    }
+
+    func removeExerciseFromActive(_ name: String) {
+        guard var active = activeWorkout else { return }
+        active.exercises.removeAll { $0 == name }
+        for entry in entries where entry.workoutId == active.id && entry.exercise == name {
+            storage.deleteEntry(id: entry.id)
+        }
+        entries = storage.getAllEntries()
+        setActiveWorkout(active)
+    }
+
+    func entriesForActive(exercise: String) -> [WorkoutEntry] {
+        guard let active = activeWorkout else { return [] }
+        return entries.filter { $0.workoutId == active.id && $0.exercise == exercise }
+            .sorted(by: { WorkoutEntry.chronological($0, $1) })
+    }
+
+    /// Ends the training and returns it for the summary (nil when nothing was logged).
+    @discardableResult
+    func finishWorkout() -> Workout? {
+        guard let active = activeWorkout else { return nil }
+        let finished = workouts.first { $0.id == active.id }
+        setActiveWorkout(nil)
+        RestTimerManager.shared.cancel()
+        if let finished {
+            PostHogSDK.shared.capture("workout_finished", properties: [
+                "sets": finished.setCount,
+                "exercises": finished.exercises.count,
+                "duration_s": Int(Date().timeIntervalSince(active.startedAt)),
+                "workout_number": completedWorkoutCount
+            ])
+        }
+        return finished
+    }
+
+    func discardWorkout() {
+        guard let active = activeWorkout else { return }
+        for entry in entries where entry.workoutId == active.id { storage.deleteEntry(id: entry.id) }
+        entries = storage.getAllEntries()
+        setActiveWorkout(nil)
+        RestTimerManager.shared.cancel()
+        PostHogSDK.shared.capture("workout_discarded")
+    }
+
+    private func setActiveWorkout(_ workout: ActiveWorkout?) {
+        activeWorkout = workout
+        if let workout, let data = try? JSONEncoder().encode(workout) {
+            defaults.set(data, forKey: activeWorkoutKey)
+        } else {
+            defaults.removeObject(forKey: activeWorkoutKey)
+        }
+    }
+
+    // MARK: - Entries
+
+    /// Returns false when the free limit blocked the save. Sets that belong to a workout are never blocked mid-training;
+    /// a quick entry outside a workout counts as (part of) that day's training.
+    @discardableResult
+    func addEntry(exercise: String, weight: Double, reps: Int, date: Date, workoutId: String? = nil,
+                  source: String = "detail", presentPaywall: Bool = true) -> Bool {
+        if workoutId == nil {
+            let startsNewDay = !workouts.contains { Calendar.current.isDate($0.start, inSameDayAs: date) }
+            if startsNewDay && isFreeLimitReached() {
+                if presentPaywall { paywallRequest = PaywallRequest(source: "entry_limit") }
+                return false
+            }
+        }
         let isFirstEntry = entries.isEmpty && !defaults.bool(forKey: firstEntryKey)
-        let entry = WorkoutEntry.create(exercise: exercise, weight: weight, reps: reps, date: date)
+        let entry = WorkoutEntry.create(exercise: exercise, weight: weight, reps: reps, date: date, workoutId: workoutId)
         storage.saveEntry(entry)
         entries = storage.getAllEntries()
         PostHogSDK.shared.capture("workout_entry_added", properties: [
@@ -351,6 +448,7 @@ final class AppStore: ObservableObject {
         storage.resetAll()
         defaults.removeObject(forKey: languageKey)
         defaults.removeObject(forKey: homeSettingsKey)
+        defaults.removeObject(forKey: activeWorkoutKey)
         defaults.removeObject(forKey: themeKey)
         defaults.set("system", forKey: themeKey)
         if args.contains("-ui_test_force_morning") { forceMorningGreeting = true }

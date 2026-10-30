@@ -10,8 +10,8 @@ final class PremiumManager: ObservableObject {
 
     static let revenueCatAPIKey = "appl_oHLkiQEDhlOYMGMfQLTfuesBoKx"
     static let entitlementID = "pro"
-    static let freeEntryLimitFlag = "free_entry_limit"
-    static let defaultFreeEntryLimit = 5
+    static let freeWorkoutLimitFlag = "free_workout_limit"
+    static let defaultFreeWorkoutLimit = 2
 
     @Published private(set) var packages: [Package] = []
     @Published private(set) var currentOffering: Offering?
@@ -67,11 +67,12 @@ final class PremiumManager: ObservableObject {
 
     // MARK: - Paywall rules
 
-    var freeEntryLimit: Int {
-        let raw = PostHogSDK.shared.getFeatureFlag(Self.freeEntryLimitFlag)
+    /// Number of trainings a free user can log before the paywall (remote flag `free_workout_limit`).
+    var freeWorkoutLimit: Int {
+        let raw = PostHogSDK.shared.getFeatureFlag(Self.freeWorkoutLimitFlag)
         if let number = raw as? NSNumber { return max(number.intValue, 0) }
         if let text = raw as? String, let value = Int(text) { return max(value, 0) }
-        return Self.defaultFreeEntryLimit
+        return Self.defaultFreeWorkoutLimit
     }
 
     var isPaywallSuppressedRegion: Bool {
@@ -114,9 +115,9 @@ final class PremiumManager: ObservableObject {
 
     // MARK: - Purchase / restore
 
-    nonisolated static func isEntryLimitReached(entryCount: Int, limit: Int, isPro: Bool, suppressedRegion: Bool) -> Bool {
+    nonisolated static func isWorkoutLimitReached(workoutCount: Int, limit: Int, isPro: Bool, suppressedRegion: Bool) -> Bool {
         guard !isPro && !suppressedRegion else { return false }
-        return entryCount >= limit
+        return workoutCount >= limit
     }
 
     @discardableResult

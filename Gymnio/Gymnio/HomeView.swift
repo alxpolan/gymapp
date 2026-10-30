@@ -173,7 +173,7 @@ struct HomeView: View {
         let count = store.entries.count
         let days = Set(store.entries.map { Calendar.current.startOfDay(for: $0.date) }).count
         let premium = PremiumManager.shared
-        let nearPaywall = !premium.isPro && count >= premium.freeEntryLimit - 1
+        let nearPaywall = false
         guard !nearPaywall,
               AppStore.shouldRequestReview(entryCount: count, distinctDays: days, alreadyAsked: UserDefaults.standard.bool(forKey: key))
         else { return }
