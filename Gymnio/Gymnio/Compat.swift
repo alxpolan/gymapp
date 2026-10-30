@@ -3,6 +3,14 @@ import Charts
 
 // Backports so the app runs on iOS 16+ while newer systems keep the newer look and APIs.
 
+@available(iOS 26, *)
+private func makeGlass(tint: Color?, interactive: Bool) -> Glass {
+    var glass = Glass.regular
+    if let tint { glass = glass.tint(tint) }
+    if interactive { glass = glass.interactive() }
+    return glass
+}
+
 extension View {
 
     /// `onChange(of:)` with the single-parameter closure: the two-parameter form needs iOS 17.
@@ -19,10 +27,7 @@ extension View {
     @ViewBuilder
     func glassSurface<S: Shape>(_ shape: S, tint: Color? = nil, interactive: Bool = false) -> some View {
         if #available(iOS 26, *) {
-            var glass = Glass.regular
-            if let tint { glass = glass.tint(tint) }
-            if interactive { glass = glass.interactive() }
-            self.glassEffect(glass, in: shape)
+            self.glassEffect(makeGlass(tint: tint, interactive: interactive), in: shape)
         } else {
             self
                 .background(.ultraThinMaterial, in: shape)
