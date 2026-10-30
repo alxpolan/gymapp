@@ -83,7 +83,11 @@ final class PremiumManager: ObservableObject {
     /// Offering for a paywall trigger: `paywall_<source>` if configured in RevenueCat, else the current one.
     func offering(for source: String) async -> Offering? {
         guard let offerings = try? await Purchases.shared.offerings() else { return currentOffering }
-        return offerings.offering(identifier: "paywall_" + source) ?? offerings.current ?? currentOffering
+        // Placements allow RevenueCat experiments per trigger; fall back to the plain offering ID.
+        return offerings.currentOffering(forPlacement: source)
+            ?? offerings.offering(identifier: "paywall_" + source)
+            ?? offerings.current
+            ?? currentOffering
     }
 
     func loadOfferings(source: String? = nil) async {
