@@ -39,6 +39,11 @@ struct ContentView: View {
                     DispatchQueue.main.async { selectedTab = 1 }
                 }
             }
+            .sheet(item: $store.quickLogRequest) { request in
+                QuickLogView(exercise: request.exercise)
+                    .environmentObject(store)
+                    .environmentObject(PremiumManager.shared)
+            }
 
             if store.showAddExercise {
                 Color.black
@@ -57,6 +62,11 @@ struct ContentView: View {
             PaywallView(source: request.source)
                 .environmentObject(store)
                 .environmentObject(PremiumManager.shared)
+        }
+        .fullScreenCover(isPresented: $store.showOnboarding) {
+            OnboardingView(defaultUnit: store.weightUnit)
+                .environmentObject(store)
+                .preferredColorScheme(store.colorScheme)
         }
         .preferredColorScheme(store.colorScheme)
 

@@ -9,6 +9,24 @@ final class NotificationManager {
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { _, _ in }
     }
 
+    /// Soft-ask after the first entry: asks for permission and, if granted, turns on Mon/Wed/Fri 18:00 reminders.
+    func enableDefaultReminders(completion: @escaping (Bool) -> Void) {
+        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { granted, _ in
+            guard granted else {
+                DispatchQueue.main.async { completion(false) }
+                return
+            }
+            let days = [2, 3, 4, 5, 6, 7, 1].map { ReminderDay(weekday: $0, enabled: [2, 4, 6].contains($0), hour: 18, minute: 0) }
+            let defaults = UserDefaults.standard
+            defaults.set(true, forKey: "daily_reminder_enabled")
+            if let data = try? JSONEncoder().encode(days) {
+                defaults.set(data, forKey: "reminder_schedule_v2")
+            }
+            self.scheduleReminders(days)
+            DispatchQueue.main.async { completion(true) }
+        }
+    }
+
     // MARK: - Daily reminder (legacy – kept for compatibility)
 
     func scheduleDailyReminder(enabled: Bool) {

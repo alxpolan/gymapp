@@ -44,19 +44,7 @@ struct HomeView: View {
                         .padding(.bottom, 4)
 
                         if store.entries.isEmpty {
-                            VStack(spacing: 12) {
-                                Image(systemName: store.exercises.isEmpty ? "plus.circle" : "dumbbell")
-                                    .font(.system(size: 64))
-                                    .foregroundColor(scheme == .dark ? Color(hex: "555555") : Color(hex: "cccccc"))
-                                    .padding(.top, 60)
-                                Text(store.exercises.isEmpty
-                                     ? store.t("exercises.empty")
-                                     : store.t("home.noLogs"))
-                                    .font(.system(size: 18, weight: .semibold))
-                                    .secondaryText()
-                                    .multilineTextAlignment(.center)
-                            }
-                            .frame(maxWidth: .infinity)
+                            StarterExercisesCard()
                         } else {
                             VStack(spacing: 12) {
 
@@ -182,16 +170,28 @@ struct HomeView: View {
             }
         }
         .onAppear(perform: reload)
-        .onChange(of: store.entries.count) { _, count in
-            let key = "review_requested_at_10"
-            let days = Set(store.entries.map { Calendar.current.startOfDay(for: $0.date) }).count
-            let premium = PremiumManager.shared
-            let nearPaywall = !premium.isPro && count >= premium.freeEntryLimit - 1
-            if !nearPaywall && store.paywallRequest == nil && AppStore.shouldRequestReview(entryCount: count, distinctDays: days, alreadyAsked: UserDefaults.standard.bool(forKey: key)) {
-                UserDefaults.standard.set(true, forKey: key)
-                requestReview()
-            }
+        .onChange(of: store.entries.count) { _, _ in
+            reload()
+            maybeRequestReview()
         }
+        .onChange(of: store.quickLogRequest == nil) { _, closed in
+            if closed { maybeRequestReview() }
+        }
+    }
+
+    /// Asks for a rating right after the first success, never while the quick log sheet or a paywall is up.
+    private func maybeRequestReview() {
+        guard store.quickLogRequest == nil, store.paywallRequest == nil else { return }
+        let key = "review_requested_at_10"
+        let count = store.entries.count
+        let days = Set(store.entries.map { Calendar.current.startOfDay(for: $0.date) }).count
+        let premium = PremiumManager.shared
+        let nearPaywall = !premium.isPro && count >= premium.freeEntryLimit - 1
+        guard !nearPaywall,
+              AppStore.shouldRequestReview(entryCount: count, distinctDays: days, alreadyAsked: UserDefaults.standard.bool(forKey: key))
+        else { return }
+        UserDefaults.standard.set(true, forKey: key)
+        requestReview()
     }
 
     private func reload() {

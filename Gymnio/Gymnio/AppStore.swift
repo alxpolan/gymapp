@@ -19,6 +19,8 @@ final class AppStore: ObservableObject {
     @Published var showAddExercise: Bool = false
     @Published var forceMorningGreeting: Bool = false
     @Published var paywallRequest: PaywallRequest?
+    @Published var showOnboarding: Bool = false
+    @Published var quickLogRequest: QuickLogRequest?
 
     static let supportedLanguages = [
         "de", "en", "fr", "es", "it", "pt", "nl",
@@ -32,6 +34,11 @@ final class AppStore: ObservableObject {
     private let homeSettingsKey = "homeViewSettings"
     private let themeKey        = "@theme_mode"
     private let weightUnitKey   = "@weight_unit"
+    private let onboardingKey   = "@onboarding_done"
+    private let goalKey         = "@onboarding_goal"
+    private let firstOpenKey    = "@first_open_at"
+    private let firstExerciseKey = "@first_exercise_logged"
+    private let firstEntryKey   = "@first_entry_logged"
 
     init() {
         configureForUITestsIfNeeded()
@@ -62,6 +69,41 @@ final class AppStore: ObservableObject {
            let s = try? JSONDecoder().decode(HomeViewSettings.self, from: data) {
             homeSettings = s
         }
+        if defaults.object(forKey: firstOpenKey) == nil {
+            defaults.set(Date().timeIntervalSince1970, forKey: firstOpenKey)
+        }
+        // Existing users with data skip onboarding; UI tests never see it.
+        let isUITest = ProcessInfo.processInfo.arguments.contains("-ui_testing")
+        if !defaults.bool(forKey: onboardingKey) {
+            if isUITest || !exercises.isEmpty || !entries.isEmpty {
+                defaults.set(true, forKey: onboardingKey)
+            } else {
+                showOnboarding = true
+                PostHogSDK.shared.capture("onboarding_started")
+            }
+        }
+    }
+
+    // MARK: - Onboarding
+
+    var goal: String { defaults.string(forKey: goalKey) ?? "" }
+
+    func completeOnboarding(goal: String, unit: String) {
+        defaults.set(goal, forKey: goalKey)
+        defaults.set(true, forKey: onboardingKey)
+        setWeightUnit(unit)
+        PostHogSDK.shared.register(["goal": goal])
+        PostHogSDK.shared.capture("onboarding_completed", properties: [
+            "goal": goal,
+            "unit": unit,
+            "time_since_install_s": secondsSinceInstall
+        ])
+        showOnboarding = false
+    }
+
+    private var secondsSinceInstall: Int {
+        let first = defaults.double(forKey: firstOpenKey)
+        return first > 0 ? max(Int(Date().timeIntervalSince1970 - first), 0) : 0
     }
 
     func reload() {
@@ -72,7 +114,12 @@ final class AppStore: ObservableObject {
     // MARK: - Language
 
     func t(_ key: String) -> String {
-        NSLocalizedString(key, bundle: localizedBundle, comment: "")
+        let missing = "\u{1}"
+        let value = NSLocalizedString(key, bundle: localizedBundle, value: missing, comment: "")
+        guard value == missing else { return value }
+        // Not translated in this language yet: fall back to English, then the key.
+        let english = Bundle.main.path(forResource: "en", ofType: "lproj").flatMap(Bundle.init) ?? .main
+        return NSLocalizedString(key, bundle: english, value: key, comment: "")
     }
 
     func setLanguageOverride(_ lang: String) {
@@ -94,10 +141,17 @@ final class AppStore: ObservableObject {
 
     // MARK: - Exercises
 
-    func addExercise(_ name: String) {
+    func addExercise(_ name: String, source: String = "manual") {
         storage.addExercise(name)
         exercises = storage.getExercises()
-        PostHogSDK.shared.capture("exercise_added")
+        PostHogSDK.shared.capture("exercise_added", properties: ["source": source])
+        if !defaults.bool(forKey: firstExerciseKey) {
+            defaults.set(true, forKey: firstExerciseKey)
+            PostHogSDK.shared.capture("first_exercise_added", properties: [
+                "source": source,
+                "time_since_install_s": secondsSinceInstall
+            ])
+        }
     }
 
     func deleteExercise(_ name: String) {
@@ -116,21 +170,35 @@ final class AppStore: ObservableObject {
 
     // MARK: - Entries
 
-    func addEntry(exercise: String, weight: Double, reps: Int, date: Date) {
+    /// Returns false when the free entry limit blocked the save.
+    @discardableResult
+    func addEntry(exercise: String, weight: Double, reps: Int, date: Date,
+                  source: String = "detail", presentPaywall: Bool = true) -> Bool {
         let premium = PremiumManager.shared
         if PremiumManager.isEntryLimitReached(entryCount: entries.count, limit: premium.freeEntryLimit, isPro: premium.isPro, suppressedRegion: premium.isPaywallSuppressedRegion) {
-            paywallRequest = PaywallRequest(source: "entry_limit")
-            return
+            if presentPaywall { paywallRequest = PaywallRequest(source: "entry_limit") }
+            return false
         }
+        let isFirstEntry = entries.isEmpty && !defaults.bool(forKey: firstEntryKey)
         let entry = WorkoutEntry.create(exercise: exercise, weight: weight, reps: reps, date: date)
         storage.saveEntry(entry)
         entries = storage.getAllEntries()
         PostHogSDK.shared.capture("workout_entry_added", properties: [
             "weight": weight,
             "reps": reps,
-            "unit": weightUnit
+            "unit": weightUnit,
+            "source": source
         ])
+        if isFirstEntry {
+            defaults.set(true, forKey: firstEntryKey)
+            PostHogSDK.shared.capture("first_entry_added", properties: [
+                "source": source,
+                "time_to_first_entry_s": secondsSinceInstall,
+                "goal": goal
+            ])
+        }
         checkMilestones()
+        return true
     }
 
     func deleteEntry(id: String) {
@@ -197,7 +265,8 @@ final class AppStore: ObservableObject {
             NotificationManager.shared.sendCelebrationNotification(entryCount: count)
             PostHogSDK.shared.capture("milestone_reached", properties: ["entry_count": count])
         }
-        if count == 5 {
+        // Fallback if the soft ask after the first entry was never shown (e.g. entry via detail view).
+        if count == 3 {
             NotificationManager.shared.requestPermissions()
         }
     }
@@ -254,6 +323,13 @@ final class AppStore: ObservableObject {
             }
         }
     }
+}
+
+// MARK: - Quick log request
+
+struct QuickLogRequest: Identifiable {
+    let id = UUID()
+    let exercise: String
 }
 
 // MARK: - Paywall request
