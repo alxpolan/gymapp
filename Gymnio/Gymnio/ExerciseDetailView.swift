@@ -390,6 +390,9 @@ struct EntryCard: View {
                         .secondaryText()
                 }
                 Spacer()
+                if isPB {
+                    RecordShareButton(entry: entry)
+                }
                 Button(action: onDelete) {
                     Image(systemName: "trash")
                         .font(.system(size: 18))

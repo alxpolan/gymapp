@@ -37025,6 +37025,57 @@
           }
         }
       }
+    },
+    "settings.import": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Import data (CSV)"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Daten importieren (CSV)"
+          }
+        }
+      }
+    },
+    "settings.import.done": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Imported %lld entries"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%lld Einträge importiert"
+          }
+        }
+      }
+    },
+    "settings.import.error": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Could not read this file."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Diese Datei konnte nicht gelesen werden."
+          }
+        }
+      }
     }
   },
   "version": "1.1"

@@ -89,6 +89,40 @@ final class AppStore: ObservableObject {
         }
     }
 
+    // MARK: - Analytics: person properties and return events
+
+    /// Call when the app becomes active: refreshes PostHog person properties and fires D1/D7/D30 return events once.
+    func trackSessionStart() {
+        let days = daysSinceInstall
+        PostHogSDK.shared.identify(PostHogSDK.shared.getDistinctId(), userProperties: [
+            "entries_count": entries.count,
+            "exercise_count": exercises.count,
+            "is_pro": PremiumManager.shared.isPro,
+            "days_since_install": days,
+            "language": language,
+            "weight_unit": weightUnit,
+            "goal": goal
+        ])
+        for day in [1, 7, 30] where days == day {
+            let key = "@retention_d\(day)_sent"
+            guard !defaults.bool(forKey: key) else { continue }
+            defaults.set(true, forKey: key)
+            PostHogSDK.shared.capture("retention_d\(day)", properties: [
+                "entries_count": entries.count,
+                "is_pro": PremiumManager.shared.isPro
+            ])
+        }
+    }
+
+    private var daysSinceInstall: Int {
+        let first = defaults.double(forKey: firstOpenKey)
+        guard first > 0 else { return 0 }
+        let calendar = Calendar.current
+        let start = calendar.startOfDay(for: Date(timeIntervalSince1970: first))
+        let today = calendar.startOfDay(for: Date())
+        return calendar.dateComponents([.day], from: start, to: today).day ?? 0
+    }
+
     // MARK: - Onboarding
 
     var goal: String { defaults.string(forKey: goalKey) ?? "" }
@@ -210,6 +244,19 @@ final class AppStore: ObservableObject {
         storage.deleteEntry(id: id)
         entries = storage.getAllEntries()
         PostHogSDK.shared.capture("workout_entry_deleted")
+    }
+
+    // MARK: - Import
+
+    func importEntry(_ entry: WorkoutEntry) {
+        storage.addExercise(entry.exercise)
+        storage.saveEntry(entry)
+    }
+
+    func finishImport() {
+        exercises = storage.getExercises()
+        entries = storage.getAllEntries()
+        PostHogSDK.shared.capture("data_imported", properties: ["entries": entries.count])
     }
 
     // MARK: - Settings

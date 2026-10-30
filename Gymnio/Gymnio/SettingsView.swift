@@ -2,6 +2,7 @@ import SwiftUI
 import RevenueCat
 import RevenueCatUI
 import PostHog
+import UniformTypeIdentifiers
 
 struct SettingsView: View {
     @EnvironmentObject var store: AppStore
@@ -11,6 +12,8 @@ struct SettingsView: View {
     @State private var shareURL: URL?
     @State private var showShare = false
     @State private var showCustomerCenter = false
+    @State private var showImporter = false
+    @State private var importMessage: String?
 
     var body: some View {
         ZStack {
@@ -81,6 +84,17 @@ struct SettingsView: View {
                             } else {
                                 ProBadge()
                             }
+                        }
+                    }
+                    .buttonStyle(.plain)
+                }
+
+                GlassCard {
+                    Button { showImporter = true } label: {
+                        SettingsRow(icon: "square.and.arrow.down", iconColor: Color(hex: "5B8DEF"),
+                                    label: store.t("settings.import")) {
+                            Image(systemName: "chevron.right")
+                                .font(.system(size: 13, weight: .semibold)).foregroundColor(.secondary)
                         }
                     }
                     .buttonStyle(.plain)
@@ -203,6 +217,26 @@ struct SettingsView: View {
         .navigationBarTitleDisplayMode(.large)
         .sheet(isPresented: $showPaywall) { PaywallView(source: "settings") }
         .sheet(isPresented: $showCustomerCenter) { CustomerCenterView() }
+        .fileImporter(isPresented: $showImporter, allowedContentTypes: [.commaSeparatedText, .plainText]) { result in
+            switch result {
+            case .success(let url):
+                if let summary = try? DataImport.importCSV(from: url, store: store) {
+                    importMessage = String(format: store.t("settings.import.done"), summary.imported)
+                } else {
+                    importMessage = store.t("settings.import.error")
+                }
+            case .failure:
+                importMessage = store.t("settings.import.error")
+            }
+        }
+        .alert(store.t("settings.import"), isPresented: Binding(
+            get: { importMessage != nil },
+            set: { if !$0 { importMessage = nil } }
+        )) {
+            Button(store.t("common.done"), role: .cancel) {}
+        } message: {
+            Text(importMessage ?? "")
+        }
         .sheet(isPresented: $showShare) {
             if let shareURL {
                 ShareSheet(items: [shareURL], isPresented: $showShare)

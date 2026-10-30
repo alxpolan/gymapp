@@ -11,6 +11,7 @@ struct ContentView: View {
     }
 
     @Environment(\.scenePhase) private var scenePhase
+    @EnvironmentObject var premium: PremiumManager
 
     /// iOS 18+ uses the new `Tab` API (with the search-role "add" tab); earlier systems use tab items.
     @ViewBuilder
@@ -93,11 +94,13 @@ struct ContentView: View {
                 .environmentObject(store)
                 .preferredColorScheme(store.colorScheme)
         }
+        .onChangeCompat(of: premium.isPro) { _ in store.trackSessionStart() }
         .onChangeCompat(of: scenePhase) { phase in
             if phase == .background || phase == .inactive {
                 PostHogSDK.shared.flush()
             }
             if phase == .active {
+                store.trackSessionStart()
                 RestTimerManager.shared.endExpired()
             }
         }
