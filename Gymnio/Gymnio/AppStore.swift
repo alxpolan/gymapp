@@ -20,6 +20,7 @@ final class AppStore: ObservableObject {
     @Published var forceMorningGreeting: Bool = false
     @Published var paywallRequest: PaywallRequest?
     @Published var showOnboarding: Bool = false
+    @Published var restSeconds: Int = 90
     @Published var quickLogRequest: QuickLogRequest?
 
     static let supportedLanguages = [
@@ -34,6 +35,7 @@ final class AppStore: ObservableObject {
     private let homeSettingsKey = "homeViewSettings"
     private let themeKey        = "@theme_mode"
     private let weightUnitKey   = "@weight_unit"
+    private let restSecondsKey  = "@rest_seconds"
     private let onboardingKey   = "@onboarding_done"
     private let goalKey         = "@onboarding_goal"
     private let firstOpenKey    = "@first_open_at"
@@ -68,6 +70,9 @@ final class AppStore: ObservableObject {
         if let data = defaults.data(forKey: homeSettingsKey),
            let s = try? JSONDecoder().decode(HomeViewSettings.self, from: data) {
             homeSettings = s
+        }
+        if defaults.object(forKey: restSecondsKey) != nil {
+            restSeconds = defaults.integer(forKey: restSecondsKey)
         }
         if defaults.object(forKey: firstOpenKey) == nil {
             defaults.set(Date().timeIntervalSince1970, forKey: firstOpenKey)
@@ -213,6 +218,13 @@ final class AppStore: ObservableObject {
         themeMode = mode
         defaults.set(mode, forKey: themeKey)
         PostHogSDK.shared.capture("theme_changed", properties: ["mode": mode])
+    }
+
+    func setRestSeconds(_ seconds: Int) {
+        restSeconds = seconds
+        defaults.set(seconds, forKey: restSecondsKey)
+        PostHogSDK.shared.capture("rest_timer_changed", properties: ["seconds": seconds])
+        if seconds == 0 { RestTimerManager.shared.cancel() }
     }
 
     func setWeightUnit(_ unit: String) {

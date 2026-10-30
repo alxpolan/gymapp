@@ -224,7 +224,9 @@ struct ExerciseDetailView: View {
 
     private func addEntry() {
         guard let w = weightValue, let r = repsValue, w > 0, r > 0 else { return }
-        store.addEntry(exercise: exerciseName, weight: store.toKg(w), reps: r, date: selectedDate)
+        if store.addEntry(exercise: exerciseName, weight: store.toKg(w), reps: r, date: selectedDate) {
+            RestTimerManager.shared.start(exercise: exerciseName, store: store)
+        }
         weightText = ""; repsText = ""; selectedDate = Date()
         focusedField = nil; showDatePicker = false
         reload()

@@ -100,6 +100,22 @@ struct SettingsView: View {
 
                         Divider().padding(.leading, 44)
 
+                        SettingsRow(icon: "timer", iconColor: Color(hex: "5B8DEF"), label: store.t("settings.rest")) {
+                            Picker("", selection: Binding(
+                                get: { store.restSeconds },
+                                set: { store.setRestSeconds($0) }
+                            )) {
+                                Text(store.t("settings.rest.off")).tag(0)
+                                ForEach([60, 90, 120, 180], id: \.self) { seconds in
+                                    Text("\(seconds) s").tag(seconds)
+                                }
+                            }
+                            .pickerStyle(.menu)
+                            .foregroundColor(.statBlue)
+                        }
+
+                        Divider().padding(.leading, 44)
+
                         NavigationLink(destination: RemindersView()) {
                             SettingsRow(icon: "bell.fill", iconColor: Color(hex: "FF9500"), label: store.t("settings.notifications")) {
                                 Image(systemName: "chevron.right")

@@ -97,6 +97,9 @@ struct ContentView: View {
             if phase == .background || phase == .inactive {
                 PostHogSDK.shared.flush()
             }
+            if phase == .active {
+                RestTimerManager.shared.endExpired()
+            }
         }
         .preferredColorScheme(store.colorScheme)
 

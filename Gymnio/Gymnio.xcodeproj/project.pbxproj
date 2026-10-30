@@ -10,6 +10,7 @@
 		3252C9C93B4098F4D4812724 /* PostHog in Frameworks */ = {isa = PBXBuildFile; productRef = B301C5BE980504EC562F93EC /* PostHog */; };
 		AA01C5BE980504EC562F0001 /* RevenueCat in Frameworks */ = {isa = PBXBuildFile; productRef = AA01C5BE980504EC562F0002 /* RevenueCat */; };
 		AA01C5BE980504EC562F0004 /* RevenueCatUI in Frameworks */ = {isa = PBXBuildFile; productRef = AA01C5BE980504EC562F0005 /* RevenueCatUI */; };
+		DD00000000000000000A000D /* GymnioWidgets.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = DD00000000000000000A0002 /* GymnioWidgets.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -27,12 +28,34 @@
 			remoteGlobalIDString = D9FED0552F72024100B8CB60;
 			remoteInfo = Gymnio;
 		};
+		DD00000000000000000A000B /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D9FED04E2F72024100B8CB60 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DD00000000000000000A0001;
+			remoteInfo = GymnioWidgets;
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		DD00000000000000000A000C /* Embed Foundation Extensions */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 13;
+			files = (
+				DD00000000000000000A000D /* GymnioWidgets.appex in Embed Foundation Extensions */,
+			);
+			name = "Embed Foundation Extensions";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		D9FED0562F72024100B8CB60 /* Gymnio.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Gymnio.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D9FED0632F72024200B8CB60 /* GymnioTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GymnioTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D9FED06D2F72024200B8CB60 /* GymnioUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GymnioUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		DD00000000000000000A0002 /* GymnioWidgets.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = GymnioWidgets.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -49,6 +72,11 @@
 		D9FED0702F72024200B8CB60 /* GymnioUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			path = GymnioUITests;
+			sourceTree = "<group>";
+		};
+		DD00000000000000000A0003 /* GymnioWidgets */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = GymnioWidgets;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -78,6 +106,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		DD00000000000000000A0005 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -87,6 +122,7 @@
 				D9FED0582F72024100B8CB60 /* Gymnio */,
 				D9FED0662F72024200B8CB60 /* GymnioTests */,
 				D9FED0702F72024200B8CB60 /* GymnioUITests */,
+				DD00000000000000000A0003 /* GymnioWidgets */,
 				D9FED0572F72024100B8CB60 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -97,6 +133,7 @@
 				D9FED0562F72024100B8CB60 /* Gymnio.app */,
 				D9FED0632F72024200B8CB60 /* GymnioTests.xctest */,
 				D9FED06D2F72024200B8CB60 /* GymnioUITests.xctest */,
+				DD00000000000000000A0002 /* GymnioWidgets.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -111,10 +148,12 @@
 				D9FED0522F72024100B8CB60 /* Sources */,
 				D9FED0532F72024100B8CB60 /* Frameworks */,
 				D9FED0542F72024100B8CB60 /* Resources */,
+				DD00000000000000000A000C /* Embed Foundation Extensions */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				DD00000000000000000A000A /* PBXTargetDependency */,
 			);
 			fileSystemSynchronizedGroups = (
 				D9FED0582F72024100B8CB60 /* Gymnio */,
@@ -171,6 +210,26 @@
 			productReference = D9FED06D2F72024200B8CB60 /* GymnioUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
+		DD00000000000000000A0001 /* GymnioWidgets */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DD00000000000000000A0007 /* Build configuration list for PBXNativeTarget "GymnioWidgets" */;
+			buildPhases = (
+				DD00000000000000000A0004 /* Sources */,
+				DD00000000000000000A0005 /* Frameworks */,
+				DD00000000000000000A0006 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				DD00000000000000000A0003 /* GymnioWidgets */,
+			);
+			name = GymnioWidgets;
+			productName = GymnioWidgets;
+			productReference = DD00000000000000000A0002 /* GymnioWidgets.appex */;
+			productType = "com.apple.product-type.app-extension";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -191,6 +250,9 @@
 					D9FED06C2F72024200B8CB60 = {
 						CreatedOnToolsVersion = 26.3;
 						TestTargetID = D9FED0552F72024100B8CB60;
+					};
+					DD00000000000000000A0001 = {
+						CreatedOnToolsVersion = 26.3;
 					};
 				};
 			};
@@ -245,6 +307,7 @@
 				D9FED0552F72024100B8CB60 /* Gymnio */,
 				D9FED0622F72024200B8CB60 /* GymnioTests */,
 				D9FED06C2F72024200B8CB60 /* GymnioUITests */,
+				DD00000000000000000A0001 /* GymnioWidgets */,
 			);
 		};
 /* End PBXProject section */
@@ -265,6 +328,13 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		D9FED06B2F72024200B8CB60 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		DD00000000000000000A0006 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -295,6 +365,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		DD00000000000000000A0004 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -307,6 +384,11 @@
 			isa = PBXTargetDependency;
 			target = D9FED0552F72024100B8CB60 /* Gymnio */;
 			targetProxy = D9FED06E2F72024200B8CB60 /* PBXContainerItemProxy */;
+		};
+		DD00000000000000000A000A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DD00000000000000000A0001 /* GymnioWidgets */;
+			targetProxy = DD00000000000000000A000B /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -444,6 +526,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = Gymnio;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
+				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -479,6 +562,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_CFBundleDisplayName = Gymnio;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
+				INFOPLIST_KEY_NSSupportsLiveActivities = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -586,6 +670,56 @@
 			};
 			name = Release;
 		};
+		DD00000000000000000A0008 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = AS5BHHK5AW;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "GymnioWidgets-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = Gymnio;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0.2;
+				PRODUCT_BUNDLE_IDENTIFIER = com.fringelo.gymnio.Gymnio.GymnioWidgets;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		DD00000000000000000A0009 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = AS5BHHK5AW;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "GymnioWidgets-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = Gymnio;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@executable_path/../../Frameworks",
+				);
+				MARKETING_VERSION = 1.0.2;
+				PRODUCT_BUNDLE_IDENTIFIER = com.fringelo.gymnio.Gymnio.GymnioWidgets;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -621,6 +755,15 @@
 			buildConfigurations = (
 				D9FED07E2F72024200B8CB60 /* Debug */,
 				D9FED07F2F72024200B8CB60 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DD00000000000000000A0007 /* Build configuration list for PBXNativeTarget "GymnioWidgets" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DD00000000000000000A0008 /* Debug */,
+				DD00000000000000000A0009 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

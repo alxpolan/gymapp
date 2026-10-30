@@ -307,6 +307,7 @@ struct QuickLogView: View {
             return
         }
         UINotificationFeedbackGenerator().notificationOccurred(.success)
+        RestTimerManager.shared.start(exercise: exercise, store: store)
         PostHogSDK.shared.capture("quick_log_saved", properties: ["first": wasFirst])
         firstSaved = wasFirst
         savedCount += 1
