@@ -305,7 +305,7 @@ final class AppStore: ObservableObject {
     // MARK: - Derived data
 
     func entriesForExercise(_ name: String) -> [WorkoutEntry] {
-        entries.filter { $0.exercise == name }.sorted(by: WorkoutEntry.chronological)
+        entries.filter { $0.exercise == name }.sorted(by: { WorkoutEntry.chronological($0, $1) })
     }
 
     func groupedExercises() -> [ExerciseGroup] {

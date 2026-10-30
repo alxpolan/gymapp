@@ -98,7 +98,7 @@ final class WorkoutStorage {
         var grouped: [String: [WorkoutEntry]] = [:]
         for e in entries { grouped[e.exercise, default: []].append(e) }
         return exercises.map { ex in
-            let sorted = (grouped[ex] ?? []).sorted(by: WorkoutEntry.chronological)
+            let sorted = (grouped[ex] ?? []).sorted(by: { WorkoutEntry.chronological($0, $1) })
             return ExerciseGroup(exercise: ex, entries: sorted)
         }
     }

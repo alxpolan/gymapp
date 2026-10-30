@@ -33,7 +33,7 @@ struct ExerciseDetailView: View {
     private var maxReps: Int { entries.map { $0.reps }.max() ?? 0 }
     private var bestOneRM: Double { AdvancedAnalytics.bestOneRepMax(entries: entries) }
     private var currentGroup: ExerciseGroup {
-        ExerciseGroup(exercise: exerciseName, entries: entries.sorted(by: WorkoutEntry.chronological))
+        ExerciseGroup(exercise: exerciseName, entries: entries.sorted(by: { WorkoutEntry.chronological($0, $1) }))
     }
 
     var body: some View {
@@ -111,7 +111,7 @@ struct ExerciseDetailView: View {
                     }
 
                     if entries.count >= 3 {
-                        let chronological = entries.sorted(by: WorkoutEntry.chronological)
+                        let chronological = entries.sorted(by: { WorkoutEntry.chronological($0, $1) })
                         let charts: [(String, String, [ChartDataPoint])] = [
                             (store.t("detail.chart.weight"), store.unitLabel,
                              Analytics.weightChartData(entries: chronological).map(convertWeight)),
@@ -216,7 +216,7 @@ struct ExerciseDetailView: View {
         reload()
     }
 
-    private func reload() { entries = store.entriesForExercise(exerciseName).sorted(by: WorkoutEntry.reverseChronological) }
+    private func reload() { entries = store.entriesForExercise(exerciseName).sorted(by: { WorkoutEntry.reverseChronological($0, $1) }) }
 
     private func convertWeight(_ pt: ChartDataPoint) -> ChartDataPoint {
         ChartDataPoint(index: pt.index, value: store.displayWeight(pt.value), label: pt.label)
@@ -328,8 +328,7 @@ struct DetailChartCard: View {
                             PointMark(x: .value("i", sel.index), y: .value("v", sel.value))
                                 .foregroundStyle(Color.tint(scheme))
                                 .symbolSize(50)
-                                .annotation(position: .top, spacing: 6,
-                                            overflowResolution: .init(x: .fit(to: .chart), y: .automatic)) {
+                                .annotation(position: .top, spacing: 6) {
                                     Text("\(formatWeightValue(sel.value)) \(unit)")
                                         .font(.system(size: 11, weight: .bold))
                                         .padding(.horizontal, 7)

@@ -310,8 +310,7 @@ struct OneRMCard: View {
                             PointMark(x: .value("i", sel.index), y: .value("v", store.displayWeight(sel.value)))
                                 .foregroundStyle(Color.tint(scheme))
                                 .symbolSize(60)
-                                .annotation(position: .top, spacing: 6,
-                                            overflowResolution: .init(x: .fit(to: .chart), y: .automatic)) {
+                                .annotation(position: .top, spacing: 6) {
                                     Text("\(formatWeightValue(store.displayWeight(sel.value))) \(store.unitLabel)")
                                         .font(.system(size: 11, weight: .bold))
                                         .padding(.horizontal, 7).padding(.vertical, 4)

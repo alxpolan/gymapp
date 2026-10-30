@@ -9,7 +9,7 @@ enum DataExport {
         iso.formatOptions = [.withFullDate]
 
         var lines = ["date,exercise,weight_\(unit),reps,volume_\(unit)"]
-        for entry in store.entries.sorted(by: WorkoutEntry.chronological) {
+        for entry in store.entries.sorted(by: { WorkoutEntry.chronological($0, $1) }) {
             let date = iso.string(from: entry.date)
             let weight = store.displayWeight(entry.weight)
             let volume = weight * Double(entry.reps)

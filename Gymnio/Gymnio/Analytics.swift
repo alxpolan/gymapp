@@ -21,7 +21,7 @@ enum Analytics {
 
     static func progressionAlerts(groups: [ExerciseGroup]) -> [ProgressionAlert] {
         groups.compactMap { group in
-            let sorted = group.entries.sorted(by: WorkoutEntry.chronological)
+            let sorted = group.entries.sorted(by: { WorkoutEntry.chronological($0, $1) })
             guard sorted.count >= 5 else { return nil }
             let last5 = sorted.suffix(5)
             let weight = last5.first!.weight

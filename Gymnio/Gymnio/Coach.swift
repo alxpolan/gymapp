@@ -155,7 +155,7 @@ enum Coach {
     static func nextSetSuggestion(store: AppStore, group: ExerciseGroup) -> CoachInsight? {
         guard !group.entries.isEmpty else { return nil }
         let cal = Calendar.current
-        let sorted = group.entries.sorted(by: WorkoutEntry.chronological)
+        let sorted = group.entries.sorted(by: { WorkoutEntry.chronological($0, $1) })
 
         guard let lastDate = sorted.last?.date else { return nil }
         let lastDay = cal.startOfDay(for: lastDate)

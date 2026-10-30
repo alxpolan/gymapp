@@ -58,7 +58,7 @@ struct HistoryView: View {
 
     private func reload() {
         store.reload()
-        allEntries = store.entries.sorted(by: WorkoutEntry.reverseChronological)
+        allEntries = store.entries.sorted(by: { WorkoutEntry.reverseChronological($0, $1) })
     }
 }
 

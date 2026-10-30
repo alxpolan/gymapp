@@ -118,7 +118,7 @@ enum AdvancedAnalytics {
     }
 
     static func recordsBoard(groups: [ExerciseGroup]) -> [PersonalRecord] {
-        groups.compactMap(personalRecord(for:))
+        groups.compactMap { personalRecord(for: $0) }
             .sorted { $0.bestOneRepMax > $1.bestOneRepMax }
     }
 
@@ -160,7 +160,7 @@ enum AdvancedAnalytics {
 
     static func progressTrends(groups: [ExerciseGroup]) -> [ProgressTrend] {
         groups.filter { !$0.entries.isEmpty }
-            .map(progressTrend(for:))
+            .map { progressTrend(for: $0) }
             .sorted { $0.latestOneRepMax > $1.latestOneRepMax }
     }
 

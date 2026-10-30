@@ -12,7 +12,7 @@ struct GymnioApp: App {
     @StateObject private var premium = PremiumManager.shared
 
     init() {
-        let config = PostHogConfig(apiKey: posthogProjectToken, host: posthogHost)
+        let config = PostHogConfig(projectToken: posthogProjectToken, host: posthogHost)
         config.captureApplicationLifecycleEvents = true
         config.captureScreenViews = true
         config.sessionReplay = true
