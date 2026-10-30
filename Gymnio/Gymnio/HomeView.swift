@@ -11,7 +11,6 @@ struct HomeView: View {
     @State private var topGroups: [ExerciseGroup] = []
     @State private var chartIndex: Int = 0
     @State private var navPath = NavigationPath()
-    @State private var coachInsight: CoachInsight?
 
     private var greeting: String {
         if store.forceMorningGreeting { return store.t("home.greeting.morning") }
@@ -48,9 +47,7 @@ struct HomeView: View {
                         } else {
                             VStack(spacing: 12) {
 
-                            if let coachInsight {
-                                CoachRecapCard(insight: coachInsight)
-                            }
+                            WeeklyRecapCard()
 
                             if store.homeSettings.showProgressionAlert, let alert = alerts.first {
                                 ProgressionAlertCard(alert: alert)
@@ -190,7 +187,6 @@ struct HomeView: View {
         stats = Analytics.workoutStats(entries: store.entries)
         alerts = Analytics.progressionAlerts(groups: groups)
         topGroups = Analytics.topExercisesByVolume(groups: groups)
-        coachInsight = Coach.weeklyRecap(store: store)
     }
 }
 

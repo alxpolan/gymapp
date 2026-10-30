@@ -87,7 +87,7 @@
           </div>
           <div class="feature-card-content">
             <div class="feature-card-title">No account needed</div>
-            <div class="feature-card-subtitle">All data stored locally on device</div>
+            <div class="feature-card-subtitle">Workouts stored on your device</div>
           </div>
         </div>
         <div class="feature-card card-float-3">

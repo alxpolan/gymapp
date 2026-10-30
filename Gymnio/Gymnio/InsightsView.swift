@@ -13,8 +13,6 @@ struct InsightsView: View {
     @State private var muscles: [MuscleVolume] = []
     @State private var records: [PersonalRecord] = []
     @State private var trends: [ProgressTrend] = []
-    @State private var recap: CoachInsight?
-    @State private var coachFeed: [CoachInsight] = []
     @State private var selected1RM: String = ""
     @State private var showPaywall = false
 
@@ -38,13 +36,13 @@ struct InsightsView: View {
                         overviewCard
                         weeklyVolumeCard
 
-                        if let recap { CoachRecapCard(insight: recap) }
+                        WeeklyRecapCard()
 
                         if !premium.isPro { UpgradeCTACard(source: "insights") }
 
                         InsightSectionHeader(title: store.t("insights.coach"), isPro: true)
                         ProGate(titleKey: "prolock.title", subtitleKey: "prolock.coach", source: "feature_coach") {
-                            CoachFeedCard(insights: premium.isPro ? coachFeed : Coach.insights(store: store))
+                            CoachFeedSection()
                         }
 
                         InsightSectionHeader(title: store.t("insights.est1rm"), isPro: true)
@@ -146,8 +144,6 @@ struct InsightsView: View {
         muscles = AdvancedAnalytics.muscleDistribution(groups: groups)
         records = AdvancedAnalytics.recordsBoard(groups: groups)
         trends = AdvancedAnalytics.progressTrends(groups: groups)
-        recap = Coach.weeklyRecap(store: store)
-        coachFeed = Coach.insights(store: store)
         if selected1RM.isEmpty || !groups.contains(where: { $0.exercise == selected1RM }) {
             selected1RM = groups.max(by: { $0.entries.count < $1.entries.count })?.exercise ?? ""
         }
@@ -184,6 +180,7 @@ private struct OverviewStat: View {
 
 struct CoachRecapCard: View {
     let insight: CoachInsight
+    @EnvironmentObject var store: AppStore
     @Environment(\.colorScheme) var scheme
     var body: some View {
         GlassCard {
@@ -202,6 +199,9 @@ struct CoachRecapCard: View {
                     .secondaryText()
                     .lineSpacing(3)
                     .fixedSize(horizontal: false, vertical: true)
+                Text(store.t("coach.disclaimer"))
+                    .font(.system(size: 11))
+                    .secondaryText()
             }
         }
     }
