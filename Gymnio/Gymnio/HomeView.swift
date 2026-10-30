@@ -185,7 +185,9 @@ struct HomeView: View {
         .onChange(of: store.entries.count) { _, count in
             let key = "review_requested_at_10"
             let days = Set(store.entries.map { Calendar.current.startOfDay(for: $0.date) }).count
-            if AppStore.shouldRequestReview(entryCount: count, distinctDays: days, alreadyAsked: UserDefaults.standard.bool(forKey: key)) {
+            let premium = PremiumManager.shared
+            let nearPaywall = !premium.isPro && count >= premium.freeEntryLimit - 1
+            if !nearPaywall && store.paywallRequest == nil && AppStore.shouldRequestReview(entryCount: count, distinctDays: days, alreadyAsked: UserDefaults.standard.bool(forKey: key)) {
                 UserDefaults.standard.set(true, forKey: key)
                 requestReview()
             }

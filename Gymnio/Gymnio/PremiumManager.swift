@@ -11,7 +11,7 @@ final class PremiumManager: ObservableObject {
     static let revenueCatAPIKey = "appl_oHLkiQEDhlOYMGMfQLTfuesBoKx"
     static let entitlementID = "pro"
     static let freeEntryLimitFlag = "free_entry_limit"
-    static let defaultFreeEntryLimit = 30
+    static let defaultFreeEntryLimit = 5
 
     @Published private(set) var packages: [Package] = []
     @Published private(set) var currentOffering: Offering?
@@ -79,6 +79,12 @@ final class PremiumManager: ObservableObject {
     }
 
     // MARK: - Loading
+
+    /// Offering for a paywall trigger: `paywall_<source>` if configured in RevenueCat, else the current one.
+    func offering(for source: String) async -> Offering? {
+        guard let offerings = try? await Purchases.shared.offerings() else { return currentOffering }
+        return offerings.offering(identifier: "paywall_" + source) ?? offerings.current ?? currentOffering
+    }
 
     func loadOfferings(source: String? = nil) async {
         do {

@@ -12,10 +12,14 @@ struct PaywallView: View {
     @Environment(\.dismiss) private var dismiss
 
     @State private var appearDate = Date()
+    @State private var offering: Offering?
+    @State private var offeringLoaded = false
 
     var body: some View {
         Group {
-            if let offering = premium.currentOffering {
+            if !offeringLoaded {
+                ProgressView()
+            } else if let offering {
                 RevenueCatUI.PaywallView(
                     offering: offering,
                     displayCloseButton: true,
@@ -31,9 +35,14 @@ struct PaywallView: View {
             }
         }
         .onPurchaseCompleted { _, _ in dismiss() }
-        .onAppear {
+        .task {
+            offering = await premium.offering(for: source)
+            offeringLoaded = true
             appearDate = Date()
-            PostHogSDK.shared.capture("paywall_viewed", properties: ["source": source])
+            PostHogSDK.shared.capture("paywall_viewed", properties: [
+                "source": source,
+                "offering": offering?.identifier ?? "none"
+            ])
         }
         .onDisappear {
             PostHogSDK.shared.capture("paywall_closed", properties: [

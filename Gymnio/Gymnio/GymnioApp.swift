@@ -28,6 +28,7 @@ struct GymnioApp: App {
         Purchases.logLevel = .warn
         Purchases.configure(withAPIKey: PremiumManager.revenueCatAPIKey)
         PostHogSDK.shared.identify(Purchases.shared.appUserID)
+        Purchases.shared.attribution.setPostHogUserID(PostHogSDK.shared.getDistinctId())
         Purchases.shared.attribution.enableAdServicesAttributionTokenCollection()
         PremiumManager.shared.start()
     }

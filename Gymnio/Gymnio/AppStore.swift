@@ -179,7 +179,7 @@ final class AppStore: ObservableObject {
 
     static func shouldRequestReview(entryCount: Int, distinctDays: Int, alreadyAsked: Bool) -> Bool {
         guard !alreadyAsked else { return false }
-        return distinctDays >= 2 || entryCount >= 20
+        return entryCount >= 2 || distinctDays >= 2
     }
 
     // MARK: - Milestones

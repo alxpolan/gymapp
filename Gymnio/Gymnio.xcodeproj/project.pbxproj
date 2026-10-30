@@ -200,6 +200,13 @@
 			knownRegions = (
 				en,
 				de,
+				es,
+				fr,
+				it,
+				pt,
+				nl,
+				ja,
+				ko,
 				Base,
 			);
 			mainGroup = D9FED04D2F72024100B8CB60;

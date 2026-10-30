@@ -2,16 +2,12 @@ import Testing
 @testable import Gymnio
 
 struct PlaybookRulesTests {
-    @Test func reviewPromptAfterSecondTrainingDay() {
-        #expect(AppStore.shouldRequestReview(entryCount: 3, distinctDays: 2, alreadyAsked: false))
+    @Test func reviewPromptAfterSecondEntry() {
+        #expect(AppStore.shouldRequestReview(entryCount: 2, distinctDays: 1, alreadyAsked: false))
     }
 
-    @Test func reviewPromptFallbackAtTwentyEntries() {
-        #expect(AppStore.shouldRequestReview(entryCount: 20, distinctDays: 1, alreadyAsked: false))
-    }
-
-    @Test func reviewPromptStaysQuietOnFirstDay() {
-        #expect(!AppStore.shouldRequestReview(entryCount: 3, distinctDays: 1, alreadyAsked: false))
+    @Test func reviewPromptStaysQuietOnFirstEntry() {
+        #expect(!AppStore.shouldRequestReview(entryCount: 1, distinctDays: 1, alreadyAsked: false))
     }
 
     @Test func reviewPromptAskedOnlyOnce() {
