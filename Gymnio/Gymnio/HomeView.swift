@@ -77,23 +77,13 @@ struct HomeView: View {
                             if store.homeSettings.showCharts && !topGroups.isEmpty && store.entries.count >= 3 {
                                 let chartGroups = Array(topGroups.prefix(3))
                                 VStack(spacing: 6) {
-                                    GeometryReader { geo in
-                                        ScrollView(.horizontal, showsIndicators: false) {
-                                            HStack(spacing: 0) {
-                                                ForEach(Array(chartGroups.enumerated()), id: \.element.id) { i, group in
-                                                    HomeChartCard(group: group)
-                                                        .frame(width: geo.size.width)
-                                                        .id(i)
-                                                }
-                                            }
-                                            .scrollTargetLayout()
+                                    TabView(selection: $chartIndex) {
+                                        ForEach(Array(chartGroups.enumerated()), id: \.element.id) { i, group in
+                                            HomeChartCard(group: group)
+                                                .tag(i)
                                         }
-                                        .scrollTargetBehavior(.paging)
-                                        .scrollPosition(id: Binding<Int?>(
-                                            get: { chartIndex },
-                                            set: { chartIndex = $0 ?? 0 }
-                                        ))
                                     }
+                                    .tabViewStyle(.page(indexDisplayMode: .never))
                                     .frame(height: 230)
 
                                     PaginationDots(total: chartGroups.count, current: chartIndex)
@@ -170,11 +160,11 @@ struct HomeView: View {
             }
         }
         .onAppear(perform: reload)
-        .onChange(of: store.entries.count) { _, _ in
+        .onChangeCompat(of: store.entries.count) { _ in
             reload()
             maybeRequestReview()
         }
-        .onChange(of: store.quickLogRequest == nil) { _, closed in
+        .onChangeCompat(of: store.quickLogRequest == nil) { closed in
             if closed { maybeRequestReview() }
         }
     }
@@ -336,7 +326,7 @@ struct HomeChartCard: View {
                                 }
                         }
                     }
-                    .chartXSelection(value: $selectedIndex)
+                    .chartSelectionCompat($selectedIndex)
                     .chartXAxis(.hidden)
                     .chartYAxis(.hidden)
                     .chartBackground { _ in Color.clear }

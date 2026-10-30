@@ -59,7 +59,7 @@ struct RemindersView: View {
                         ) {
                             Toggle("", isOn: $masterEnabled)
                                 .labelsHidden()
-                                .onChange(of: masterEnabled) { _, _ in save() }
+                                .onChangeCompat(of: masterEnabled) { _ in save() }
                         }
                     }
 
@@ -75,9 +75,9 @@ struct RemindersView: View {
                                         day: $days[i],
                                         label: dayName(days[i].weekday)
                                     )
-                                    .onChange(of: days[i].enabled) { _, _ in save() }
-                                    .onChange(of: days[i].hour)    { _, _ in save() }
-                                    .onChange(of: days[i].minute)  { _, _ in save() }
+                                    .onChangeCompat(of: days[i].enabled) { _ in save() }
+                                    .onChangeCompat(of: days[i].hour)    { _ in save() }
+                                    .onChangeCompat(of: days[i].minute)  { _ in save() }
 
                                     if i < days.count - 1 {
                                         Divider().padding(.leading, 44)

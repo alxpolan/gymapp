@@ -48,7 +48,7 @@ struct ExercisesView: View {
         }
         .navigationBarHidden(true)
         .onAppear(perform: reload)
-        .onChange(of: store.exercises) { _, _ in reload() }
+        .onChangeCompat(of: store.exercises) { _ in reload() }
     }
 
     private func reload() {

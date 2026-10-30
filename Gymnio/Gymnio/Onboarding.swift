@@ -51,7 +51,7 @@ struct OnboardingView: View {
 
     private var goals: [(id: String, key: String, icon: String)] {
         [("strength", "onboarding.goal.strength", "bolt.fill"),
-         ("muscle", "onboarding.goal.muscle", "figure.strengthtraining.traditional"),
+         ("muscle", "onboarding.goal.muscle", SymbolCompat.strength),
          ("fitness", "onboarding.goal.fitness", "heart.fill")]
     }
 
@@ -87,10 +87,9 @@ struct OnboardingView: View {
                             .foregroundColor(goal == item.id ? Color.tint(scheme) : (scheme == .dark ? Color(hex: "f0f0f0") : Color(hex: "1a1a1a")))
                             .padding(16)
                             .frame(maxWidth: .infinity)
-                            .glassEffect(
-                                goal == item.id ? .regular.tint(Color.tint(scheme).opacity(0.25)).interactive() : .regular.interactive(),
-                                in: RoundedRectangle(cornerRadius: 16, style: .continuous)
-                            )
+                            .glassSurface(RoundedRectangle(cornerRadius: 16, style: .continuous),
+                                          tint: goal == item.id ? Color.tint(scheme).opacity(0.25) : nil,
+                                          interactive: true)
                         }
                         .buttonStyle(.plain)
                     }
@@ -143,7 +142,7 @@ struct StarterExercisesCard: View {
                             .multilineTextAlignment(.center)
                             .frame(maxWidth: .infinity, minHeight: 44)
                             .padding(.horizontal, 8)
-                            .glassEffect(.regular.interactive(), in: RoundedRectangle(cornerRadius: 14, style: .continuous))
+                            .glassSurface(RoundedRectangle(cornerRadius: 14, style: .continuous), interactive: true)
                     }
                     .buttonStyle(.plain)
                 }
@@ -356,7 +355,7 @@ struct StepperRow: View {
                 .font(.system(size: 20, weight: .bold))
                 .foregroundColor(Color.tint(scheme))
                 .frame(width: 52, height: 52)
-                .glassEffect(.regular.interactive(), in: Circle())
+                .glassSurface(Circle(), interactive: true)
         }
         .buttonStyle(.plain)
     }

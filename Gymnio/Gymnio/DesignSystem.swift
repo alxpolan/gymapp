@@ -50,7 +50,7 @@ struct GlassCard<Content: View>: View {
         content()
             .padding(16)
             .frame(maxWidth: .infinity, alignment: .leading)
-            .glassEffect(in: RoundedRectangle(cornerRadius: 16, style: .continuous))
+            .glassSurface(RoundedRectangle(cornerRadius: 16, style: .continuous))
             .overlay(alignment: .leading) {
                 if leftAccent {
                     Capsule()
@@ -98,7 +98,7 @@ struct GlassCircleButton: View {
                 .font(.system(size: 18, weight: .medium))
                 .foregroundColor(scheme == .dark ? Color(hex: "f0f0f0") : Color(hex: "1a1a1a"))
                 .frame(width: 40, height: 40)
-                .glassEffect(in: Circle())
+                .glassSurface(Circle())
         }
     }
 }
@@ -143,12 +143,9 @@ struct GlassBtn: View {
                 .foregroundColor(prominent ? .white : Color.tint(scheme))
                 .padding(.vertical, 14)
                 .padding(.horizontal, 24)
-                .glassEffect(
-                    prominent
-                        ? .regular.tint(Color.tint(scheme).opacity(0.5)).interactive()
-                        : .regular.interactive(),
-                    in: RoundedRectangle(cornerRadius: 12, style: .continuous)
-                )
+                .glassSurface(RoundedRectangle(cornerRadius: 12, style: .continuous),
+                              tint: prominent ? Color.tint(scheme).opacity(0.5) : nil,
+                              interactive: true)
         }
     }
 }

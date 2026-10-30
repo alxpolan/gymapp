@@ -75,8 +75,8 @@ struct InsightsView: View {
         }
         .navigationBarHidden(true)
         .onAppear(perform: reload)
-        .onChange(of: store.entries.count) { _, _ in reload() }
-        .onChange(of: premium.isPro) { _, _ in reload() }
+        .onChangeCompat(of: store.entries.count) { _ in reload() }
+        .onChangeCompat(of: premium.isPro) { _ in reload() }
     }
 
     private var emptyState: some View {
@@ -319,7 +319,7 @@ struct OneRMCard: View {
                                 }
                         }
                     }
-                    .chartXSelection(value: $selectedIndex)
+                    .chartSelectionCompat($selectedIndex)
                     .chartXAxis(.hidden)
                     .frame(height: 140)
                 } else {

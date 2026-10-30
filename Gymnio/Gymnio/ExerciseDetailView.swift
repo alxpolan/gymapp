@@ -123,23 +123,13 @@ struct ExerciseDetailView: View {
                         ]
 
                         VStack(spacing: 6) {
-                            GeometryReader { geo in
-                                ScrollView(.horizontal, showsIndicators: false) {
-                                    HStack(spacing: 0) {
-                                        ForEach(Array(charts.enumerated()), id: \.offset) { i, c in
-                                            DetailChartCard(title: c.0, unit: c.1, data: c.2)
-                                                .frame(width: geo.size.width)
-                                                .id(i)
-                                        }
-                                    }
-                                    .scrollTargetLayout()
+                            TabView(selection: $chartIndex) {
+                                ForEach(Array(charts.enumerated()), id: \.offset) { i, c in
+                                    DetailChartCard(title: c.0, unit: c.1, data: c.2)
+                                        .tag(i)
                                 }
-                                .scrollTargetBehavior(.paging)
-                                .scrollPosition(id: Binding<Int?>(
-                                    get: { chartIndex },
-                                    set: { chartIndex = $0 ?? 0 }
-                                ))
                             }
+                            .tabViewStyle(.page(indexDisplayMode: .never))
                             .frame(height: 220)
 
                             PaginationDots(total: 3, current: chartIndex)
@@ -346,7 +336,7 @@ struct DetailChartCard: View {
                                 }
                         }
                     }
-                    .chartXSelection(value: $selectedIndex)
+                    .chartSelectionCompat($selectedIndex)
                     .chartXAxis(.hidden)
                     .chartYAxis(.hidden)
                     .chartBackground { _ in Color.clear }

@@ -9,7 +9,7 @@ enum MuscleGroup: String, CaseIterable, Identifiable {
 
     var systemImage: String {
         switch self {
-        case .chest:     return "figure.strengthtraining.traditional"
+        case .chest:     return SymbolCompat.strength
         case .back:      return "figure.rower"
         case .legs:      return "figure.walk"
         case .shoulders: return "figure.arms.open"

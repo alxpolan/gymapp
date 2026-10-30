@@ -10,7 +10,6 @@ private let posthogHost = "https://eu.i.posthog.com"
 struct GymnioApp: App {
     @StateObject private var store = AppStore.shared
     @StateObject private var premium = PremiumManager.shared
-    @Environment(\.scenePhase) private var scenePhase
 
     init() {
         let config = PostHogConfig(apiKey: posthogProjectToken, host: posthogHost)
@@ -38,11 +37,6 @@ struct GymnioApp: App {
             ContentView()
                 .environmentObject(store)
                 .environmentObject(premium)
-        }
-        .onChange(of: scenePhase) { _, phase in
-            if phase == .background || phase == .inactive {
-                PostHogSDK.shared.flush()
-            }
         }
     }
 }

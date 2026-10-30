@@ -75,7 +75,7 @@ struct CustomizeHomeView: View {
         .navigationTitle(String(localized: "customize.title"))
         .navigationBarTitleDisplayMode(.large)
         .onAppear { settings = store.homeSettings }
-        .onChange(of: settings) { _, newValue in
+        .onChangeCompat(of: settings) { newValue in
             store.saveHomeSettings(newValue)
         }
     }
