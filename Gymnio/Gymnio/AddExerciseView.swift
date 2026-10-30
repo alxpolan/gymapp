@@ -22,12 +22,12 @@ struct AddExerciseView: View {
             VStack(alignment: .leading, spacing: 16) {
                 Text(store.t("add.title"))
                     .font(.system(size: 20, weight: .bold))
-                    .foregroundColor(scheme == .dark ? Color(hex: "f0f0f0") : Color(hex: "1a1a1a"))
+                    .foregroundColor(Color.gymText)
 
                 TextField(store.t("add.search"), text: $search)
                     .font(.system(size: 16))
                     .focused($isFocused)
-                    .foregroundColor(scheme == .dark ? Color(hex: "f0f0f0") : Color(hex: "1a1a1a"))
+                    .foregroundColor(Color.gymText)
                     .padding(14)
                     .background(
                         scheme == .dark
@@ -50,11 +50,10 @@ struct AddExerciseView: View {
                                 HStack {
                                     Image(systemName: "play.circle.fill")
                                         .font(.system(size: 22))
-                                        .foregroundStyle(LinearGradient(colors: [Color(hex: "5B8DEF"), Color(hex: "A06BFF")],
-                                                                        startPoint: .leading, endPoint: .trailing))
+                                        .foregroundStyle(Color.gymAccent)
                                     Text(item.displayName)
                                         .font(.system(size: 16))
-                                        .foregroundColor(scheme == .dark ? Color(hex: "f0f0f0") : Color(hex: "1a1a1a"))
+                                        .foregroundColor(Color.gymText)
                                     Spacer(minLength: 0)
                                     Image(systemName: "plus.circle")
                                         .font(.system(size: 18))
@@ -74,13 +73,13 @@ struct AddExerciseView: View {
 
                 Text(store.t("add.custom"))
                     .font(.system(size: 15, weight: .semibold))
-                    .foregroundColor(scheme == .dark ? Color(hex: "f0f0f0") : Color(hex: "1a1a1a"))
+                    .foregroundColor(Color.gymText)
 
                 TextField(store.t("add.placeholder"), text: $customName)
                     .font(.system(size: 16))
                     .autocapitalization(.words)
                     .onSubmit { add(customName) }
-                    .foregroundColor(scheme == .dark ? Color(hex: "f0f0f0") : Color(hex: "1a1a1a"))
+                    .foregroundColor(Color.gymText)
                     .padding(14)
                     .background(
                         scheme == .dark

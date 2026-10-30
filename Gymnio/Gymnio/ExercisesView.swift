@@ -69,7 +69,7 @@ struct ExerciseCard: View {
             VStack(alignment: .leading, spacing: 12) {
                 Text(group.exercise)
                     .font(.system(size: 18, weight: .bold))
-                    .foregroundColor(scheme == .dark ? Color(hex: "f0f0f0") : Color(hex: "1a1a1a"))
+                    .foregroundColor(Color.gymText)
                     .frame(maxWidth: .infinity, alignment: .leading)
 
                 if group.entries.isEmpty {
@@ -111,7 +111,7 @@ struct ExerciseStat: View {
         VStack(spacing: 2) {
             Text(value)
                 .font(.system(size: 20, weight: .semibold))
-                .foregroundColor(scheme == .dark ? Color(hex: "f0f0f0") : Color(hex: "1a1a1a"))
+                .foregroundColor(Color.gymText)
             Text(label)
                 .font(.system(size: 12))
                 .secondaryText()

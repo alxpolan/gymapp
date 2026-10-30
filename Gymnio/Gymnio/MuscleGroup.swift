@@ -22,11 +22,11 @@ enum MuscleGroup: String, CaseIterable, Identifiable {
     var color: Color {
         switch self {
         case .chest:     return Color(hex: "FF6B6B")
-        case .back:      return Color(hex: "4ECDC4")
-        case .legs:      return Color(hex: "5B8DEF")
-        case .shoulders: return Color(hex: "FFB020")
-        case .arms:      return Color(hex: "A06BFF")
-        case .core:      return Color(hex: "34C759")
+        case .back:      return Color.gymPositive
+        case .legs:      return Color.gymAccent
+        case .shoulders: return Color.gymWarning
+        case .arms:      return Color.gymAccent
+        case .core:      return Color.gymPositive
         case .other:     return Color(hex: "98989F")
         }
     }

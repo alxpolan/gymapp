@@ -26,7 +26,7 @@ struct SettingsView: View {
                 SettingsSectionTitle(title: store.t("settings.section.pro"))
                 if premium.isPro {
                     GlassCard {
-                        SettingsRow(icon: "bolt.fill", iconColor: Color(hex: "A06BFF"),
+                        SettingsRow(icon: "bolt.fill", iconColor: Color.gymAccent,
                                     label: store.t("pro.active.title")) {
                             ProBadge()
                         }
@@ -42,7 +42,7 @@ struct SettingsView: View {
                                 PostHogSDK.shared.capture("customer_center_opened")
                                 showCustomerCenter = true
                             } label: {
-                                SettingsRow(icon: "creditcard.fill", iconColor: Color(hex: "5B8DEF"),
+                                SettingsRow(icon: "creditcard.fill", iconColor: Color.gymAccent,
                                             label: store.t("settings.manage")) {
                                     Image(systemName: "chevron.right")
                                         .font(.system(size: 13, weight: .semibold)).foregroundColor(.secondary)
@@ -57,7 +57,7 @@ struct SettingsView: View {
                             PostHogSDK.shared.capture("redeem_code_tapped")
                             Purchases.shared.presentCodeRedemptionSheet()
                         } label: {
-                            SettingsRow(icon: "gift.fill", iconColor: Color(hex: "FF9500"),
+                            SettingsRow(icon: "gift.fill", iconColor: Color.gymWarning,
                                         label: store.t("settings.redeem")) {
                                 Image(systemName: "chevron.right")
                                     .font(.system(size: 13, weight: .semibold)).foregroundColor(.secondary)
@@ -76,7 +76,7 @@ struct SettingsView: View {
                             showPaywall = true
                         }
                     } label: {
-                        SettingsRow(icon: "square.and.arrow.up", iconColor: Color(hex: "34c759"),
+                        SettingsRow(icon: "square.and.arrow.up", iconColor: Color.gymPositive,
                                     label: store.t("settings.export")) {
                             if premium.isPro {
                                 Image(systemName: "chevron.right")
@@ -91,7 +91,7 @@ struct SettingsView: View {
 
                 GlassCard {
                     Button { showImporter = true } label: {
-                        SettingsRow(icon: "square.and.arrow.down", iconColor: Color(hex: "5B8DEF"),
+                        SettingsRow(icon: "square.and.arrow.down", iconColor: Color.gymAccent,
                                     label: store.t("settings.import")) {
                             Image(systemName: "chevron.right")
                                 .font(.system(size: 13, weight: .semibold)).foregroundColor(.secondary)
@@ -136,7 +136,7 @@ struct SettingsView: View {
 
                         Divider().padding(.leading, 44)
 
-                        SettingsRow(icon: "scalemass.fill", iconColor: Color(hex: "34c759"), label: store.t("settings.unit")) {
+                        SettingsRow(icon: "scalemass.fill", iconColor: Color.gymPositive, label: store.t("settings.unit")) {
                             Picker("", selection: Binding(
                                 get: { store.weightUnit },
                                 set: { store.setWeightUnit($0) }
@@ -150,7 +150,7 @@ struct SettingsView: View {
 
                         Divider().padding(.leading, 44)
 
-                        SettingsRow(icon: "timer", iconColor: Color(hex: "5B8DEF"), label: store.t("settings.rest")) {
+                        SettingsRow(icon: "timer", iconColor: Color.gymAccent, label: store.t("settings.rest")) {
                             Picker("", selection: Binding(
                                 get: { store.restSeconds },
                                 set: { store.setRestSeconds($0) }
@@ -167,7 +167,7 @@ struct SettingsView: View {
                         Divider().padding(.leading, 44)
 
                         NavigationLink(destination: RemindersView()) {
-                            SettingsRow(icon: "bell.fill", iconColor: Color(hex: "FF9500"), label: store.t("settings.notifications")) {
+                            SettingsRow(icon: "bell.fill", iconColor: Color.gymWarning, label: store.t("settings.notifications")) {
                                 Image(systemName: "chevron.right")
                                     .font(.system(size: 13, weight: .semibold))
                                     .foregroundColor(.secondary)
@@ -185,7 +185,7 @@ struct SettingsView: View {
                                         label: store.t("settings.privacy"),
                                         url: "https://gymnio.fringelo.com/privacy-policy/")
                         Divider().padding(.leading, 44)
-                        SettingsLinkRow(icon: "doc.text.fill", iconColor: Color(hex: "34c759"),
+                        SettingsLinkRow(icon: "doc.text.fill", iconColor: Color.gymPositive,
                                         label: store.t("settings.terms"),
                                         url: "https://www.apple.com/legal/internet-services/itunes/dev/stdeula/")
                     }

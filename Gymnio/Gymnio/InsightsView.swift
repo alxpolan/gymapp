@@ -99,13 +99,13 @@ struct InsightsView: View {
             HStack(spacing: 0) {
                 OverviewStat(value: "\(streak.currentWeekStreak)",
                              label: store.t("insights.overview.streak"),
-                             color: Color(hex: "FF9500"), icon: "flame.fill")
+                             color: Color.gymWarning, icon: "flame.fill")
                 OverviewStat(value: "\(streak.activeDays)",
                              label: store.t("insights.overview.days"),
                              color: Color.tint(scheme), icon: "calendar")
                 OverviewStat(value: "\(Int(streak.consistency * 100))%",
                              label: store.t("insights.overview.consistency"),
-                             color: Color(hex: "34C759"), icon: "target")
+                             color: Color.gymPositive, icon: "target")
             }
         }
     }
@@ -115,13 +115,12 @@ struct InsightsView: View {
             VStack(alignment: .leading, spacing: 12) {
                 Text(store.t("insights.weeklyVolume"))
                     .font(.system(size: 16, weight: .bold))
-                    .foregroundColor(scheme == .dark ? Color(hex: "f0f0f0") : Color(hex: "1a1a1a"))
+                    .foregroundColor(Color.gymText)
                 if weekly.contains(where: { $0.value > 0 }) {
                     Chart(weekly) { pt in
                         BarMark(x: .value("w", pt.label),
                                 y: .value("v", store.displayWeight(pt.value)))
-                            .foregroundStyle(LinearGradient(colors: [Color(hex: "5B8DEF"), Color(hex: "A06BFF")],
-                                                            startPoint: .top, endPoint: .bottom))
+                            .foregroundStyle(Color.gymAccent)
                             .cornerRadius(4)
                     }
                     .chartYAxis { AxisMarks(position: .leading) }
@@ -188,11 +187,10 @@ struct CoachRecapCard: View {
                 HStack(spacing: 10) {
                     Image(systemName: insight.systemImage)
                         .font(.system(size: 20))
-                        .foregroundStyle(LinearGradient(colors: [Color(hex: "5B8DEF"), Color(hex: "A06BFF")],
-                                                        startPoint: .leading, endPoint: .trailing))
+                        .foregroundStyle(Color.gymAccent)
                     Text(insight.title)
                         .font(.system(size: 17, weight: .bold))
-                        .foregroundColor(scheme == .dark ? Color(hex: "f0f0f0") : Color(hex: "1a1a1a"))
+                        .foregroundColor(Color.gymText)
                 }
                 Text(insight.message)
                     .font(.system(size: 14))
@@ -233,7 +231,7 @@ struct CoachFeedCard: View {
                             VStack(alignment: .leading, spacing: 3) {
                                 Text(insight.title)
                                     .font(.system(size: 15, weight: .bold))
-                                    .foregroundColor(scheme == .dark ? Color(hex: "f0f0f0") : Color(hex: "1a1a1a"))
+                                    .foregroundColor(Color.gymText)
                                 Text(insight.message)
                                     .font(.system(size: 13))
                                     .secondaryText()
@@ -281,7 +279,7 @@ struct OneRMCard: View {
                             .font(.system(size: 12)).secondaryText()
                         Text("\(formatWeightValue(store.displayWeight(best))) \(store.unitLabel)")
                             .font(.system(size: 24, weight: .heavy))
-                            .foregroundColor(scheme == .dark ? Color(hex: "f0f0f0") : Color(hex: "1a1a1a"))
+                            .foregroundColor(Color.gymText)
                     }
                     Spacer()
                     Menu {
@@ -346,7 +344,7 @@ struct RecordsCard: View {
                         VStack(alignment: .leading, spacing: 3) {
                             Text(r.exercise)
                                 .font(.system(size: 15, weight: .semibold))
-                                .foregroundColor(scheme == .dark ? Color(hex: "f0f0f0") : Color(hex: "1a1a1a"))
+                                .foregroundColor(Color.gymText)
                             Text(String(format: store.t("insights.records.line"),
                                         formatWeightValue(store.displayWeight(r.maxWeight)), store.unitLabel, r.maxReps))
                                 .font(.system(size: 12)).secondaryText()
@@ -386,7 +384,7 @@ struct MuscleSplitCard: View {
                                 .frame(width: 20)
                             Text(store.t(m.group.titleKey))
                                 .font(.system(size: 14, weight: .semibold))
-                                .foregroundColor(scheme == .dark ? Color(hex: "f0f0f0") : Color(hex: "1a1a1a"))
+                                .foregroundColor(Color.gymText)
                             Spacer()
                             Text("\(Int(m.share * 100))%")
                                 .font(.system(size: 13, weight: .bold))
@@ -416,10 +414,10 @@ struct TrendsCard: View {
 
     private func color(_ c: TrendCategory) -> Color {
         switch c {
-        case .improving: return Color(hex: "34C759")
+        case .improving: return Color.gymPositive
         case .declining: return Color(hex: "FF3B30")
-        case .steady:    return Color(hex: "FF9500")
-        case .new:       return Color(hex: "A06BFF")
+        case .steady:    return Color.gymWarning
+        case .new:       return Color.gymAccent
         }
     }
 
@@ -434,7 +432,7 @@ struct TrendsCard: View {
                             .frame(width: 22)
                         Text(t.exercise)
                             .font(.system(size: 15, weight: .semibold))
-                            .foregroundColor(scheme == .dark ? Color(hex: "f0f0f0") : Color(hex: "1a1a1a"))
+                            .foregroundColor(Color.gymText)
                         Spacer()
                         Text(trendLabel(t))
                             .font(.system(size: 13, weight: .semibold))

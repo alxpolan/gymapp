@@ -54,7 +54,7 @@ struct RemindersView: View {
                     GlassCard {
                         SettingsRow(
                             icon: "bell.fill",
-                            iconColor: Color(hex: "FF9500"),
+                            iconColor: Color.gymWarning,
                             label: store.t("reminders.title")
                         ) {
                             Toggle("", isOn: $masterEnabled)

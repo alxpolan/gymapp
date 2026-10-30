@@ -104,6 +104,7 @@ struct ContentView: View {
                 RestTimerManager.shared.endExpired()
             }
         }
+        .tint(Color.gymAccent)
         .preferredColorScheme(store.colorScheme)
 
         if forceTabBar {

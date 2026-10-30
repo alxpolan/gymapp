@@ -13,10 +13,10 @@ struct CoachInsight: Identifiable {
 
     var tint: Color {
         switch kind {
-        case .celebration: return Color(hex: "34C759")
-        case .warning:     return Color(hex: "FF9500")
-        case .suggestion:  return Color(hex: "5B8DEF")
-        case .info:        return Color(hex: "A06BFF")
+        case .celebration: return Color.gymPositive
+        case .warning:     return Color.gymWarning
+        case .suggestion:  return Color.gymAccent
+        case .info:        return Color.gymTextSecondary
         }
     }
 }

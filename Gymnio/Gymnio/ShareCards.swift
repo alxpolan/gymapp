@@ -13,47 +13,51 @@ struct RecordShareCard: View {
 
     var body: some View {
         ZStack {
-            LinearGradient(colors: [Color(hex: "5B8DEF"), Color(hex: "A06BFF")],
-                           startPoint: .topLeading, endPoint: .bottomTrailing)
+            Color(hex: "0E0E10")
 
-            VStack(alignment: .leading, spacing: 14) {
+            VStack(alignment: .leading, spacing: 0) {
                 HStack(spacing: 8) {
                     Image(systemName: "trophy.fill")
                     Text(badge.uppercased())
-                        .font(.system(size: 15, weight: .heavy))
-                        .tracking(1.2)
+                        .font(.system(size: 14, weight: .heavy))
+                        .tracking(1.4)
                 }
-                .foregroundColor(Color.white.opacity(0.9))
+                .foregroundColor(Color(hex: "FF5B2E"))
 
                 Spacer()
 
                 Text(exercise)
-                    .font(.system(size: 30, weight: .bold))
-                    .foregroundColor(.white)
+                    .font(.system(size: 26, weight: .bold))
+                    .foregroundColor(Color(hex: "F2F0EB"))
                     .lineLimit(2)
                     .minimumScaleFactor(0.6)
 
                 Text(weightText)
-                    .font(.system(size: 64, weight: .heavy))
-                    .foregroundColor(.white)
+                    .font(.system(size: 68, weight: .heavy).monospacedDigit())
+                    .foregroundColor(Color(hex: "FF5B2E"))
                     .minimumScaleFactor(0.5)
                     .lineLimit(1)
+                    .padding(.top, 6)
 
                 Text("× \(reps) \(repsLabel)")
-                    .font(.system(size: 24, weight: .semibold))
-                    .foregroundColor(Color.white.opacity(0.9))
+                    .font(.system(size: 24, weight: .semibold).monospacedDigit())
+                    .foregroundColor(Color(hex: "F2F0EB"))
 
                 Spacer()
 
+                Rectangle().fill(Color(hex: "2E2E33")).frame(height: 1)
+
                 HStack {
                     Text(dateText)
-                        .font(.system(size: 14))
-                        .foregroundColor(Color.white.opacity(0.8))
+                        .font(.system(size: 13))
+                        .foregroundColor(Color(hex: "9A978F"))
                     Spacer()
-                    Text("Gymnio")
-                        .font(.system(size: 18, weight: .heavy))
-                        .foregroundColor(.white)
+                    Text("GYMNIO")
+                        .font(.system(size: 15, weight: .heavy))
+                        .tracking(2)
+                        .foregroundColor(Color(hex: "F2F0EB"))
                 }
+                .padding(.top, 14)
             }
             .padding(28)
         }
@@ -82,7 +86,7 @@ struct RecordShareButton: View {
                           preview: SharePreview(entry.exercise, image: Image(uiImage: image))) {
                     Image(systemName: "square.and.arrow.up")
                         .font(.system(size: 17))
-                        .foregroundColor(Color.tint(.light))
+                        .foregroundColor(.gymAccent)
                         .padding(8)
                 }
                 .simultaneousGesture(TapGesture().onEnded {

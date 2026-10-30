@@ -34,7 +34,7 @@ struct HomeView: View {
                         HStack {
                             Text(greeting)
                                 .font(.system(size: 34, weight: .heavy))
-                                .foregroundColor(scheme == .dark ? Color(hex: "f0f0f0") : Color(hex: "1a1a1a"))
+                                .foregroundColor(Color.gymText)
                             Spacer()
                             GlassCircleButton(icon: "gearshape.fill") {
                                 navPath.append(NavDest.settings)
@@ -93,7 +93,7 @@ struct HomeView: View {
                                     VStack(alignment: .leading, spacing: 0) {
                                         Text(store.t("home.top.title"))
                                             .font(.system(size: 18, weight: .bold))
-                                            .foregroundColor(scheme == .dark ? Color(hex: "f0f0f0") : Color(hex: "1a1a1a"))
+                                            .foregroundColor(Color.gymText)
                                             .padding(.bottom, 16)
 
                                         ForEach(Array(topGroups.prefix(3).enumerated()), id: \.element.id) { idx, group in
@@ -108,7 +108,7 @@ struct HomeView: View {
                                                     )
                                                 Text(group.exercise)
                                                     .font(.system(size: 15, weight: .semibold))
-                                                    .foregroundColor(scheme == .dark ? Color(hex: "f0f0f0") : Color(hex: "1a1a1a"))
+                                                    .foregroundColor(Color.gymText)
                                                     .frame(maxWidth: .infinity, alignment: .leading)
                                                 Text(String(format: "%.0f \(store.unitLabel)", store.displayWeight(group.totalVolume)))
                                                     .font(.system(size: 13, weight: .medium))
@@ -129,7 +129,7 @@ struct HomeView: View {
                                             .foregroundColor(Color.tint(scheme))
                                         Text(store.t("home.customize"))
                                             .font(.system(size: 15, weight: .semibold))
-                                            .foregroundColor(scheme == .dark ? Color(hex: "f0f0f0") : Color(hex: "1a1a1a"))
+                                            .foregroundColor(Color.gymText)
                                             .frame(maxWidth: .infinity, alignment: .leading)
                                         Image(systemName: "chevron.right")
                                             .font(.system(size: 13, weight: .semibold))
@@ -223,7 +223,7 @@ struct ProgressionAlertCard: View {
                         .foregroundColor(.green)
                     Text(store.t("home.progression.ready"))
                         .font(.system(size: 18, weight: .bold))
-                        .foregroundColor(scheme == .dark ? Color(hex: "f0f0f0") : Color(hex: "1a1a1a"))
+                        .foregroundColor(Color.gymText)
                 }
                 Text(bodyText)
                     .font(.system(size: 14))
@@ -233,7 +233,7 @@ struct ProgressionAlertCard: View {
         }
         .background(
             LinearGradient(
-                colors: [Color(hex: "ff9500").opacity(scheme == .dark ? 0.22 : 0.14),
+                colors: [Color.gymWarning.opacity(scheme == .dark ? 0.22 : 0.14),
                          Color(hex: "ff6b00").opacity(0.04)],
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
@@ -294,7 +294,7 @@ struct HomeChartCard: View {
             VStack(alignment: .leading, spacing: 12) {
                 Text(group.exercise)
                     .font(.system(size: 18, weight: .bold))
-                    .foregroundColor(scheme == .dark ? Color(hex: "f0f0f0") : Color(hex: "1a1a1a"))
+                    .foregroundColor(Color.gymText)
 
                 if data.count >= 2 {
                     Chart(data) { pt in

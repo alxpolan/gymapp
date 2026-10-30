@@ -41,7 +41,7 @@ struct CustomizeHomeView: View {
                         )
                         Divider().padding(.leading, 44)
                         CustomizeToggleRow(
-                            icon: "chart.line.uptrend.xyaxis", iconColor: Color(hex: "FF9500"),
+                            icon: "chart.line.uptrend.xyaxis", iconColor: Color.gymWarning,
                             label: String(localized: "customize.charts"),
                             isOn: $settings.showCharts
                         )

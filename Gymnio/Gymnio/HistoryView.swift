@@ -76,7 +76,7 @@ struct HistoryEntryCard: View {
                 VStack(alignment: .leading, spacing: 4) {
                     Text(entry.exercise)
                         .font(.system(size: 16, weight: .bold))
-                        .foregroundColor(scheme == .dark ? Color(hex: "f0f0f0") : Color(hex: "1a1a1a"))
+                        .foregroundColor(Color.gymText)
                     Text("\(formatWeightValue(store.displayWeight(entry.weight))) \(store.unitLabel) × \(entry.reps) \(store.t("common.reps"))")
                         .font(.system(size: 15))
                         .secondaryText()

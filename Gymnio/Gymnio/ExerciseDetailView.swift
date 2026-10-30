@@ -46,7 +46,7 @@ struct ExerciseDetailView: View {
 
                     Text(exerciseName)
                         .font(.system(size: 34, weight: .heavy))
-                        .foregroundColor(scheme == .dark ? Color(hex: "f0f0f0") : Color(hex: "1a1a1a"))
+                        .foregroundColor(Color.gymText)
                         .padding(.top, -16)
                         .padding(.bottom, 8)
 
@@ -58,7 +58,7 @@ struct ExerciseDetailView: View {
                         VStack(alignment: .leading, spacing: 14) {
                             Text(store.t("detail.new_entry"))
                                 .font(.system(size: 20, weight: .bold))
-                                .foregroundColor(scheme == .dark ? Color(hex: "f0f0f0") : Color(hex: "1a1a1a"))
+                                .foregroundColor(Color.gymText)
 
                             HStack(spacing: 12) {
                                 DetailInput(label: "\(store.t("detail.weight")) (\(store.unitLabel))",
@@ -140,7 +140,7 @@ struct ExerciseDetailView: View {
                     if !entries.isEmpty {
                         Text(store.t("detail.history.title"))
                             .font(.system(size: 18, weight: .bold))
-                            .foregroundColor(scheme == .dark ? Color(hex: "f0f0f0") : Color(hex: "1a1a1a"))
+                            .foregroundColor(Color.gymText)
 
                         ForEach(entries) { entry in
                             EntryCard(entry: entry, isPB: entry.weight == maxWeight) {
@@ -258,7 +258,7 @@ struct DetailInput: View {
                 .focused(focused, equals: field)
                 .font(.system(size: 20, weight: .semibold))
                 .multilineTextAlignment(.center)
-                .foregroundColor(scheme == .dark ? Color(hex: "f0f0f0") : Color(hex: "1a1a1a"))
+                .foregroundColor(Color.gymText)
                 .padding(14)
                 .background(scheme == .dark ? Color.white.opacity(0.08) : Color.black.opacity(0.04))
                 .overlay(RoundedRectangle(cornerRadius: 12)
@@ -281,7 +281,7 @@ struct SummaryItem: View {
         VStack(spacing: 4) {
             Text(value)
                 .font(.system(size: 22, weight: .bold))
-                .foregroundColor(scheme == .dark ? Color(hex: "f0f0f0") : Color(hex: "1a1a1a"))
+                .foregroundColor(Color.gymText)
             Text(label)
                 .font(.system(size: 12))
                 .secondaryText()
@@ -309,7 +309,7 @@ struct DetailChartCard: View {
             VStack(alignment: .leading, spacing: 12) {
                 Text(title)
                     .font(.system(size: 18, weight: .bold))
-                    .foregroundColor(scheme == .dark ? Color(hex: "f0f0f0") : Color(hex: "1a1a1a"))
+                    .foregroundColor(Color.gymText)
                 if data.count >= 2 {
                     Chart(data) { pt in
                         LineMark(x: .value("i", pt.index), y: .value("v", pt.value))
@@ -367,7 +367,7 @@ struct EntryCard: View {
                     HStack(spacing: 4) {
                         Text("\(formatWeightValue(store.displayWeight(entry.weight))) \(store.unitLabel)")
                             .font(.system(size: 17, weight: .bold))
-                            .foregroundColor(scheme == .dark ? Color(hex: "f0f0f0") : Color(hex: "1a1a1a"))
+                            .foregroundColor(Color.gymText)
                         Text("× \(entry.reps) \(store.t("common.reps"))")
                             .font(.system(size: 15))
                             .secondaryText()
@@ -434,7 +434,7 @@ struct LockedChartCard: View {
                     VStack(spacing: 8) {
                         Image(systemName: "lock.fill")
                             .font(.system(size: 22, weight: .semibold))
-                            .foregroundColor(scheme == .dark ? Color(hex: "98989f") : Color(hex: "888888"))
+                            .foregroundColor(Color.gymTextSecondary)
                         Text(String(format: store.t("detail.charts.locked"), required, current, required))
                             .font(.system(size: 14, weight: .medium))
                             .secondaryText()

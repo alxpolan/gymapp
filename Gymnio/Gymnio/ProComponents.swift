@@ -6,12 +6,11 @@ struct ProBadge: View {
     var body: some View {
         Text("PRO")
             .font(.system(size: 10, weight: .heavy))
-            .foregroundColor(.white)
+            .foregroundColor(.gymOnAccent)
             .padding(.horizontal, 7)
             .padding(.vertical, 3)
             .background(
-                LinearGradient(colors: [Color(hex: "5B8DEF"), Color(hex: "A06BFF")],
-                               startPoint: .leading, endPoint: .trailing),
+                Color.gymAccent,
                 in: Capsule()
             )
     }
@@ -46,11 +45,10 @@ struct ProGate<Content: View>: View {
                     Image(systemName: "lock.fill")
                         .font(.system(size: 26, weight: .semibold))
                         .foregroundStyle(
-                            LinearGradient(colors: [Color(hex: "5B8DEF"), Color(hex: "A06BFF")],
-                                           startPoint: .leading, endPoint: .trailing))
+                            Color.gymAccent)
                     Text(store.t(titleKey))
                         .font(.system(size: 17, weight: .bold))
-                        .foregroundColor(scheme == .dark ? Color(hex: "f0f0f0") : Color(hex: "1a1a1a"))
+                        .foregroundColor(Color.gymText)
                         .multilineTextAlignment(.center)
                     Text(store.t(subtitleKey))
                         .font(.system(size: 13))
@@ -61,12 +59,11 @@ struct ProGate<Content: View>: View {
                         Button { showPaywall = true } label: {
                             Text(store.t("pro.unlock"))
                                 .font(.system(size: 15, weight: .semibold))
-                                .foregroundColor(.white)
+                                .foregroundColor(.gymOnAccent)
                                 .padding(.horizontal, 22)
                                 .padding(.vertical, 11)
                                 .background(
-                                    LinearGradient(colors: [Color(hex: "5B8DEF"), Color(hex: "A06BFF")],
-                                                   startPoint: .leading, endPoint: .trailing),
+                                    Color.gymAccent,
                                     in: Capsule())
                         }
                         .buttonStyle(.plain)
@@ -98,18 +95,17 @@ struct UpgradeCTACard: View {
             HStack(spacing: 14) {
                 ZStack {
                     Circle()
-                        .fill(LinearGradient(colors: [Color(hex: "5B8DEF"), Color(hex: "A06BFF")],
-                                             startPoint: .topLeading, endPoint: .bottomTrailing))
+                        .fill(Color.gymAccent)
                         .frame(width: 46, height: 46)
                     Image(systemName: "bolt.fill")
                         .font(.system(size: 20, weight: .bold))
-                        .foregroundColor(.white)
+                        .foregroundColor(.gymOnAccent)
                 }
                 VStack(alignment: .leading, spacing: 3) {
                     HStack(spacing: 6) {
                         Text(store.t("pro.cta.title"))
                             .font(.system(size: 16, weight: .bold))
-                            .foregroundColor(scheme == .dark ? Color(hex: "f0f0f0") : Color(hex: "1a1a1a"))
+                            .foregroundColor(Color.gymText)
                         ProBadge()
                     }
                     Text(store.t("pro.cta.subtitle"))
@@ -131,15 +127,11 @@ struct UpgradeCTACard: View {
         .padding(16)
         .background(
             RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .fill(LinearGradient(
-                    colors: [Color(hex: "5B8DEF").opacity(scheme == .dark ? 0.20 : 0.12),
-                             Color(hex: "A06BFF").opacity(scheme == .dark ? 0.14 : 0.06)],
-                    startPoint: .topLeading, endPoint: .bottomTrailing))
+                .fill(Color.gymAccent.opacity(scheme == .dark ? 0.20 : 0.12))
         )
         .overlay(
             RoundedRectangle(cornerRadius: 16, style: .continuous)
-                .stroke(LinearGradient(colors: [Color(hex: "5B8DEF").opacity(0.4), Color(hex: "A06BFF").opacity(0.4)],
-                                       startPoint: .leading, endPoint: .trailing), lineWidth: 1)
+                .stroke(Color.gymAccent.opacity(0.4), lineWidth: 1)
         )
         .sheet(isPresented: $showPaywall) { PaywallView(source: source) }
     }
@@ -155,7 +147,7 @@ struct InsightSectionHeader: View {
         HStack(spacing: 8) {
             Text(title)
                 .font(.system(size: 20, weight: .bold))
-                .foregroundColor(scheme == .dark ? Color(hex: "f0f0f0") : Color(hex: "1a1a1a"))
+                .foregroundColor(Color.gymText)
             if isPro { ProBadge() }
             Spacer()
         }

@@ -65,12 +65,12 @@ struct OnboardingView: View {
 
                 Text(store.t("onboarding.title"))
                     .font(.system(size: 34, weight: .heavy))
-                    .foregroundColor(scheme == .dark ? Color(hex: "f0f0f0") : Color(hex: "1a1a1a"))
+                    .foregroundColor(Color.gymText)
 
                 VStack(alignment: .leading, spacing: 12) {
                     Text(store.t("onboarding.goal.question"))
                         .font(.system(size: 18, weight: .bold))
-                        .foregroundColor(scheme == .dark ? Color(hex: "f0f0f0") : Color(hex: "1a1a1a"))
+                        .foregroundColor(Color.gymText)
 
                     ForEach(goals, id: \.id) { item in
                         Button { goal = item.id } label: {
@@ -84,7 +84,7 @@ struct OnboardingView: View {
                                     Image(systemName: "checkmark.circle.fill")
                                 }
                             }
-                            .foregroundColor(goal == item.id ? Color.tint(scheme) : (scheme == .dark ? Color(hex: "f0f0f0") : Color(hex: "1a1a1a")))
+                            .foregroundColor(goal == item.id ? Color.tint(scheme) : (Color.gymText))
                             .padding(16)
                             .frame(maxWidth: .infinity)
                             .glassSurface(RoundedRectangle(cornerRadius: 16, style: .continuous),
@@ -98,7 +98,7 @@ struct OnboardingView: View {
                 VStack(alignment: .leading, spacing: 12) {
                     Text(store.t("settings.unit"))
                         .font(.system(size: 18, weight: .bold))
-                        .foregroundColor(scheme == .dark ? Color(hex: "f0f0f0") : Color(hex: "1a1a1a"))
+                        .foregroundColor(Color.gymText)
                     Picker("", selection: $unit) {
                         Text("kg").tag("kg")
                         Text("lbs").tag("lbs")
@@ -128,7 +128,7 @@ struct StarterExercisesCard: View {
         VStack(alignment: .leading, spacing: 14) {
             Text(store.t("starter.title"))
                 .font(.system(size: 22, weight: .bold))
-                .foregroundColor(scheme == .dark ? Color(hex: "f0f0f0") : Color(hex: "1a1a1a"))
+                .foregroundColor(Color.gymText)
             Text(store.t("starter.subtitle"))
                 .font(.system(size: 15))
                 .secondaryText()
@@ -142,7 +142,7 @@ struct StarterExercisesCard: View {
                             .multilineTextAlignment(.center)
                             .frame(maxWidth: .infinity, minHeight: 44)
                             .padding(.horizontal, 8)
-                            .glassSurface(RoundedRectangle(cornerRadius: 14, style: .continuous), interactive: true)
+                            .flatSurface(RoundedRectangle(cornerRadius: 14, style: .continuous))
                     }
                     .buttonStyle(.plain)
                 }
@@ -199,7 +199,7 @@ struct QuickLogView: View {
                 VStack(spacing: 20) {
                     Text(exercise)
                         .font(.system(size: 28, weight: .heavy))
-                        .foregroundColor(scheme == .dark ? Color(hex: "f0f0f0") : Color(hex: "1a1a1a"))
+                        .foregroundColor(Color.gymText)
                         .multilineTextAlignment(.center)
                         .padding(.top, 28)
 
@@ -249,7 +249,7 @@ struct QuickLogView: View {
                 .padding(.top, 8)
             Text(store.t(firstSaved ? "quicklog.saved.title" : "quicklog.saved.more"))
                 .font(.system(size: 22, weight: .bold))
-                .foregroundColor(scheme == .dark ? Color(hex: "f0f0f0") : Color(hex: "1a1a1a"))
+                .foregroundColor(Color.gymText)
                 .multilineTextAlignment(.center)
             if firstSaved {
                 Text(store.t("quicklog.saved.subtitle"))
@@ -341,7 +341,7 @@ struct StepperRow: View {
                     Spacer()
                     Text(value)
                         .font(.system(size: 40, weight: .bold))
-                        .foregroundColor(scheme == .dark ? Color(hex: "f0f0f0") : Color(hex: "1a1a1a"))
+                        .foregroundColor(Color.gymText)
                         .minimumScaleFactor(0.6)
                     Spacer()
                     roundButton("plus", action: plus)
@@ -356,7 +356,7 @@ struct StepperRow: View {
                 .font(.system(size: 20, weight: .bold))
                 .foregroundColor(Color.tint(scheme))
                 .frame(width: 52, height: 52)
-                .glassSurface(Circle(), interactive: true)
+                .flatSurface(Circle())
         }
         .buttonStyle(.plain)
     }
