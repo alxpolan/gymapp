@@ -47,3 +47,30 @@ struct PlaybookRulesTests {
         #expect(workouts.last?.exercises == ["Squat", "Bench Press"])
     }
 }
+
+struct SetKindTests {
+    @Test func warmupsDoNotCountTowardsVolumeOrSets() {
+        let entries = [
+            WorkoutEntry.create(exercise: "Squat", weight: 40, reps: 10, workoutId: "w", kind: .warmup),
+            WorkoutEntry.create(exercise: "Squat", weight: 100, reps: 5, workoutId: "w"),
+            WorkoutEntry.create(exercise: "Squat", weight: 100, reps: 5, workoutId: "w", kind: .drop)
+        ]
+        let workout = Workout.group(entries)[0]
+        #expect(workout.setCount == 2)
+        #expect(workout.volumeKg == 1000)
+        #expect(workout.entries.count == 3)
+    }
+
+    @Test func oldEntriesWithoutKindStillDecode() throws {
+        let json = #"{"id":"1","exercise":"Squat","weight":100,"reps":5,"date":0}"#.data(using: .utf8)!
+        let entry = try JSONDecoder().decode(WorkoutEntry.self, from: json)
+        #expect(entry.kind == nil)
+        #expect(!entry.isWarmup)
+    }
+
+    @Test func activeWorkoutWithoutPlannedSetsDecodes() throws {
+        let json = #"{"id":"a","startedAt":0,"exercises":["Squat"]}"#.data(using: .utf8)!
+        let active = try JSONDecoder().decode(ActiveWorkout.self, from: json)
+        #expect(active.plannedSets.isEmpty)
+    }
+}

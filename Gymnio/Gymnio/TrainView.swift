@@ -34,6 +34,7 @@ struct TrainView: View {
                     VStack(alignment: .leading, spacing: 16) {
                         header
                         primaryAction
+                        RoutinesSection()
 
                         if !store.workouts.isEmpty {
                             weekCard
@@ -160,7 +161,7 @@ struct TrainView: View {
     private var statsCard: some View {
         let weekStart = calendar.dateInterval(of: .weekOfYear, for: Date())?.start ?? Date()
         let thisWeek = store.workouts.filter { $0.start >= weekStart }.count
-        let streak = AdvancedAnalytics.streakInfo(entries: store.entries).currentWeekStreak
+        let streak = AdvancedAnalytics.streakInfo(entries: store.workingEntries).currentWeekStreak
         return Card {
             HStack(alignment: .top, spacing: 12) {
                 StatNumber(value: "\(store.workouts.count)", label: store.t("home.stats.workouts"))
@@ -226,6 +227,9 @@ struct WorkoutRowCard: View {
                     Text(dateText)
                         .font(.system(size: 13, weight: .bold))
                         .foregroundColor(.gymAccent)
+                    HStack(spacing: 6) {
+                        ForEach(Array(workout.exercises.prefix(4)), id: \.self) { ExerciseThumb(name: $0, size: 34) }
+                    }
                     Text(workout.exercises.joined(separator: " · "))
                         .font(.system(size: 16, weight: .semibold))
                         .foregroundColor(.gymText)

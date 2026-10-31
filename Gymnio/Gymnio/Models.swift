@@ -7,6 +7,17 @@ func formatWeightValue(_ value: Double) -> String {
     return s
 }
 
+// MARK: - Set type
+
+enum SetKind: String, Codable, CaseIterable {
+    case warmup, drop, failure
+
+    var titleKey: String { "setkind.\(rawValue)" }
+    var letter: String {
+        switch self { case .warmup: return "W"; case .drop: return "D"; case .failure: return "F" }
+    }
+}
+
 // MARK: - WorkoutEntry
 
 struct WorkoutEntry: Codable, Identifiable, Equatable {
@@ -18,14 +29,22 @@ struct WorkoutEntry: Codable, Identifiable, Equatable {
     var createdAt: Date = Date()
     /// The training this set belongs to. Older entries have none and are grouped by day (see `Workout.group`).
     var workoutId: String?
+    /// nil = normal working set.
+    var kind: SetKind?
 
-    static func create(exercise: String, weight: Double, reps: Int, date: Date = Date(), workoutId: String? = nil) -> WorkoutEntry {
-        WorkoutEntry(id: UUID().uuidString, exercise: exercise, weight: weight, reps: reps, date: date, createdAt: Date(), workoutId: workoutId)
+    var isWarmup: Bool { kind == .warmup }
+
+    static func create(exercise: String, weight: Double, reps: Int, date: Date = Date(), workoutId: String? = nil,
+                       kind: SetKind? = nil) -> WorkoutEntry {
+        WorkoutEntry(id: UUID().uuidString, exercise: exercise, weight: weight, reps: reps, date: date, createdAt: Date(),
+                     workoutId: workoutId, kind: kind)
     }
 
-    enum CodingKeys: String, CodingKey { case id, exercise, weight, reps, date, createdAt, workoutId }
+    enum CodingKeys: String, CodingKey { case id, exercise, weight, reps, date, createdAt, workoutId, kind }
 
-    init(id: String, exercise: String, weight: Double, reps: Int, date: Date, createdAt: Date, workoutId: String? = nil) {
+    init(id: String, exercise: String, weight: Double, reps: Int, date: Date, createdAt: Date, workoutId: String? = nil,
+         kind: SetKind? = nil) {
+        self.kind = kind
         self.id = id
         self.exercise = exercise
         self.weight = weight
@@ -44,6 +63,7 @@ struct WorkoutEntry: Codable, Identifiable, Equatable {
         date = try c.decode(Date.self, forKey: .date)
         createdAt = try c.decodeIfPresent(Date.self, forKey: .createdAt) ?? date
         workoutId = try c.decodeIfPresent(String.self, forKey: .workoutId)
+        kind = try c.decodeIfPresent(SetKind.self, forKey: .kind)
     }
 
     static func chronological(_ a: WorkoutEntry, _ b: WorkoutEntry) -> Bool {
@@ -65,8 +85,10 @@ struct Workout: Identifiable {
     var start: Date { entries.map { $0.date }.min() ?? Date() }
     var end: Date { entries.map { $0.date }.max() ?? start }
     var duration: TimeInterval { end.timeIntervalSince(start) }
-    var setCount: Int { entries.count }
-    var volumeKg: Double { entries.reduce(0) { $0 + $1.weight * Double($1.reps) } }
+    /// Working sets only: warm-ups do not count towards sets, volume or records.
+    var workingEntries: [WorkoutEntry] { entries.filter { !$0.isWarmup } }
+    var setCount: Int { workingEntries.count }
+    var volumeKg: Double { workingEntries.reduce(0) { $0 + $1.weight * Double($1.reps) } }
     /// Exercise names in the order they were first trained.
     var exercises: [String] {
         var seen = Set<String>()
@@ -94,6 +116,41 @@ struct ActiveWorkout: Codable, Equatable {
     var startedAt: Date
     /// Exercise names in the order they were added.
     var exercises: [String]
+    var note: String?
+    /// Target number of sets per exercise when started from a routine.
+    var plannedSets: [String: Int] = [:]
+
+    init(id: String, startedAt: Date, exercises: [String]) {
+        self.id = id
+        self.startedAt = startedAt
+        self.exercises = exercises
+    }
+
+    init(from decoder: Decoder) throws {
+        let c = try decoder.container(keyedBy: CodingKeys.self)
+        id = try c.decode(String.self, forKey: .id)
+        startedAt = try c.decode(Date.self, forKey: .startedAt)
+        exercises = try c.decode([String].self, forKey: .exercises)
+        note = try c.decodeIfPresent(String.self, forKey: .note)
+        plannedSets = try c.decodeIfPresent([String: Int].self, forKey: .plannedSets) ?? [:]
+    }
+
+    enum CodingKeys: String, CodingKey { case id, startedAt, exercises, note, plannedSets }
+}
+
+// MARK: - Routine (reusable workout template)
+
+struct RoutineExercise: Codable, Equatable, Identifiable {
+    var name: String
+    var sets: Int
+    var id: String { name }
+}
+
+struct Routine: Codable, Equatable, Identifiable {
+    var id: String
+    var name: String
+    var exercises: [RoutineExercise]
+    var createdAt: Date = Date()
 }
 
 // MARK: - ExerciseGroup

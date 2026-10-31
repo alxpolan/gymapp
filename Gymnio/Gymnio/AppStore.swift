@@ -23,6 +23,8 @@ final class AppStore: ObservableObject {
     @Published var activeWorkout: ActiveWorkout?
     @Published var showActiveWorkout: Bool = false
     @Published var reviewPending: Bool = false
+    @Published var routines: [Routine] = []
+    @Published var exerciseNotes: [String: String] = [:]
     var lastWorkoutDuration: TimeInterval = 0
 
     static let supportedLanguages = [
@@ -38,6 +40,9 @@ final class AppStore: ObservableObject {
     private let weightUnitKey   = "@weight_unit"
     private let restSecondsKey  = "@rest_seconds"
     private let activeWorkoutKey = "@active_workout"
+    private let routinesKey     = "@routines"
+    private let exerciseNotesKey = "@exercise_notes"
+    private let workoutNotesKey = "@workout_notes"
     private let onboardingKey   = "@onboarding_done"
     private let goalKey         = "@onboarding_goal"
     private let firstOpenKey    = "@first_open_at"
@@ -70,6 +75,8 @@ final class AppStore: ObservableObject {
             defaults.set(detected, forKey: languageKey)
         }
         activeWorkout = defaults.data(forKey: activeWorkoutKey).flatMap { try? JSONDecoder().decode(ActiveWorkout.self, from: $0) }
+        routines = defaults.data(forKey: routinesKey).flatMap { try? JSONDecoder().decode([Routine].self, from: $0) } ?? []
+        exerciseNotes = defaults.data(forKey: exerciseNotesKey).flatMap { try? JSONDecoder().decode([String: String].self, from: $0) } ?? [:]
         if defaults.object(forKey: restSecondsKey) != nil {
             restSeconds = defaults.integer(forKey: restSecondsKey)
         }
@@ -206,6 +213,79 @@ final class AppStore: ObservableObject {
         PostHogSDK.shared.capture("exercise_renamed")
     }
 
+    // MARK: - Routines
+
+    /// Routines a free user may keep; more needs Pro.
+    static let freeRoutineLimit = 3
+
+    var canAddRoutine: Bool {
+        PremiumManager.shared.isPro || PremiumManager.shared.isPaywallSuppressedRegion || routines.count < Self.freeRoutineLimit
+    }
+
+    /// Returns false (and shows the paywall) when a free user is at the routine limit.
+    @discardableResult
+    func saveRoutine(_ routine: Routine, source: String = "editor") -> Bool {
+        if let idx = routines.firstIndex(where: { $0.id == routine.id }) {
+            routines[idx] = routine
+        } else {
+            guard canAddRoutine else {
+                paywallRequest = PaywallRequest(source: "feature_routines")
+                return false
+            }
+            routines.append(routine)
+            PostHogSDK.shared.capture("routine_created", properties: ["source": source, "exercises": routine.exercises.count])
+        }
+        persistRoutines()
+        return true
+    }
+
+    func deleteRoutine(_ routine: Routine) {
+        routines.removeAll { $0.id == routine.id }
+        persistRoutines()
+        PostHogSDK.shared.capture("routine_deleted")
+    }
+
+    /// A routine built from a finished training (same exercises, same number of working sets).
+    func routine(from workout: Workout, name: String) -> Routine {
+        Routine(id: UUID().uuidString, name: name,
+                exercises: workout.exercises.map { ex in
+                    RoutineExercise(name: ex, sets: max(workout.sets(for: ex).filter { !$0.isWarmup }.count, 1))
+                })
+    }
+
+    func startRoutine(_ routine: Routine) {
+        guard startWorkout(source: "routine") else { return }
+        for ex in routine.exercises { addExerciseToActive(ex.name, plannedSets: ex.sets) }
+        PostHogSDK.shared.capture("routine_started", properties: ["exercises": routine.exercises.count])
+        showActiveWorkout = true
+    }
+
+    private func persistRoutines() {
+        if let data = try? JSONEncoder().encode(routines) { defaults.set(data, forKey: routinesKey) }
+    }
+
+    // MARK: - Notes
+
+    /// Sticky note per exercise (seat height, grip, cues). Empty text removes it.
+    func setExerciseNote(_ text: String, for exercise: String) {
+        let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        if trimmed.isEmpty { exerciseNotes.removeValue(forKey: exercise) } else { exerciseNotes[exercise] = trimmed }
+        if let data = try? JSONEncoder().encode(exerciseNotes) { defaults.set(data, forKey: exerciseNotesKey) }
+    }
+
+    func setActiveNote(_ text: String) {
+        guard var active = activeWorkout else { return }
+        active.note = text
+        setActiveWorkout(active)
+    }
+
+    private var workoutNotes: [String: String] {
+        get { defaults.data(forKey: workoutNotesKey).flatMap { try? JSONDecoder().decode([String: String].self, from: $0) } ?? [:] }
+        set { if let data = try? JSONEncoder().encode(newValue) { defaults.set(data, forKey: workoutNotesKey) } }
+    }
+
+    func note(for workoutId: String) -> String? { workoutNotes[workoutId] }
+
     // MARK: - Entries
 
     // MARK: - Workouts
@@ -244,7 +324,7 @@ final class AppStore: ObservableObject {
         workouts.first { $0.id != activeWorkout?.id && !$0.sets(for: exercise).isEmpty }?.sets(for: exercise) ?? []
     }
 
-    func addExerciseToActive(_ name: String) {
+    func addExerciseToActive(_ name: String, plannedSets: Int? = nil) {
         let trimmed = name.trimmingCharacters(in: .whitespaces)
         guard var active = activeWorkout, !trimmed.isEmpty,
               !active.exercises.contains(where: { $0.lowercased() == trimmed.lowercased() }) else { return }
@@ -252,6 +332,7 @@ final class AppStore: ObservableObject {
             addExercise(trimmed, source: "workout")
         }
         active.exercises.append(trimmed)
+        if let plannedSets { active.plannedSets[trimmed] = plannedSets }
         setActiveWorkout(active)
     }
 
@@ -264,6 +345,9 @@ final class AppStore: ObservableObject {
 
     func deleteWorkout(_ workout: Workout) {
         for entry in workout.entries { storage.deleteEntry(id: entry.id) }
+        var notes = workoutNotes
+        notes.removeValue(forKey: workout.id)
+        workoutNotes = notes
         entries = storage.getAllEntries()
         PostHogSDK.shared.capture("workout_deleted", properties: ["sets": workout.setCount])
     }
@@ -290,6 +374,11 @@ final class AppStore: ObservableObject {
         guard let active = activeWorkout else { return nil }
         let finished = workouts.first { $0.id == active.id }
         lastWorkoutDuration = Date().timeIntervalSince(active.startedAt)
+        if let note = active.note?.trimmingCharacters(in: .whitespacesAndNewlines), !note.isEmpty {
+            var notes = workoutNotes
+            notes[active.id] = note
+            workoutNotes = notes
+        }
         setActiveWorkout(nil)
         RestTimerManager.shared.cancel()
         // The right moment to ask for a rating: right after the first finished training.
@@ -329,7 +418,7 @@ final class AppStore: ObservableObject {
     /// a quick entry outside a workout counts as (part of) that day's training.
     @discardableResult
     func addEntry(exercise: String, weight: Double, reps: Int, date: Date, workoutId: String? = nil,
-                  source: String = "detail", presentPaywall: Bool = true) -> Bool {
+                  kind: SetKind? = nil, source: String = "detail", presentPaywall: Bool = true) -> Bool {
         if workoutId == nil {
             let startsNewDay = !workouts.contains { Calendar.current.isDate($0.start, inSameDayAs: date) }
             if startsNewDay && isFreeLimitReached() {
@@ -338,7 +427,7 @@ final class AppStore: ObservableObject {
             }
         }
         let isFirstEntry = entries.isEmpty && !defaults.bool(forKey: firstEntryKey)
-        let entry = WorkoutEntry.create(exercise: exercise, weight: weight, reps: reps, date: date, workoutId: workoutId)
+        let entry = WorkoutEntry.create(exercise: exercise, weight: weight, reps: reps, date: date, workoutId: workoutId, kind: kind)
         storage.saveEntry(entry)
         entries = storage.getAllEntries()
         PostHogSDK.shared.capture("workout_entry_added", properties: [
@@ -417,11 +506,14 @@ final class AppStore: ObservableObject {
     // MARK: - Derived data
 
     func entriesForExercise(_ name: String) -> [WorkoutEntry] {
-        entries.filter { $0.exercise == name }.sorted(by: { WorkoutEntry.chronological($0, $1) })
+        workingEntries.filter { $0.exercise == name }.sorted(by: { WorkoutEntry.chronological($0, $1) })
     }
 
+    /// All sets without warm-ups: the basis for records, trends and volume.
+    var workingEntries: [WorkoutEntry] { entries.filter { !$0.isWarmup } }
+
     func groupedExercises() -> [ExerciseGroup] {
-        storage.groupByExercise()
+        storage.groupByExercise().map { ExerciseGroup(exercise: $0.exercise, entries: $0.entries.filter { !$0.isWarmup }) }
     }
 
     // MARK: - Review prompt

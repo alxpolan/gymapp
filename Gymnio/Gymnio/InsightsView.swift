@@ -138,8 +138,8 @@ struct InsightsView: View {
     private func reload() {
         store.reload()
         groups = store.groupedExercises().filter { !$0.entries.isEmpty }
-        streak = AdvancedAnalytics.streakInfo(entries: store.entries)
-        weekly = AdvancedAnalytics.weeklyVolume(entries: store.entries)
+        streak = AdvancedAnalytics.streakInfo(entries: store.workingEntries)
+        weekly = AdvancedAnalytics.weeklyVolume(entries: store.workingEntries)
         muscles = AdvancedAnalytics.muscleDistribution(groups: groups)
         records = AdvancedAnalytics.recordsBoard(groups: groups)
         trends = AdvancedAnalytics.progressTrends(groups: groups)

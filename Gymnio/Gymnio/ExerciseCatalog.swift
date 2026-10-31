@@ -78,3 +78,49 @@ struct ExerciseVideoView: View {
             }
     }
 }
+
+// MARK: - Exercise picture (first frame of the demo video)
+
+@MainActor
+final class ExerciseThumbCache {
+    static let shared = ExerciseThumbCache()
+    private let cache = NSCache<NSString, UIImage>()
+
+    func image(for exercise: String) async -> UIImage? {
+        guard let url = ExerciseCatalog.videoURL(for: exercise) else { return nil }
+        let key = url.lastPathComponent as NSString
+        if let hit = cache.object(forKey: key) { return hit }
+        let generator = AVAssetImageGenerator(asset: AVURLAsset(url: url))
+        generator.appliesPreferredTrackTransform = true
+        generator.maximumSize = CGSize(width: 360, height: 360)
+        guard let result = try? await generator.image(at: CMTime(seconds: 0.5, preferredTimescale: 600)) else { return nil }
+        let image = UIImage(cgImage: result.image)
+        cache.setObject(image, forKey: key)
+        return image
+    }
+}
+
+/// Square picture of an exercise; without a video it shows the muscle group icon.
+struct ExerciseThumb: View {
+    let name: String
+    var size: CGFloat = 52
+    @State private var image: UIImage?
+
+    var body: some View {
+        let shape = RoundedRectangle(cornerRadius: size * 0.22, style: .continuous)
+        ZStack {
+            shape.fill(Color.gymSurfaceRaised)
+            if let image {
+                Image(uiImage: image).resizable().scaledToFill()
+            } else {
+                Image(systemName: MuscleGroup.classify(name).systemImage)
+                    .font(.system(size: size * 0.4, weight: .semibold))
+                    .foregroundColor(.gymTextSecondary)
+            }
+        }
+        .frame(width: size, height: size)
+        .clipShape(shape)
+        .overlay(shape.stroke(Color.gymLine.opacity(0.5), lineWidth: 0.5))
+        .task(id: name) { image = await ExerciseThumbCache.shared.image(for: name) }
+    }
+}

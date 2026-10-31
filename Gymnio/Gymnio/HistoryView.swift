@@ -191,17 +191,29 @@ struct WorkoutDetailView: View {
                             }
                         }
 
+                        if let note = store.note(for: workout.id) {
+                            Card {
+                                Text(note)
+                                    .font(.system(size: 15))
+                                    .foregroundColor(.gymText)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
+                            }
+                        }
+
                         ForEach(workout.exercises, id: \.self) { name in
                             Card {
                                 VStack(alignment: .leading, spacing: 10) {
-                                    Text(name)
-                                        .font(.system(size: 17, weight: .bold))
-                                        .foregroundColor(.gymText)
+                                    HStack(spacing: 10) {
+                                        ExerciseThumb(name: name, size: 40)
+                                        Text(name)
+                                            .font(.system(size: 17, weight: .bold))
+                                            .foregroundColor(.gymText)
+                                    }
                                     let sets = workout.sets(for: name)
-                                    let best = sets.map { $0.weight }.max() ?? 0
+                                    let best = sets.filter { !$0.isWarmup }.map { $0.weight }.max() ?? 0
                                     ForEach(Array(sets.enumerated()), id: \.element.id) { index, set in
                                         HStack {
-                                            Text("\(index + 1)")
+                                            Text(set.kind?.letter ?? "\(sets[..<index].filter { !$0.isWarmup }.count + 1)")
                                                 .gymNumber(14, weight: .bold)
                                                 .foregroundColor(.gymTextSecondary)
                                                 .frame(width: 24, alignment: .leading)
@@ -209,7 +221,7 @@ struct WorkoutDetailView: View {
                                                 .gymNumber(16, weight: .semibold)
                                                 .foregroundColor(.gymText)
                                             Spacer()
-                                            if set.weight == best && sets.count > 1 { RecordBadge() }
+                                            if !set.isWarmup && set.weight == best && sets.count > 1 { RecordBadge() }
                                         }
                                     }
                                 }
@@ -220,6 +232,9 @@ struct WorkoutDetailView: View {
                             store.repeatWorkout(workout)
                         }
                         .padding(.top, 4)
+
+                        SaveAsRoutineButton(workout: workout)
+                            .frame(maxWidth: .infinity)
 
                         Button(role: .destructive) { showDelete = true } label: {
                             Text(store.t("history.deleteWorkout"))

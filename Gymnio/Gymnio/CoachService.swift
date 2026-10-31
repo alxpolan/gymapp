@@ -201,7 +201,7 @@ final class CoachService {
         return [
             "thisWeek": stats(thisEntries),
             "lastWeek": stats(lastEntries),
-            "streakWeeks": AdvancedAnalytics.streakInfo(entries: store.entries).currentWeekStreak,
+            "streakWeeks": AdvancedAnalytics.streakInfo(entries: store.workingEntries).currentWeekStreak,
             "top": Array(top)
         ]
     }
@@ -218,14 +218,14 @@ final class CoachService {
                 "recent": recentSets(group.entries, limit: 6, store: store)
             ]
         }
-        let weekly = AdvancedAnalytics.weeklyVolume(entries: store.entries).map { Int(store.displayWeight($0.value).rounded()) }
+        let weekly = AdvancedAnalytics.weeklyVolume(entries: store.workingEntries).map { Int(store.displayWeight($0.value).rounded()) }
         let muscles: [[String: Any]] = AdvancedAnalytics.muscleDistribution(groups: groups).map { item in
             ["group": item.group.rawValue, "share": item.share]
         }
         return [
             "exercises": exercises,
             "weeklyVolume": weekly,
-            "streakWeeks": AdvancedAnalytics.streakInfo(entries: store.entries).currentWeekStreak,
+            "streakWeeks": AdvancedAnalytics.streakInfo(entries: store.workingEntries).currentWeekStreak,
             "muscleShare": muscles
         ]
     }

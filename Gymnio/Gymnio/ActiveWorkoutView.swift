@@ -19,6 +19,7 @@ struct ActiveWorkoutView: View {
     @State private var showPicker = false
     @State private var showDiscard = false
     @State private var summary: Workout?
+    @State private var note = ""
 
     private var exercises: [String] { store.activeWorkout?.exercises ?? [] }
 
@@ -31,6 +32,7 @@ struct ActiveWorkoutView: View {
                 content
             }
         }
+        .task { note = store.activeWorkout?.note ?? "" }
         .sheet(isPresented: $showPicker) {
             ExercisePickerSheet { name in store.addExerciseToActive(name) }
                 .environmentObject(store)
@@ -65,6 +67,13 @@ struct ActiveWorkoutView: View {
                                 .padding(.vertical, 14)
                                 .flatSurface(RoundedRectangle(cornerRadius: 14, style: .continuous))
                         }
+                        TextField(store.t("workout.note"), text: $note, axis: .vertical)
+                            .font(.system(size: 15))
+                            .foregroundColor(.gymText)
+                            .lineLimit(2...5)
+                            .padding(14)
+                            .flatSurface(RoundedRectangle(cornerRadius: 14, style: .continuous))
+                            .onChangeCompat(of: note) { store.setActiveNote($0) }
                     }
                 }
                 .padding(.horizontal, 16)
@@ -110,7 +119,7 @@ struct ActiveWorkoutView: View {
     }
 
     private func finish() {
-        let sets = store.workouts.first { $0.id == store.activeWorkout?.id }?.setCount ?? 0
+        let sets = store.workouts.first { $0.id == store.activeWorkout?.id }?.entries.count ?? 0
         if sets == 0 {
             showDiscard = true
         } else {
@@ -176,6 +185,7 @@ private struct SetDraft: Identifiable {
     var weight = ""
     var reps = ""
     var entryId: String?
+    var kind: SetKind?
 }
 
 struct ExerciseBlock: View {
@@ -184,15 +194,30 @@ struct ExerciseBlock: View {
     @State private var drafts: [SetDraft] = []
     @State private var showVideo = false
 
-    private var previous: [WorkoutEntry] { store.previousSets(for: exercise) }
+    private var previous: [WorkoutEntry] { store.previousSets(for: exercise).filter { !$0.isWarmup } }
+    private var hasVideo: Bool { ExerciseCatalog.videoURL(for: exercise) != nil }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
-            HStack {
+            HStack(spacing: 12) {
+                Button { if hasVideo { showVideo = true } } label: {
+                    ExerciseThumb(name: exercise, size: 48)
+                        .overlay(alignment: .bottomTrailing) {
+                            if hasVideo {
+                                Image(systemName: "play.fill")
+                                    .font(.system(size: 8, weight: .bold))
+                                    .foregroundColor(.gymOnAccent)
+                                    .frame(width: 16, height: 16)
+                                    .background(Circle().fill(Color.gymAccent))
+                                    .offset(x: 3, y: 3)
+                            }
+                        }
+                }
+                .buttonStyle(.plain)
                 Text(exercise)
                     .font(.system(size: 19, weight: .bold))
                     .foregroundColor(.gymText)
-                Spacer()
+                    .frame(maxWidth: .infinity, alignment: .leading)
                 Menu {
                     if ExerciseCatalog.videoURL(for: exercise) != nil {
                         Button { showVideo = true } label: { Label(store.t("workout.video"), systemImage: "play.circle") }
@@ -208,6 +233,11 @@ struct ExerciseBlock: View {
                 }
             }
 
+            TextField(store.t("workout.exerciseNote"), text: noteBinding, axis: .vertical)
+                .font(.system(size: 14))
+                .foregroundColor(.gymTextSecondary)
+                .lineLimit(1...3)
+
             HStack(spacing: 8) {
                 header(store.t("workout.set"), width: 28)
                 header(store.t("workout.previous"), width: nil)
@@ -218,6 +248,7 @@ struct ExerciseBlock: View {
 
             ForEach(Array(drafts.enumerated()), id: \.element.id) { index, draft in
                 SetRow(index: index + 1,
+                       label: setLabel(index),
                        previousText: previousText(index),
                        draft: $drafts[index],
                        onToggle: { toggle(index) })
@@ -243,6 +274,11 @@ struct ExerciseBlock: View {
         }
     }
 
+    private var noteBinding: Binding<String> {
+        Binding(get: { store.exerciseNotes[exercise] ?? "" },
+                set: { store.setExerciseNote($0, for: exercise) })
+    }
+
     private func header(_ text: String, width: CGFloat?) -> some View {
         Text(text)
             .font(.system(size: 10, weight: .bold))
@@ -257,14 +293,16 @@ struct ExerciseBlock: View {
     private func loadDrafts() {
         guard drafts.isEmpty else { return }
         drafts = store.entriesForActive(exercise: exercise).map { entry in
-            SetDraft(weight: formatWeightValue(store.displayWeight(entry.weight)), reps: "\(entry.reps)", entryId: entry.id)
+            SetDraft(weight: formatWeightValue(store.displayWeight(entry.weight)), reps: "\(entry.reps)", entryId: entry.id, kind: entry.kind)
         }
         drafts.append(nextDraft())
+        let planned = store.activeWorkout?.plannedSets[exercise] ?? 0
+        while drafts.count < planned { drafts.append(nextDraft()) }
     }
 
     /// Next empty row, prefilled from the same set last time or from the previous set of this training.
     private func nextDraft() -> SetDraft {
-        let index = drafts.count
+        let index = drafts.filter { $0.kind != .warmup }.count
         if index < previous.count {
             let p = previous[index]
             return SetDraft(weight: formatWeightValue(store.displayWeight(p.weight)), reps: "\(p.reps)", entryId: nil)
@@ -275,9 +313,17 @@ struct ExerciseBlock: View {
         return SetDraft()
     }
 
+    /// Number of the set among the working sets; warm-ups and other types show their letter instead.
+    private func setLabel(_ index: Int) -> String {
+        if let kind = drafts[index].kind { return kind.letter }
+        return "\(drafts[..<index].filter { $0.kind != .warmup }.count + 1)"
+    }
+
     private func previousText(_ index: Int) -> String {
-        guard index < previous.count else { return "–" }
-        let p = previous[index]
+        guard drafts.indices.contains(index), drafts[index].kind != .warmup else { return "–" }
+        let workingIndex = drafts[..<index].filter { $0.kind != .warmup }.count
+        guard workingIndex < previous.count else { return "–" }
+        let p = previous[workingIndex]
         return "\(formatWeightValue(store.displayWeight(p.weight))) × \(p.reps)"
     }
 
@@ -292,11 +338,11 @@ struct ExerciseBlock: View {
         guard let weight = Double(weightText), weight >= 0,
               let reps = Int(drafts[index].reps), reps > 0 else { return }
         let saved = store.addEntry(exercise: exercise, weight: store.toKg(weight), reps: reps, date: Date(),
-                                   workoutId: store.activeWorkout?.id, source: "workout", presentPaywall: false)
+                                   workoutId: store.activeWorkout?.id, kind: drafts[index].kind, source: "workout", presentPaywall: false)
         guard saved else { return }
         drafts[index].entryId = store.entries.last?.id
         UIImpactFeedbackGenerator(style: .medium).impactOccurred()
-        RestTimerManager.shared.start(exercise: exercise, store: store)
+        if drafts[index].kind != .warmup { RestTimerManager.shared.start(exercise: exercise, store: store) }
         if index == drafts.count - 1 { drafts.append(nextDraft()) }
     }
 }
@@ -305,18 +351,38 @@ struct ExerciseBlock: View {
 
 private struct SetRow: View {
     let index: Int
+    let label: String
     let previousText: String
     @Binding var draft: SetDraft
     let onToggle: () -> Void
 
+    @EnvironmentObject private var store: AppStore
     private var done: Bool { draft.entryId != nil }
+    private var kindColor: Color {
+        switch draft.kind {
+        case .warmup: return .gymWarning
+        case .drop: return .gymPositive
+        case .failure: return Color(hex: "FF6B6B")
+        case nil: return .gymTextSecondary
+        }
+    }
 
     var body: some View {
         HStack(spacing: 8) {
-            Text("\(index)")
-                .gymNumber(15, weight: .bold)
-                .foregroundColor(done ? .gymAccent : .gymTextSecondary)
-                .frame(width: 28)
+            Menu {
+                Button { draft.kind = nil } label: { Label(store.t("setkind.normal"), systemImage: draft.kind == nil ? "checkmark" : "circle") }
+                ForEach(SetKind.allCases, id: \.self) { kind in
+                    Button { draft.kind = kind } label: {
+                        Label(store.t(kind.titleKey), systemImage: draft.kind == kind ? "checkmark" : "circle")
+                    }
+                }
+            } label: {
+                Text(label)
+                    .gymNumber(15, weight: .bold)
+                    .foregroundColor(draft.kind != nil ? kindColor : (done ? .gymAccent : .gymTextSecondary))
+                    .frame(width: 28, height: 38)
+            }
+            .disabled(done)
             Text(previousText)
                 .gymNumber(13, weight: .medium)
                 .foregroundColor(.gymTextSecondary)
@@ -424,8 +490,12 @@ struct ExercisePickerSheet: View {
             dismiss()
         } label: {
             HStack(spacing: 12) {
-                Image(systemName: icon).foregroundColor(.gymAccent).frame(width: 24)
-                Text(title).font(.system(size: 16)).foregroundColor(.gymText)
+                if icon == "plus.circle.fill" {
+                    Image(systemName: icon).foregroundColor(.gymAccent).frame(width: 44, height: 44)
+                } else {
+                    ExerciseThumb(name: name, size: 44)
+                }
+                Text(title).font(.system(size: 16, weight: .medium)).foregroundColor(.gymText)
                 Spacer()
             }
             .padding(.vertical, 12)
@@ -448,11 +518,11 @@ struct WorkoutSummaryView: View {
 
     /// Exercises where this training beat the best estimated 1RM from earlier trainings.
     private var records: [(exercise: String, oneRM: Double)] {
-        let earlier = store.entries.filter { $0.workoutId != workout.id && $0.date < workout.start }
+        let earlier = store.workingEntries.filter { $0.workoutId != workout.id && $0.date < workout.start }
         return workout.exercises.compactMap { name in
             let before = earlier.filter { $0.exercise == name }
                 .map { AdvancedAnalytics.estimatedOneRepMax(weight: $0.weight, reps: $0.reps) }.max() ?? 0
-            let now = workout.sets(for: name)
+            let now = workout.sets(for: name).filter { !$0.isWarmup }
                 .map { AdvancedAnalytics.estimatedOneRepMax(weight: $0.weight, reps: $0.reps) }.max() ?? 0
             return before > 0 && now > before ? (name, now) : nil
         }
@@ -501,6 +571,8 @@ struct WorkoutSummaryView: View {
                 Card {
                     VStack(alignment: .leading, spacing: 14) {
                         ForEach(workout.exercises, id: \.self) { name in
+                            HStack(alignment: .top, spacing: 12) {
+                                ExerciseThumb(name: name, size: 44)
                             VStack(alignment: .leading, spacing: 4) {
                                 Text(name).font(.system(size: 16, weight: .bold)).foregroundColor(.gymText)
                                 Text(workout.sets(for: name)
@@ -509,9 +581,19 @@ struct WorkoutSummaryView: View {
                                     .gymNumber(14, weight: .medium)
                                     .foregroundColor(.gymTextSecondary)
                             }
+                            }
                         }
                     }
                 }
+
+                if let note = store.note(for: workout.id) {
+                    Card {
+                        Text(note).font(.system(size: 15)).foregroundColor(.gymText)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                    }
+                }
+
+                SaveAsRoutineButton(workout: workout).frame(maxWidth: .infinity)
 
                 WeeklyRecapCard()
 

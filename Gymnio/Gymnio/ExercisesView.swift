@@ -71,10 +71,13 @@ struct ExerciseCard: View {
     var body: some View {
         GlassCard {
             VStack(alignment: .leading, spacing: 12) {
-                Text(group.exercise)
-                    .font(.system(size: 18, weight: .bold))
-                    .foregroundColor(Color.gymText)
-                    .frame(maxWidth: .infinity, alignment: .leading)
+                HStack(spacing: 12) {
+                    ExerciseThumb(name: group.exercise, size: 52)
+                    Text(group.exercise)
+                        .font(.system(size: 18, weight: .bold))
+                        .foregroundColor(Color.gymText)
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                }
 
                 if group.entries.isEmpty {
                     Text(store.t("exercises.noEntries"))
