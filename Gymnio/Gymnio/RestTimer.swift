@@ -1,24 +1,30 @@
 import Foundation
+import Combine
 import ActivityKit
 import UserNotifications
 import PostHog
 
 /// Starts the rest countdown after a set: a Live Activity (Lock Screen / Dynamic Island) on iOS 16.2+,
 /// plus a local "rest over" notification on every supported version.
-final class RestTimerManager {
+final class RestTimerManager: ObservableObject {
     static let shared = RestTimerManager()
     private init() {}
 
     private let notificationID = "rest_timer_end"
     private var endTask: Task<Void, Never>?
+    private var lastExercise = ""
+    /// When the running countdown ends (nil = no rest running). Drives the in-app rest bar.
+    @Published private(set) var endDate: Date?
 
-    func start(exercise: String, store: AppStore) {
-        let seconds = store.restSeconds
+    func start(exercise: String, store: AppStore, seconds override: Int? = nil) {
+        let seconds = override ?? store.restDuration(for: exercise)
         guard seconds > 0 else { return }
         reset()
+        lastExercise = exercise
 
         let start = Date()
         let end = start.addingTimeInterval(TimeInterval(seconds))
+        endDate = end
         scheduleNotification(seconds: seconds, store: store)
 
         if #available(iOS 16.2, *) {
@@ -31,8 +37,16 @@ final class RestTimerManager {
         PostHogSDK.shared.capture("rest_timer_started", properties: ["seconds": seconds])
     }
 
+    /// Adds or removes seconds from the running countdown.
+    func adjust(by delta: Int, store: AppStore) {
+        guard let endDate else { return }
+        let remaining = Int(endDate.timeIntervalSinceNow.rounded()) + delta
+        if remaining <= 0 { cancel() } else { start(exercise: lastExercise, store: store, seconds: remaining) }
+    }
+
     func cancel() {
         reset()
+        endDate = nil
         if #available(iOS 16.2, *) {
             Task { await endAll() }
         }

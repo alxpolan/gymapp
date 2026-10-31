@@ -51,6 +51,7 @@ struct ActiveWorkoutView: View {
     private var content: some View {
         VStack(spacing: 0) {
             topBar
+            RestBar()
             ScrollView(showsIndicators: false) {
                 VStack(spacing: 14) {
                     if exercises.isEmpty {
@@ -186,6 +187,8 @@ private struct SetDraft: Identifiable {
     var reps = ""
     var entryId: String?
     var kind: SetKind?
+    var rpe: Double?
+    var isRecord = false
 }
 
 struct ExerciseBlock: View {
@@ -193,7 +196,10 @@ struct ExerciseBlock: View {
     @EnvironmentObject var store: AppStore
     @State private var drafts: [SetDraft] = []
     @State private var showVideo = false
+    @State private var showEditor = false
+    @State private var showPlates = false
 
+    private var type: ExerciseType { store.exerciseType(for: exercise) }
     private var previous: [WorkoutEntry] { store.previousSets(for: exercise).filter { !$0.isWarmup } }
     private var canLinkNext: Bool {
         guard let list = store.activeWorkout?.exercises, let idx = list.firstIndex(of: exercise) else { return false }
@@ -211,45 +217,7 @@ struct ExerciseBlock: View {
                     .textCase(.uppercase)
                     .foregroundColor(.gymAccent)
             }
-            HStack(spacing: 12) {
-                Button { if hasVideo { showVideo = true } } label: {
-                    ExerciseThumb(name: exercise, size: 48)
-                        .overlay(alignment: .bottomTrailing) {
-                            if hasVideo {
-                                Image(systemName: "play.fill")
-                                    .font(.system(size: 8, weight: .bold))
-                                    .foregroundColor(.gymOnAccent)
-                                    .frame(width: 16, height: 16)
-                                    .background(Circle().fill(Color.gymAccent))
-                                    .offset(x: 3, y: 3)
-                            }
-                        }
-                }
-                .buttonStyle(.plain)
-                Text(exercise)
-                    .font(.system(size: 19, weight: .bold))
-                    .foregroundColor(.gymText)
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                Menu {
-                    if ExerciseCatalog.videoURL(for: exercise) != nil {
-                        Button { showVideo = true } label: { Label(store.t("workout.video"), systemImage: "play.circle") }
-                    }
-                    if canLinkNext {
-                        Button { store.toggleSupersetWithNext(exercise) } label: {
-                            Label(store.t(store.isLinkedToNext(exercise) ? "workout.superset.unlink" : "workout.superset.link"),
-                                  systemImage: "link")
-                        }
-                    }
-                    Button(role: .destructive) { store.removeExerciseFromActive(exercise) } label: {
-                        Label(store.t("workout.removeExercise"), systemImage: "trash")
-                    }
-                } label: {
-                    Image(systemName: "ellipsis")
-                        .font(.system(size: 17, weight: .semibold))
-                        .foregroundColor(.gymTextSecondary)
-                        .frame(width: 36, height: 30)
-                }
-            }
+            titleRow
 
             TextField(store.t("workout.exerciseNote"), text: noteBinding, axis: .vertical)
                 .font(.system(size: 14))
@@ -259,17 +227,18 @@ struct ExerciseBlock: View {
             HStack(spacing: 8) {
                 header(store.t("workout.set"), width: 28)
                 header(store.t("workout.previous"), width: nil)
-                header(store.unitLabel.uppercased(), width: 72)
-                header(store.t("detail.reps").uppercased(), width: 72)
+                if type.usesWeight { header(store.unitLabel.uppercased(), width: 72) }
+                header(repsHeader, width: 72)
                 Color.clear.frame(width: 38, height: 1)
             }
 
             ForEach(Array(drafts.enumerated()), id: \.element.id) { index, draft in
-                SetRow(index: index + 1,
-                       label: setLabel(index),
+                SetRow(label: setLabel(index),
                        previousText: previousText(index),
+                       type: type,
                        draft: $drafts[index],
-                       onToggle: { toggle(index) })
+                       onToggle: { toggle(index) },
+                       onRemove: { removeDraft(index) })
             }
 
             Button { drafts.append(nextDraft()) } label: {
@@ -288,6 +257,63 @@ struct ExerciseBlock: View {
         .sheet(isPresented: $showVideo) {
             if let url = ExerciseCatalog.videoURL(for: exercise) {
                 ExerciseVideoView(url: url).padding(16)
+            }
+        }
+        .sheet(isPresented: $showEditor) { ExerciseMetaEditor(exercise: exercise).environmentObject(store) }
+        .sheet(isPresented: $showPlates) {
+            PlateCalculatorView(initialWeight: Double(drafts.first(where: { $0.entryId == nil && $0.kind == nil })?.weight
+                .replacingOccurrences(of: ",", with: ".") ?? "") ?? 0)
+                .environmentObject(store)
+        }
+    }
+
+    private var repsHeader: String {
+        type == .duration ? store.t("workout.seconds").uppercased() : store.t("detail.reps").uppercased()
+    }
+
+    private var titleRow: some View {
+        HStack(spacing: 12) {
+            Button { if hasVideo { showVideo = true } } label: {
+                ExerciseThumb(name: exercise, size: 48)
+                    .overlay(alignment: .bottomTrailing) {
+                        if hasVideo {
+                            Image(systemName: "play.fill")
+                                .font(.system(size: 8, weight: .bold))
+                                .foregroundColor(.gymOnAccent)
+                                .frame(width: 16, height: 16)
+                                .background(Circle().fill(Color.gymAccent))
+                                .offset(x: 3, y: 3)
+                        }
+                    }
+            }
+            .buttonStyle(.plain)
+            Text(exercise)
+                .font(.system(size: 19, weight: .bold))
+                .foregroundColor(.gymText)
+                .frame(maxWidth: .infinity, alignment: .leading)
+            Menu {
+                if hasVideo {
+                    Button { showVideo = true } label: { Label(store.t("workout.video"), systemImage: "play.circle") }
+                }
+                if type == .weightReps {
+                    Button(action: addWarmups) { Label(store.t("workout.warmups"), systemImage: "flame") }
+                    Button { showPlates = true } label: { Label(store.t("plates.title"), systemImage: "circle.grid.2x1") }
+                }
+                if canLinkNext {
+                    Button { store.toggleSupersetWithNext(exercise) } label: {
+                        Label(store.t(store.isLinkedToNext(exercise) ? "workout.superset.unlink" : "workout.superset.link"),
+                              systemImage: "link")
+                    }
+                }
+                Button { showEditor = true } label: { Label(store.t("meta.edit"), systemImage: "slider.horizontal.3") }
+                Button(role: .destructive) { store.removeExerciseFromActive(exercise) } label: {
+                    Label(store.t("workout.removeExercise"), systemImage: "trash")
+                }
+            } label: {
+                Image(systemName: "ellipsis")
+                    .font(.system(size: 17, weight: .semibold))
+                    .foregroundColor(.gymTextSecondary)
+                    .frame(width: 36, height: 30)
             }
         }
     }
@@ -311,7 +337,8 @@ struct ExerciseBlock: View {
     private func loadDrafts() {
         guard drafts.isEmpty else { return }
         drafts = store.entriesForActive(exercise: exercise).map { entry in
-            SetDraft(weight: formatWeightValue(store.displayWeight(entry.weight)), reps: "\(entry.reps)", entryId: entry.id, kind: entry.kind)
+            SetDraft(weight: formatWeightValue(store.displayWeight(entry.weight)), reps: "\(entry.reps)",
+                     entryId: entry.id, kind: entry.kind, rpe: entry.rpe)
         }
         drafts.append(nextDraft())
         let planned = store.activeWorkout?.plannedSets[exercise] ?? 0
@@ -323,10 +350,10 @@ struct ExerciseBlock: View {
         let index = drafts.filter { $0.kind != .warmup }.count
         if index < previous.count {
             let p = previous[index]
-            return SetDraft(weight: formatWeightValue(store.displayWeight(p.weight)), reps: "\(p.reps)", entryId: nil)
+            return SetDraft(weight: formatWeightValue(store.displayWeight(p.weight)), reps: "\(p.reps)")
         }
-        if let last = drafts.last(where: { $0.entryId != nil }) ?? drafts.last {
-            return SetDraft(weight: last.weight, reps: last.reps, entryId: nil)
+        if let last = drafts.last(where: { $0.entryId != nil && $0.kind != .warmup }) ?? drafts.last(where: { $0.kind != .warmup }) {
+            return SetDraft(weight: last.weight, reps: last.reps)
         }
         return SetDraft()
     }
@@ -341,8 +368,28 @@ struct ExerciseBlock: View {
         guard drafts.indices.contains(index), drafts[index].kind != .warmup else { return "–" }
         let workingIndex = drafts[..<index].filter { $0.kind != .warmup }.count
         guard workingIndex < previous.count else { return "–" }
-        let p = previous[workingIndex]
-        return "\(formatWeightValue(store.displayWeight(p.weight))) × \(p.reps)"
+        return store.shortSetText(previous[workingIndex])
+    }
+
+    private func removeDraft(_ index: Int) {
+        guard drafts.indices.contains(index) else { return }
+        if let id = drafts[index].entryId { store.deleteEntry(id: id) }
+        drafts.remove(at: index)
+        if drafts.isEmpty { drafts.append(nextDraft()) }
+    }
+
+    /// Three lighter sets (50 / 70 / 85 %) before the first open working set.
+    private func addWarmups() {
+        guard let target = drafts.first(where: { $0.entryId == nil && $0.kind == nil }),
+              let weight = Double(target.weight.replacingOccurrences(of: ",", with: ".")), weight > 0 else { return }
+        let step = store.weightUnit == "lbs" ? 5.0 : 2.5
+        let plan: [(Double, Int)] = [(0.5, 8), (0.7, 5), (0.85, 3)]
+        let rows = plan.map { pct, reps -> SetDraft in
+            let w = max((weight * pct / step).rounded() * step, step)
+            return SetDraft(weight: formatWeightValue(w), reps: "\(reps)", kind: .warmup)
+        }
+        let insertAt = drafts.firstIndex(where: { $0.entryId == nil }) ?? drafts.count
+        drafts.insert(contentsOf: rows, at: insertAt)
     }
 
     private func toggle(_ index: Int) {
@@ -350,29 +397,56 @@ struct ExerciseBlock: View {
         if let id = drafts[index].entryId {
             store.deleteEntry(id: id)
             drafts[index].entryId = nil
+            drafts[index].isRecord = false
             return
         }
         let weightText = drafts[index].weight.replacingOccurrences(of: ",", with: ".")
-        guard let weight = Double(weightText), weight >= 0,
-              let reps = Int(drafts[index].reps), reps > 0 else { return }
-        let saved = store.addEntry(exercise: exercise, weight: store.toKg(weight), reps: reps, date: Date(),
-                                   workoutId: store.activeWorkout?.id, kind: drafts[index].kind, source: "workout", presentPaywall: false)
+        let weight = type.usesWeight || !weightText.isEmpty ? (Double(weightText) ?? (type.usesWeight ? -1 : 0)) : 0
+        guard weight >= 0, let reps = Int(drafts[index].reps), reps > 0 else { return }
+        let kg = store.toKg(weight)
+        let isRecord = drafts[index].kind != .warmup && beatsRecord(weightKg: kg, reps: reps)
+        let saved = store.addEntry(exercise: exercise, weight: kg, reps: reps, date: Date(),
+                                   workoutId: store.activeWorkout?.id, kind: drafts[index].kind,
+                                   rpe: drafts[index].rpe, source: "workout", presentPaywall: false)
         guard saved else { return }
         drafts[index].entryId = store.entries.last?.id
-        UIImpactFeedbackGenerator(style: .medium).impactOccurred()
-        if drafts[index].kind != .warmup && !store.isLinkedToNext(exercise) { RestTimerManager.shared.start(exercise: exercise, store: store) }
+        drafts[index].isRecord = isRecord
+        if isRecord {
+            UINotificationFeedbackGenerator().notificationOccurred(.success)
+            PostHogSDK.shared.capture("pr_in_workout", properties: ["exercise": exercise])
+        } else {
+            UIImpactFeedbackGenerator(style: .medium).impactOccurred()
+        }
+        if drafts[index].kind != .warmup && !store.isLinkedToNext(exercise) {
+            RestTimerManager.shared.start(exercise: exercise, store: store)
+        }
         if index == drafts.count - 1 { drafts.append(nextDraft()) }
+    }
+
+    /// True when this set is better than anything logged for the exercise before this training.
+    private func beatsRecord(weightKg: Double, reps: Int) -> Bool {
+        let activeId = store.activeWorkout?.id
+        let earlier = store.workingEntries.filter { $0.exercise == exercise && $0.workoutId != activeId }
+        guard !earlier.isEmpty else { return false }
+        func score(_ w: Double, _ r: Int) -> Double {
+            type == .weightReps ? AdvancedAnalytics.estimatedOneRepMax(weight: w, reps: r) : Double(r) + w * 1000
+        }
+        let best = earlier.map { score($0.weight, $0.reps) }.max() ?? 0
+        let sameWorkout = store.entriesForActive(exercise: exercise).filter { !$0.isWarmup }.map { score($0.weight, $0.reps) }.max() ?? 0
+        let candidate = score(weightKg, reps)
+        return candidate > best && candidate > sameWorkout
     }
 }
 
 // MARK: - A single set row
 
 private struct SetRow: View {
-    let index: Int
     let label: String
     let previousText: String
+    let type: ExerciseType
     @Binding var draft: SetDraft
     let onToggle: () -> Void
+    let onRemove: () -> Void
 
     @EnvironmentObject private var store: AppStore
     private var done: Bool { draft.entryId != nil }
@@ -386,36 +460,56 @@ private struct SetRow: View {
     }
 
     var body: some View {
-        HStack(spacing: 8) {
-            Menu {
-                Button { draft.kind = nil } label: { Label(store.t("setkind.normal"), systemImage: draft.kind == nil ? "checkmark" : "circle") }
-                ForEach(SetKind.allCases, id: \.self) { kind in
-                    Button { draft.kind = kind } label: {
-                        Label(store.t(kind.titleKey), systemImage: draft.kind == kind ? "checkmark" : "circle")
+        VStack(alignment: .leading, spacing: 2) {
+            HStack(spacing: 8) {
+                Menu {
+                    Button { draft.kind = nil } label: { Label(store.t("setkind.normal"), systemImage: draft.kind == nil ? "checkmark" : "circle") }
+                    ForEach(SetKind.allCases, id: \.self) { kind in
+                        Button { draft.kind = kind } label: {
+                            Label(store.t(kind.titleKey), systemImage: draft.kind == kind ? "checkmark" : "circle")
+                        }
                     }
+                    Menu {
+                        Button { draft.rpe = nil } label: { Text(store.t("rpe.none")) }
+                        ForEach([6.0, 7.0, 7.5, 8.0, 8.5, 9.0, 9.5, 10.0], id: \.self) { value in
+                            Button { draft.rpe = value } label: { Text("RPE " + formatWeightValue(value)) }
+                        }
+                    } label: { Label("RPE", systemImage: "gauge.medium") }
+                    Button(role: .destructive, action: onRemove) { Label(store.t("workout.removeSet"), systemImage: "trash") }
+                } label: {
+                    Text(label)
+                        .gymNumber(15, weight: .bold)
+                        .foregroundColor(draft.kind != nil ? kindColor : (done ? .gymAccent : .gymTextSecondary))
+                        .frame(width: 28, height: 38)
                 }
-            } label: {
-                Text(label)
-                    .gymNumber(15, weight: .bold)
-                    .foregroundColor(draft.kind != nil ? kindColor : (done ? .gymAccent : .gymTextSecondary))
-                    .frame(width: 28, height: 38)
-            }
-            .disabled(done)
-            Text(previousText)
-                .gymNumber(13, weight: .medium)
-                .foregroundColor(.gymTextSecondary)
+
+                HStack(spacing: 6) {
+                    Text(previousText)
+                        .gymNumber(13, weight: .medium)
+                        .foregroundColor(.gymTextSecondary)
+                    if draft.isRecord { RecordBadge() }
+                }
                 .frame(maxWidth: .infinity, alignment: .leading)
-            field($draft.weight, keyboard: .decimalPad)
-            field($draft.reps, keyboard: .numberPad)
-            Button(action: onToggle) {
-                Image(systemName: "checkmark")
-                    .font(.system(size: 15, weight: .heavy))
-                    .foregroundColor(done ? .gymOnAccent : .gymTextSecondary)
-                    .frame(width: 38, height: 38)
-                    .background(RoundedRectangle(cornerRadius: 10, style: .continuous)
-                        .fill(done ? Color.gymAccent : Color.gymSurfaceRaised))
+
+                if type.usesWeight { field($draft.weight, keyboard: .decimalPad) }
+                field($draft.reps, keyboard: .numberPad)
+
+                Button(action: onToggle) {
+                    Image(systemName: "checkmark")
+                        .font(.system(size: 15, weight: .heavy))
+                        .foregroundColor(done ? .gymOnAccent : .gymTextSecondary)
+                        .frame(width: 38, height: 38)
+                        .background(RoundedRectangle(cornerRadius: 10, style: .continuous)
+                            .fill(done ? Color.gymAccent : Color.gymSurfaceRaised))
+                }
+                .buttonStyle(.plain)
             }
-            .buttonStyle(.plain)
+            if let rpe = draft.rpe {
+                Text("RPE " + formatWeightValue(rpe))
+                    .font(.system(size: 11, weight: .semibold))
+                    .foregroundColor(.gymTextSecondary)
+                    .padding(.leading, 36)
+            }
         }
         .opacity(done ? 0.85 : 1)
     }
@@ -594,7 +688,7 @@ struct WorkoutSummaryView: View {
                             VStack(alignment: .leading, spacing: 4) {
                                 Text(name).font(.system(size: 16, weight: .bold)).foregroundColor(.gymText)
                                 Text(workout.sets(for: name)
-                                    .map { "\(formatWeightValue(store.displayWeight($0.weight))) × \($0.reps)" }
+                                    .map { store.shortSetText($0) }
                                     .joined(separator: "   "))
                                     .gymNumber(14, weight: .medium)
                                     .foregroundColor(.gymTextSecondary)
@@ -639,6 +733,135 @@ struct WorkoutSummaryView: View {
         NotificationManager.shared.enableDefaultReminders { granted in
             remindersOn = granted
             PostHogSDK.shared.capture("reminder_soft_ask", properties: ["granted": granted])
+        }
+    }
+}
+
+// MARK: - Rest countdown bar
+
+struct RestBar: View {
+    @ObservedObject private var timer = RestTimerManager.shared
+    @EnvironmentObject var store: AppStore
+
+    var body: some View {
+        if let end = timer.endDate {
+            TimelineView(.periodic(from: .now, by: 1)) { context in
+                let remaining = Int(end.timeIntervalSince(context.date).rounded(.up))
+                if remaining > -3 {
+                    HStack(spacing: 12) {
+                        Image(systemName: "timer").foregroundColor(.gymAccent)
+                        Text(remaining > 0 ? formatDuration(TimeInterval(remaining)) : store.t("liveactivity.rest.over"))
+                            .gymNumber(22)
+                            .foregroundColor(.gymText)
+                        Spacer()
+                        stepButton("−15") { timer.adjust(by: -15, store: store) }
+                        stepButton("+15") { timer.adjust(by: 15, store: store) }
+                        Button { timer.cancel() } label: {
+                            Image(systemName: "xmark")
+                                .font(.system(size: 13, weight: .bold))
+                                .foregroundColor(.gymTextSecondary)
+                                .frame(width: 32, height: 32)
+                        }
+                    }
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 10)
+                    .background(RoundedRectangle(cornerRadius: 16, style: .continuous).fill(Color.gymSurface))
+                    .overlay(RoundedRectangle(cornerRadius: 16, style: .continuous).stroke(Color.gymAccent, lineWidth: 1.5))
+                    .padding(.horizontal, 16)
+                    .padding(.bottom, 8)
+                }
+            }
+        }
+    }
+
+    private func stepButton(_ title: String, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Text(title)
+                .font(.system(size: 14, weight: .bold))
+                .foregroundColor(.gymText)
+                .padding(.horizontal, 12)
+                .padding(.vertical, 7)
+                .background(Capsule().fill(Color.gymSurfaceRaised))
+        }
+    }
+}
+
+// MARK: - Plate calculator
+
+struct PlateCalculatorView: View {
+    @State var target: Double
+    @EnvironmentObject var store: AppStore
+    @Environment(\.dismiss) private var dismiss
+    @State private var targetText = ""
+    @State private var barText = ""
+
+    init(initialWeight: Double) { _target = State(initialValue: initialWeight) }
+
+    private var isLbs: Bool { store.weightUnit == "lbs" }
+    private var plates: [Double] { isLbs ? [45, 35, 25, 10, 5, 2.5] : [25, 20, 15, 10, 5, 2.5, 1.25] }
+    private var bar: Double { Double(barText.replacingOccurrences(of: ",", with: ".")) ?? (isLbs ? 45 : 20) }
+
+    private var perSide: [Double] {
+        var remaining = ((Double(targetText.replacingOccurrences(of: ",", with: ".")) ?? 0) - bar) / 2
+        var result: [Double] = []
+        guard remaining > 0 else { return [] }
+        for plate in plates {
+            while remaining + 0.001 >= plate {
+                result.append(plate)
+                remaining -= plate
+            }
+        }
+        return result
+    }
+
+    var body: some View {
+        ZStack {
+            Color.gymBackground.ignoresSafeArea()
+            VStack(alignment: .leading, spacing: 18) {
+                HStack {
+                    Text(store.t("plates.title")).font(.system(size: 22, weight: .heavy)).foregroundColor(.gymText)
+                    Spacer()
+                    Button(store.t("common.done")) { dismiss() }.foregroundColor(.gymAccent)
+                }
+                HStack(spacing: 12) {
+                    labeled(store.t("plates.target"), text: $targetText)
+                    labeled(store.t("plates.bar"), text: $barText)
+                }
+                SectionLabel(text: store.t("plates.perSide"))
+                if perSide.isEmpty {
+                    Text("–").foregroundColor(.gymTextSecondary)
+                } else {
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        HStack(spacing: 6) {
+                            ForEach(Array(perSide.enumerated()), id: \.offset) { _, plate in
+                                Text(formatWeightValue(plate))
+                                    .gymNumber(16, weight: .bold)
+                                    .foregroundColor(.gymOnAccent)
+                                    .frame(width: 34, height: 34 + CGFloat(plate / (isLbs ? 45 : 25)) * 40)
+                                    .background(RoundedRectangle(cornerRadius: 6).fill(Color.gymAccent))
+                            }
+                        }
+                    }
+                }
+                Spacer()
+            }
+            .padding(16)
+        }
+        .task {
+            targetText = target > 0 ? formatWeightValue(target) : ""
+            barText = formatWeightValue(isLbs ? 45 : 20)
+        }
+    }
+
+    private func labeled(_ title: String, text: Binding<String>) -> some View {
+        VStack(alignment: .leading, spacing: 6) {
+            SectionLabel(text: "\(title) (\(store.unitLabel))")
+            TextField("0", text: text)
+                .keyboardType(.decimalPad)
+                .gymNumber(20, weight: .bold)
+                .foregroundColor(.gymText)
+                .padding(12)
+                .background(RoundedRectangle(cornerRadius: 12, style: .continuous).fill(Color.gymSurfaceRaised))
         }
     }
 }

@@ -70,7 +70,8 @@ struct ExerciseMetaEditor: View {
     @Environment(\.dismiss) private var dismiss
     @State private var muscle: MuscleGroup?
     @State private var photo: UIImage?
-    @State private var photoRemoved = false
+    @State private var type: ExerciseType = .weightReps
+    @State private var rest = -1
     @State private var loaded = false
 
     var body: some View {
@@ -82,12 +83,32 @@ struct ExerciseMetaEditor: View {
                     Spacer()
                     Button(store.t("common.save")) {
                         store.setExerciseMeta(muscle, photo: photo, for: exercise, removePhoto: photo == nil)
+                        store.setExerciseType(type == store.defaultExerciseType(for: exercise) ? nil : type,
+                                              rest: rest < 0 ? nil : rest, for: exercise)
                         dismiss()
                     }
                     .font(.system(size: 16, weight: .bold))
                     .foregroundColor(.gymAccent)
                 }
                 ExerciseMetaFields(muscle: $muscle, photo: $photo)
+
+                SectionLabel(text: store.t("meta.type"))
+                Picker("", selection: $type) {
+                    ForEach(ExerciseType.allCases, id: \.self) { Text(store.t($0.titleKey)).tag($0) }
+                }
+                .pickerStyle(.segmented)
+
+                HStack {
+                    SectionLabel(text: store.t("meta.rest"))
+                    Spacer()
+                    Picker("", selection: $rest) {
+                        Text(store.t("meta.rest.default")).tag(-1)
+                        Text(store.t("settings.rest.off")).tag(0)
+                        ForEach([30, 60, 90, 120, 180, 240], id: \.self) { Text("\($0) s").tag($0) }
+                    }
+                    .pickerStyle(.menu)
+                    .tint(.gymAccent)
+                }
                 Spacer()
             }
             .padding(16)
@@ -97,6 +118,8 @@ struct ExerciseMetaEditor: View {
             loaded = true
             if let raw = store.exerciseMeta[exercise]?.muscle { muscle = MuscleGroup(rawValue: raw) }
             photo = store.photo(for: exercise)
+            type = store.exerciseType(for: exercise)
+            rest = store.exerciseMeta[exercise]?.restSeconds ?? -1
         }
     }
 }

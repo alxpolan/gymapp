@@ -31,20 +31,23 @@ struct WorkoutEntry: Codable, Identifiable, Equatable {
     var workoutId: String?
     /// nil = normal working set.
     var kind: SetKind?
+    /// Rate of perceived exertion (6–10), optional.
+    var rpe: Double?
 
     var isWarmup: Bool { kind == .warmup }
 
     static func create(exercise: String, weight: Double, reps: Int, date: Date = Date(), workoutId: String? = nil,
-                       kind: SetKind? = nil) -> WorkoutEntry {
+                       kind: SetKind? = nil, rpe: Double? = nil) -> WorkoutEntry {
         WorkoutEntry(id: UUID().uuidString, exercise: exercise, weight: weight, reps: reps, date: date, createdAt: Date(),
-                     workoutId: workoutId, kind: kind)
+                     workoutId: workoutId, kind: kind, rpe: rpe)
     }
 
-    enum CodingKeys: String, CodingKey { case id, exercise, weight, reps, date, createdAt, workoutId, kind }
+    enum CodingKeys: String, CodingKey { case id, exercise, weight, reps, date, createdAt, workoutId, kind, rpe }
 
     init(id: String, exercise: String, weight: Double, reps: Int, date: Date, createdAt: Date, workoutId: String? = nil,
-         kind: SetKind? = nil) {
+         kind: SetKind? = nil, rpe: Double? = nil) {
         self.kind = kind
+        self.rpe = rpe
         self.id = id
         self.exercise = exercise
         self.weight = weight
@@ -64,6 +67,7 @@ struct WorkoutEntry: Codable, Identifiable, Equatable {
         createdAt = try c.decodeIfPresent(Date.self, forKey: .createdAt) ?? date
         workoutId = try c.decodeIfPresent(String.self, forKey: .workoutId)
         kind = try c.decodeIfPresent(SetKind.self, forKey: .kind)
+        rpe = try c.decodeIfPresent(Double.self, forKey: .rpe)
     }
 
     static func chronological(_ a: WorkoutEntry, _ b: WorkoutEntry) -> Bool {
@@ -143,7 +147,19 @@ struct ActiveWorkout: Codable, Equatable {
 
 // MARK: - Exercise details set by the user
 
+/// How an exercise is logged. Duration exercises store seconds in `reps`.
+enum ExerciseType: String, Codable, CaseIterable {
+    case weightReps, bodyweightReps, duration
+
+    var titleKey: String { "extype.\(rawValue)" }
+    var usesWeight: Bool { self == .weightReps }
+}
+
 struct ExerciseMeta: Codable, Equatable {
+    /// `ExerciseType.rawValue`; nil = guessed from the name.
+    var type: String?
+    /// Rest timer for this exercise in seconds; nil = global setting.
+    var restSeconds: Int?
     /// `MuscleGroup.rawValue`; nil = guessed from the name.
     var muscle: String?
     /// File name inside the photos folder.

@@ -160,6 +160,7 @@ struct WorkoutDetailView: View {
     @EnvironmentObject var store: AppStore
     @Environment(\.dismiss) private var dismiss
     @State private var showDelete = false
+    @State private var editing: WorkoutEntry?
 
     private var workout: Workout? { store.workouts.first { $0.id == workoutId } }
 
@@ -212,17 +213,21 @@ struct WorkoutDetailView: View {
                                     let sets = workout.sets(for: name)
                                     let best = sets.filter { !$0.isWarmup }.map { $0.weight }.max() ?? 0
                                     ForEach(Array(sets.enumerated()), id: \.element.id) { index, set in
+                                        Button { editing = set } label: {
                                         HStack {
                                             Text(set.kind?.letter ?? "\(sets[..<index].filter { !$0.isWarmup }.count + 1)")
                                                 .gymNumber(14, weight: .bold)
                                                 .foregroundColor(.gymTextSecondary)
                                                 .frame(width: 24, alignment: .leading)
-                                            Text("\(formatWeightValue(store.displayWeight(set.weight))) \(store.unitLabel) × \(set.reps)")
+                                            Text(store.setText(set) + (set.rpe.map { " @" + formatWeightValue($0) } ?? ""))
                                                 .gymNumber(16, weight: .semibold)
                                                 .foregroundColor(.gymText)
                                             Spacer()
                                             if !set.isWarmup && set.weight == best && sets.count > 1 { RecordBadge() }
                                         }
+                                        .contentShape(Rectangle())
+                                        }
+                                        .buttonStyle(.plain)
                                     }
                                 }
                             }
@@ -251,6 +256,9 @@ struct WorkoutDetailView: View {
             }
         }
         .navigationBarTitleDisplayMode(.inline)
+        .sheet(item: $editing) { entry in
+            SetEditSheet(entry: entry).environmentObject(store)
+        }
         .confirmationDialog(store.t("history.deleteWorkout"), isPresented: $showDelete, titleVisibility: .visible) {
             Button(store.t("common.delete"), role: .destructive) {
                 if let workout { store.deleteWorkout(workout) }
@@ -260,5 +268,71 @@ struct WorkoutDetailView: View {
         } message: {
             Text(store.t("history.delete.message"))
         }
+    }
+}
+
+// MARK: - Edit a logged set
+
+struct SetEditSheet: View {
+    let entry: WorkoutEntry
+    @EnvironmentObject var store: AppStore
+    @Environment(\.dismiss) private var dismiss
+    @State private var weight = ""
+    @State private var reps = ""
+
+    private var type: ExerciseType { store.exerciseType(for: entry.exercise) }
+
+    var body: some View {
+        ZStack {
+            Color.gymBackground.ignoresSafeArea()
+            VStack(alignment: .leading, spacing: 18) {
+                HStack {
+                    Text(entry.exercise).font(.system(size: 20, weight: .heavy)).foregroundColor(.gymText)
+                    Spacer()
+                    Button(store.t("common.save"), action: save)
+                        .font(.system(size: 16, weight: .bold))
+                        .foregroundColor(.gymAccent)
+                }
+                HStack(spacing: 12) {
+                    if type.usesWeight { field(store.unitLabel.uppercased(), text: $weight, keyboard: .decimalPad) }
+                    field(type == .duration ? store.t("workout.seconds").uppercased() : store.t("detail.reps").uppercased(),
+                          text: $reps, keyboard: .numberPad)
+                }
+                Button(role: .destructive) {
+                    store.deleteEntry(id: entry.id)
+                    dismiss()
+                } label: {
+                    Text(store.t("workout.removeSet"))
+                        .font(.system(size: 15, weight: .semibold))
+                        .foregroundColor(.gymDestructive)
+                }
+                Spacer()
+            }
+            .padding(16)
+        }
+        .task {
+            weight = formatWeightValue(store.displayWeight(entry.weight))
+            reps = "\(entry.reps)"
+        }
+    }
+
+    private func field(_ title: String, text: Binding<String>, keyboard: UIKeyboardType) -> some View {
+        VStack(alignment: .leading, spacing: 6) {
+            SectionLabel(text: title)
+            TextField("0", text: text)
+                .keyboardType(keyboard)
+                .gymNumber(22, weight: .bold)
+                .foregroundColor(.gymText)
+                .padding(12)
+                .background(RoundedRectangle(cornerRadius: 12, style: .continuous).fill(Color.gymSurfaceRaised))
+        }
+    }
+
+    private func save() {
+        var updated = entry
+        if type.usesWeight, let w = Double(weight.replacingOccurrences(of: ",", with: ".")), w >= 0 { updated.weight = store.toKg(w) }
+        if let r = Int(reps), r > 0 { updated.reps = r }
+        store.updateEntry(updated)
+        dismiss()
     }
 }

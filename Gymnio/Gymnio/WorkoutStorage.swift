@@ -80,6 +80,13 @@ final class WorkoutStorage {
         save(entries: entries)
     }
 
+    func updateEntry(_ entry: WorkoutEntry) {
+        var entries = getAllEntries()
+        guard let idx = entries.firstIndex(where: { $0.id == entry.id }) else { return }
+        entries[idx] = entry
+        save(entries: entries)
+    }
+
     func deleteEntry(id: String) {
         var entries = getAllEntries()
         entries.removeAll { $0.id == id }

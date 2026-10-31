@@ -233,6 +233,51 @@ final class AppStore: ObservableObject {
 
     func muscleGroup(for exercise: String) -> MuscleGroup { MuscleGroup.classify(exercise) }
 
+    func exerciseType(for exercise: String) -> ExerciseType {
+        if let raw = exerciseMeta[exercise]?.type, let type = ExerciseType(rawValue: raw) { return type }
+        return defaultExerciseType(for: exercise)
+    }
+
+    /// The type guessed from the name, used when the user did not choose one.
+    func defaultExerciseType(for exercise: String) -> ExerciseType {
+        let name = exercise.lowercased()
+        if ["plank", "hang", "hold", "wall sit", "planke"].contains(where: { name.contains($0) }) { return .duration }
+        if ["push-up", "pushup", "pull-up", "pullup", "chin-up", "chinup", "sit-up", "situp", "liegestütz", "klimmzug"]
+            .contains(where: { name.contains($0) }) { return .bodyweightReps }
+        return .weightReps
+    }
+
+    /// "80 kg × 5", "12 reps" or "45 s", depending on how the exercise is logged.
+    func setText(_ entry: WorkoutEntry) -> String {
+        switch exerciseType(for: entry.exercise) {
+        case .weightReps: return "\(formatWeightValue(displayWeight(entry.weight))) \(unitLabel) × \(entry.reps)"
+        case .bodyweightReps:
+            return entry.weight > 0 ? "+\(formatWeightValue(displayWeight(entry.weight))) \(unitLabel) × \(entry.reps)" : "\(entry.reps) \(t("common.reps"))"
+        case .duration: return "\(entry.reps) s"
+        }
+    }
+
+    /// Short form without unit for the "previous" column.
+    func shortSetText(_ entry: WorkoutEntry) -> String {
+        switch exerciseType(for: entry.exercise) {
+        case .weightReps: return "\(formatWeightValue(displayWeight(entry.weight))) × \(entry.reps)"
+        case .bodyweightReps: return entry.weight > 0 ? "+\(formatWeightValue(displayWeight(entry.weight))) × \(entry.reps)" : "\(entry.reps)"
+        case .duration: return "\(entry.reps) s"
+        }
+    }
+
+    func restDuration(for exercise: String) -> Int { exerciseMeta[exercise]?.restSeconds ?? restSeconds }
+
+    func setExerciseType(_ type: ExerciseType?, rest: Int?, for exercise: String) {
+        var meta = exerciseMeta[exercise] ?? ExerciseMeta()
+        meta.type = type?.rawValue
+        meta.restSeconds = rest
+        if meta.muscle == nil && meta.photo == nil && meta.type == nil && meta.restSeconds == nil {
+            exerciseMeta.removeValue(forKey: exercise)
+        } else { exerciseMeta[exercise] = meta }
+        persistMeta()
+    }
+
     func photo(for exercise: String) -> UIImage? {
         guard let file = exerciseMeta[exercise]?.photo else { return nil }
         return UIImage(contentsOfFile: photosFolder.appendingPathComponent(file).path)
@@ -251,7 +296,7 @@ final class AppStore: ObservableObject {
             try? FileManager.default.removeItem(at: photosFolder.appendingPathComponent(old))
             meta.photo = nil
         }
-        if meta.muscle == nil && meta.photo == nil { exerciseMeta.removeValue(forKey: exercise) } else { exerciseMeta[exercise] = meta }
+        if meta.muscle == nil && meta.photo == nil && meta.type == nil && meta.restSeconds == nil { exerciseMeta.removeValue(forKey: exercise) } else { exerciseMeta[exercise] = meta }
         persistMeta()
     }
 
@@ -568,7 +613,7 @@ final class AppStore: ObservableObject {
     /// a quick entry outside a workout counts as (part of) that day's training.
     @discardableResult
     func addEntry(exercise: String, weight: Double, reps: Int, date: Date, workoutId: String? = nil,
-                  kind: SetKind? = nil, source: String = "detail", presentPaywall: Bool = true) -> Bool {
+                  kind: SetKind? = nil, rpe: Double? = nil, source: String = "detail", presentPaywall: Bool = true) -> Bool {
         if workoutId == nil {
             let startsNewDay = !workouts.contains { Calendar.current.isDate($0.start, inSameDayAs: date) }
             if startsNewDay && isFreeLimitReached() {
@@ -577,7 +622,7 @@ final class AppStore: ObservableObject {
             }
         }
         let isFirstEntry = entries.isEmpty && !defaults.bool(forKey: firstEntryKey)
-        let entry = WorkoutEntry.create(exercise: exercise, weight: weight, reps: reps, date: date, workoutId: workoutId, kind: kind)
+        let entry = WorkoutEntry.create(exercise: exercise, weight: weight, reps: reps, date: date, workoutId: workoutId, kind: kind, rpe: rpe)
         storage.saveEntry(entry)
         entries = storage.getAllEntries()
         PostHogSDK.shared.capture("workout_entry_added", properties: [
@@ -596,6 +641,13 @@ final class AppStore: ObservableObject {
         }
         checkMilestones()
         return true
+    }
+
+    /// Changes a logged set (used when correcting a past training).
+    func updateEntry(_ entry: WorkoutEntry) {
+        storage.updateEntry(entry)
+        entries = storage.getAllEntries()
+        PostHogSDK.shared.capture("workout_entry_edited")
     }
 
     func deleteEntry(id: String) {
