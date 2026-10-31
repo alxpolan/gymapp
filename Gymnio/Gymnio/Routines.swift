@@ -19,6 +19,7 @@ struct RoutinesSection: View {
             }
 
             if store.routines.isEmpty {
+                templates
                 Button(action: create) {
                     VStack(alignment: .leading, spacing: 4) {
                         Text(store.t("routines.empty.title"))
@@ -42,6 +43,32 @@ struct RoutinesSection: View {
         }
         .sheet(item: $editing) { routine in
             RoutineEditorView(routine: routine).environmentObject(store)
+        }
+    }
+
+    /// One-tap starting points for people who have no routine yet.
+    private var templates: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(store.t("routines.templates"))
+                .font(.system(size: 13, weight: .semibold))
+                .foregroundColor(.gymTextSecondary)
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: 8) {
+                    ForEach(RoutineTemplate.all) { template in
+                        Button {
+                            store.saveRoutine(template.routine(name: store.t(template.titleKey)), source: "template")
+                        } label: {
+                            Label(store.t(template.titleKey), systemImage: "plus")
+                                .font(.system(size: 14, weight: .semibold))
+                                .foregroundColor(.gymAccent)
+                                .padding(.horizontal, 14)
+                                .padding(.vertical, 9)
+                                .flatSurface(Capsule())
+                        }
+                        .buttonStyle(.plain)
+                    }
+                }
+            }
         }
     }
 
@@ -76,6 +103,12 @@ struct RoutineCard: View {
                     Spacer(minLength: 8)
                     Menu {
                         Button(action: onEdit) { Label(store.t("routines.edit"), systemImage: "pencil") }
+                        Button {
+                            var copy = routine
+                            copy.id = UUID().uuidString
+                            copy.name = routine.name + " 2"
+                            store.saveRoutine(copy, source: "duplicate")
+                        } label: { Label(store.t("routines.duplicate"), systemImage: "doc.on.doc") }
                         Button(role: .destructive) { confirmDelete = true } label: {
                             Label(store.t("common.delete"), systemImage: "trash")
                         }
@@ -128,6 +161,13 @@ struct RoutineEditorView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var showPicker = false
 
+    private func move(_ name: String, by delta: Int) {
+        guard let idx = routine.exercises.firstIndex(where: { $0.name == name }) else { return }
+        let target = idx + delta
+        guard routine.exercises.indices.contains(target) else { return }
+        routine.exercises.swapAt(idx, target)
+    }
+
     private var canSave: Bool {
         !routine.name.trimmingCharacters(in: .whitespaces).isEmpty && !routine.exercises.isEmpty
     }
@@ -171,7 +211,13 @@ struct RoutineEditorView: View {
                                         .foregroundColor(.gymTextSecondary)
                                 }
                                 Spacer()
-                                Stepper("", value: $ex.sets, in: 1...12).labelsHidden()
+                                VStack(spacing: 2) {
+                                    Button { move(ex.name, by: -1) } label: { Image(systemName: "chevron.up") }
+                                    Button { move(ex.name, by: 1) } label: { Image(systemName: "chevron.down") }
+                                }
+                                .font(.system(size: 12, weight: .bold))
+                                .foregroundColor(.gymTextSecondary)
+                                Stepper("", value: $ex.sets, in: 1...12).labelsHidden().fixedSize()
                                 Button { routine.exercises.removeAll { $0.name == ex.name } } label: {
                                     Image(systemName: "xmark.circle.fill").foregroundColor(.gymTextSecondary)
                                 }
@@ -226,4 +272,27 @@ struct SaveAsRoutineButton: View {
             .disabled(saved)
         }
     }
+}
+
+// MARK: - Starter templates
+
+struct RoutineTemplate: Identifiable {
+    let id: String
+    let titleKey: String
+    let exercises: [(String, Int)]
+
+    func routine(name: String) -> Routine {
+        Routine(id: UUID().uuidString, name: name, exercises: exercises.map { RoutineExercise(name: $0.0, sets: $0.1) })
+    }
+
+    static let all: [RoutineTemplate] = [
+        RoutineTemplate(id: "push", titleKey: "template.push",
+                        exercises: [("Bench Press", 3), ("Incline Dumbbell Press", 3), ("Overhead Press", 3), ("Lateral Raise", 3), ("Tricep Pushdown", 3)]),
+        RoutineTemplate(id: "pull", titleKey: "template.pull",
+                        exercises: [("Deadlift", 3), ("Lat Pulldown", 3), ("Seated Cable Row", 3), ("Face Pull", 3), ("Barbell Curl", 3)]),
+        RoutineTemplate(id: "legs", titleKey: "template.legs",
+                        exercises: [("Squat", 4), ("Romanian Deadlift", 3), ("Leg Press", 3), ("Lying Leg Curl", 3), ("Standing Calf Raise", 4)]),
+        RoutineTemplate(id: "fullbody", titleKey: "template.fullbody",
+                        exercises: [("Squat", 3), ("Bench Press", 3), ("Barbell Row", 3), ("Overhead Press", 2), ("Plank", 2)])
+    ]
 }

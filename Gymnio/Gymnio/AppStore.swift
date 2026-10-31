@@ -24,6 +24,7 @@ final class AppStore: ObservableObject {
     @Published var showActiveWorkout: Bool = false
     @Published var reviewPending: Bool = false
     @Published var routines: [Routine] = []
+    @Published var weeklyGoal: Int = 3
     @Published var exerciseMeta: [String: ExerciseMeta] = [:]
     @Published var bodyWeights: [BodyWeightEntry] = []
     @Published var exerciseNotes: [String: String] = [:]
@@ -43,6 +44,7 @@ final class AppStore: ObservableObject {
     private let restSecondsKey  = "@rest_seconds"
     private let activeWorkoutKey = "@active_workout"
     private let routinesKey     = "@routines"
+    private let weeklyGoalKey   = "@weekly_goal"
     private let exerciseMetaKey = "@exercise_meta"
     private let bodyWeightKey   = "@body_weights"
     private let exerciseNotesKey = "@exercise_notes"
@@ -81,6 +83,7 @@ final class AppStore: ObservableObject {
         activeWorkout = defaults.data(forKey: activeWorkoutKey).flatMap { try? JSONDecoder().decode(ActiveWorkout.self, from: $0) }
         routines = defaults.data(forKey: routinesKey).flatMap { try? JSONDecoder().decode([Routine].self, from: $0) } ?? []
         exerciseMeta = defaults.data(forKey: exerciseMetaKey).flatMap { try? JSONDecoder().decode([String: ExerciseMeta].self, from: $0) } ?? [:]
+        if defaults.object(forKey: weeklyGoalKey) != nil { weeklyGoal = defaults.integer(forKey: weeklyGoalKey) }
         applyMuscleOverrides()
         bodyWeights = defaults.data(forKey: bodyWeightKey).flatMap { try? JSONDecoder().decode([BodyWeightEntry].self, from: $0) } ?? []
         exerciseNotes = defaults.data(forKey: exerciseNotesKey).flatMap { try? JSONDecoder().decode([String: String].self, from: $0) } ?? [:]
@@ -240,6 +243,7 @@ final class AppStore: ObservableObject {
 
     /// The type guessed from the name, used when the user did not choose one.
     func defaultExerciseType(for exercise: String) -> ExerciseType {
+        if let known = ExerciseLibrary.entry(for: exercise) { return known.type }
         let name = exercise.lowercased()
         if ["plank", "hang", "hold", "wall sit", "planke"].contains(where: { name.contains($0) }) { return .duration }
         if ["push-up", "pushup", "pull-up", "pullup", "chin-up", "chinup", "sit-up", "situp", "liegestütz", "klimmzug"]
@@ -390,6 +394,12 @@ final class AppStore: ObservableObject {
         var notes = workoutNotes
         for (id, note) in backup.workoutNotes where notes[id] == nil { notes[id] = note }
         workoutNotes = notes
+    }
+
+    func setWeeklyGoal(_ goal: Int) {
+        weeklyGoal = min(max(goal, 1), 7)
+        defaults.set(weeklyGoal, forKey: weeklyGoalKey)
+        PostHogSDK.shared.capture("weekly_goal_set", properties: ["goal": weeklyGoal])
     }
 
     // MARK: - Routines

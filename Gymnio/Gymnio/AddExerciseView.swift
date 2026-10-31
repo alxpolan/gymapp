@@ -11,10 +11,11 @@ struct AddExerciseView: View {
     @State private var customPhoto: UIImage?
     @FocusState private var isFocused: Bool
 
-    private var filtered: [CatalogExercise] {
+    private var filtered: [String] {
         let query = search.trimmingCharacters(in: .whitespaces).lowercased()
-        guard !query.isEmpty else { return ExerciseCatalog.all }
-        return ExerciseCatalog.all.filter { $0.displayName.lowercased().contains(query) }
+        let all = ExerciseLibrary.suggestions().filter { name in !store.exercises.contains { $0.lowercased() == name.lowercased() } }
+        guard !query.isEmpty else { return all }
+        return all.filter { $0.lowercased().contains(query) }
     }
 
     private var isCustomValid: Bool { !customName.trimmingCharacters(in: .whitespaces).isEmpty }
@@ -47,13 +48,11 @@ struct AddExerciseView: View {
 
                 ScrollView(showsIndicators: false) {
                     VStack(spacing: 4) {
-                        ForEach(filtered) { item in
-                            Button { add(item.displayName) } label: {
+                        ForEach(filtered, id: \.self) { name in
+                            Button { add(name) } label: {
                                 HStack {
-                                    Image(systemName: "play.circle.fill")
-                                        .font(.system(size: 22))
-                                        .foregroundStyle(Color.gymAccent)
-                                    Text(item.displayName)
+                                    ExerciseThumb(name: name, size: 36)
+                                    Text(name)
                                         .font(.system(size: 16))
                                         .foregroundColor(Color.gymText)
                                     Spacer(minLength: 0)

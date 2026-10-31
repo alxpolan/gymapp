@@ -125,9 +125,25 @@ struct TrainView: View {
 
     private var weekCard: some View {
         let trainedDays = Set(store.workouts.map { calendar.startOfDay(for: $0.start) })
+        let weekStartDay = calendar.startOfDay(for: weekDays.first ?? Date())
         return Card {
             VStack(alignment: .leading, spacing: 12) {
-                SectionLabel(text: store.t("train.thisWeek"))
+                HStack {
+                    SectionLabel(text: store.t("train.thisWeek"))
+                    Spacer()
+                    Menu {
+                        ForEach(1...7, id: \.self) { goal in
+                            Button { store.setWeeklyGoal(goal) } label: {
+                                Label(String(format: store.t("train.goal.option"), goal),
+                                      systemImage: store.weeklyGoal == goal ? "checkmark" : "circle")
+                            }
+                        }
+                    } label: {
+                        Text(String(format: store.t("train.goal.progress"), trainedDays.filter { $0 >= weekStartDay }.count, store.weeklyGoal))
+                            .gymNumber(13, weight: .bold)
+                            .foregroundColor(trainedDays.filter { $0 >= weekStartDay }.count >= store.weeklyGoal ? .gymPositive : .gymAccent)
+                    }
+                }
                 HStack(spacing: 0) {
                     ForEach(weekDays, id: \.self) { day in
                         let trained = trainedDays.contains(calendar.startOfDay(for: day))

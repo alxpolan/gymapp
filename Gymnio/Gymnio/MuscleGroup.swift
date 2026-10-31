@@ -61,6 +61,7 @@ enum MuscleGroup: String, CaseIterable, Identifiable {
 
     static func classify(_ exercise: String) -> MuscleGroup {
         if let chosen = overrides[exercise] { return chosen }
+        if let known = ExerciseLibrary.entry(for: exercise) { return known.muscle }
         let name = exercise.lowercased()
         for group in [MuscleGroup.legs, .back, .chest, .shoulders, .core, .arms] {
             if group.keywords.contains(where: { name.contains($0) }) {

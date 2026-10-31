@@ -533,24 +533,32 @@ struct ExercisePickerSheet: View {
     @EnvironmentObject var store: AppStore
     @Environment(\.dismiss) private var dismiss
     @State private var search = ""
+    @State private var filter: MuscleGroup?
 
     private var query: String { search.trimmingCharacters(in: .whitespaces) }
 
-    private var mine: [String] {
-        store.exercises.filter { query.isEmpty || $0.lowercased().contains(query.lowercased()) }
+    private func matches(_ name: String) -> Bool {
+        (query.isEmpty || name.lowercased().contains(query.lowercased()))
+        && (filter == nil || store.muscleGroup(for: name) == filter)
     }
 
-    private var library: [CatalogExercise] {
-        ExerciseCatalog.all.filter { item in
-            !store.exercises.contains(where: { $0.lowercased() == item.displayName.lowercased() })
-            && (query.isEmpty || item.displayName.lowercased().contains(query.lowercased()))
+    private var library: [String] {
+        ExerciseLibrary.suggestions().filter { name in
+            !store.exercises.contains(where: { $0.lowercased() == name.lowercased() }) && matches(name)
         }
+    }
+
+    /// Own exercises, the ones trained most recently first.
+    private var yours: [String] {
+        let lastTrained = Dictionary(grouping: store.entries, by: { $0.exercise }).mapValues { $0.map { $0.date }.max() ?? .distantPast }
+        return store.exercises.filter { matches($0) }
+            .sorted { (lastTrained[$0] ?? .distantPast) > (lastTrained[$1] ?? .distantPast) }
     }
 
     private var canCreate: Bool {
         !query.isEmpty
         && !store.exercises.contains(where: { $0.lowercased() == query.lowercased() })
-        && !ExerciseCatalog.all.contains(where: { $0.displayName.lowercased() == query.lowercased() })
+        && !ExerciseLibrary.suggestions().contains(where: { $0.lowercased() == query.lowercased() })
     }
 
     var body: some View {
@@ -572,28 +580,45 @@ struct ExercisePickerSheet: View {
                     .background(RoundedRectangle(cornerRadius: 12, style: .continuous).fill(Color.gymSurfaceRaised))
                     .foregroundColor(.gymText)
 
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 8) {
+                        chip(store.t("picker.all"), selected: filter == nil) { filter = nil }
+                        ForEach(MuscleGroup.allCases.filter { $0 != .other }) { group in
+                            chip(store.t(group.titleKey), selected: filter == group) { filter = (filter == group) ? nil : group }
+                        }
+                    }
+                }
+
                 ScrollView(showsIndicators: false) {
                     VStack(alignment: .leading, spacing: 6) {
                         if canCreate {
                             row(title: String(format: store.t("picker.custom"), query), icon: "plus.circle.fill", pick: query)
                         }
-                        if !mine.isEmpty {
+                        if !yours.isEmpty {
                             SectionLabel(text: store.t("picker.yours")).padding(.top, 8)
-                            ForEach(mine, id: \.self) { name in row(title: name, icon: "dumbbell", pick: name) }
+                            ForEach(yours, id: \.self) { name in row(title: name, icon: "dumbbell", pick: name) }
                         }
                         if !library.isEmpty {
                             SectionLabel(text: store.t("picker.library")).padding(.top, 8)
-                            ForEach(library) { item in
-                                row(title: item.displayName,
-                                    icon: ExerciseCatalog.videoURL(for: item.displayName) != nil ? "play.circle.fill" : "dumbbell",
-                                    pick: item.displayName)
-                            }
+                            ForEach(library, id: \.self) { name in row(title: name, icon: "dumbbell", pick: name) }
                         }
                     }
                 }
             }
             .padding(16)
         }
+    }
+
+    private func chip(_ title: String, selected: Bool, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Text(title)
+                .font(.system(size: 14, weight: .semibold))
+                .foregroundColor(selected ? .gymOnAccent : .gymText)
+                .padding(.horizontal, 14)
+                .padding(.vertical, 8)
+                .background(Capsule().fill(selected ? Color.gymAccent : Color.gymSurfaceRaised))
+        }
+        .buttonStyle(.plain)
     }
 
     private func row(title: String, icon: String, pick name: String) -> some View {
