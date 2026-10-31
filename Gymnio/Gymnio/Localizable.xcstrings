@@ -29337,6 +29337,40 @@
           }
         }
       }
+    },
+    "detail.repRecords": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Best weight by reps"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Bestgewicht nach Wiederholungen"
+          }
+        }
+      }
+    },
+    "workout.history": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recent sessions"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Letzte Einheiten"
+          }
+        }
+      }
     }
   },
   "version": "1.1"

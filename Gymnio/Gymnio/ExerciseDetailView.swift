@@ -77,6 +77,8 @@ struct ExerciseDetailView: View {
                             }
                         }
 
+                        if store.exerciseType(for: exerciseName) == .weightReps { repRecordsCard }
+
                         ProGate(titleKey: "prolock.title", subtitleKey: "prolock.coach", source: "feature_coach") {
                             NextSetCoachCard(group: currentGroup)
                         }
@@ -183,6 +185,35 @@ struct ExerciseDetailView: View {
             TextField(store.t("exercises.rename.placeholder"), text: $renameText)
             Button(store.t("common.cancel"), role: .cancel) {}
             Button(store.t("common.save")) { performRename() }
+        }
+    }
+
+    /// Heaviest weight lifted for at least N reps (working sets only).
+    private var repRecordsCard: some View {
+        let working = entries.filter { !$0.isWarmup }
+        let rows: [(reps: Int, weight: Double)] = [1, 3, 5, 8, 10, 12].compactMap { reps in
+            guard let best = working.filter({ $0.reps >= reps }).map({ $0.weight }).max(), best > 0 else { return nil }
+            return (reps, best)
+        }
+        return Group {
+            if !rows.isEmpty {
+                GlassCard {
+                    VStack(alignment: .leading, spacing: 8) {
+                        SectionLabel(text: store.t("detail.repRecords"))
+                        ForEach(rows, id: \.reps) { row in
+                            HStack {
+                                Text("\(row.reps) \(store.t("common.reps"))")
+                                    .font(.system(size: 15))
+                                    .foregroundColor(.gymTextSecondary)
+                                Spacer()
+                                Text("\(formatWeightValue(store.displayWeight(row.weight))) \(store.unitLabel)")
+                                    .gymNumber(16, weight: .bold)
+                                    .foregroundColor(.gymText)
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 

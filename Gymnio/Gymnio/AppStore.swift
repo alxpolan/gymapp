@@ -210,7 +210,11 @@ final class AppStore: ObservableObject {
     }
 
     func deleteExercise(_ name: String) {
-        if exerciseMeta[name] != nil { setExerciseMeta(nil, photo: nil, for: name, removePhoto: true) }
+        if exerciseMeta[name] != nil {
+            setExerciseMeta(nil, photo: nil, for: name, removePhoto: true)
+            exerciseMeta.removeValue(forKey: name)
+            persistMeta()
+        }
         storage.deleteExercise(name)
         exercises = storage.getExercises()
         entries   = storage.getAllEntries()

@@ -198,6 +198,7 @@ struct ExerciseBlock: View {
     @State private var showVideo = false
     @State private var showEditor = false
     @State private var showPlates = false
+    @State private var showHistory = false
 
     private var type: ExerciseType { store.exerciseType(for: exercise) }
     private var previous: [WorkoutEntry] { store.previousSets(for: exercise).filter { !$0.isWarmup } }
@@ -259,6 +260,7 @@ struct ExerciseBlock: View {
                 ExerciseVideoView(url: url).padding(16)
             }
         }
+        .sheet(isPresented: $showHistory) { ExerciseHistorySheet(exercise: exercise).environmentObject(store) }
         .sheet(isPresented: $showEditor) { ExerciseMetaEditor(exercise: exercise).environmentObject(store) }
         .sheet(isPresented: $showPlates) {
             PlateCalculatorView(initialWeight: Double(drafts.first(where: { $0.entryId == nil && $0.kind == nil })?.weight
@@ -299,6 +301,7 @@ struct ExerciseBlock: View {
                     Button(action: addWarmups) { Label(store.t("workout.warmups"), systemImage: "flame") }
                     Button { showPlates = true } label: { Label(store.t("plates.title"), systemImage: "circle.grid.2x1") }
                 }
+                Button { showHistory = true } label: { Label(store.t("workout.history"), systemImage: "clock.arrow.circlepath") }
                 if canLinkNext {
                     Button { store.toggleSupersetWithNext(exercise) } label: {
                         Label(store.t(store.isLinkedToNext(exercise) ? "workout.superset.unlink" : "workout.superset.link"),
@@ -887,6 +890,59 @@ struct PlateCalculatorView: View {
                 .foregroundColor(.gymText)
                 .padding(12)
                 .background(RoundedRectangle(cornerRadius: 12, style: .continuous).fill(Color.gymSurfaceRaised))
+        }
+    }
+}
+
+// MARK: - Recent sessions of one exercise
+
+struct ExerciseHistorySheet: View {
+    let exercise: String
+    @EnvironmentObject var store: AppStore
+    @Environment(\.dismiss) private var dismiss
+
+    private var sessions: [Workout] {
+        Array(store.workouts.filter { $0.id != store.activeWorkout?.id && !$0.sets(for: exercise).isEmpty }.prefix(8))
+    }
+
+    private func dateText(_ date: Date) -> String {
+        let f = DateFormatter()
+        f.locale = store.locale
+        f.setLocalizedDateFormatFromTemplate("EEE d MMM")
+        return f.string(from: date)
+    }
+
+    var body: some View {
+        ZStack {
+            Color.gymBackground.ignoresSafeArea()
+            VStack(alignment: .leading, spacing: 14) {
+                HStack {
+                    Text(exercise).font(.system(size: 22, weight: .heavy)).foregroundColor(.gymText)
+                    Spacer()
+                    Button(store.t("common.done")) { dismiss() }.foregroundColor(.gymAccent)
+                }
+                if sessions.isEmpty {
+                    Text(store.t("detail.history.empty")).foregroundColor(.gymTextSecondary)
+                }
+                ScrollView(showsIndicators: false) {
+                    VStack(spacing: 10) {
+                        ForEach(sessions) { workout in
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text(dateText(workout.start))
+                                    .font(.system(size: 13, weight: .bold))
+                                    .foregroundColor(.gymAccent)
+                                Text(workout.sets(for: exercise).map { store.shortSetText($0) }.joined(separator: "   "))
+                                    .gymNumber(15, weight: .medium)
+                                    .foregroundColor(.gymText)
+                            }
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(14)
+                            .flatSurface(RoundedRectangle(cornerRadius: 14, style: .continuous))
+                        }
+                    }
+                }
+            }
+            .padding(16)
         }
     }
 }
