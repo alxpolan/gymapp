@@ -197,16 +197,20 @@ final class AppStore: ObservableObject {
             .flatMap(Bundle.init) ?? .main
     }
 
+    /// The first of the user's preferred languages that the app supports (English if none).
     private var deviceLanguage: String {
-        let current = Locale.current.language
-        let raw = current.languageCode?.identifier ?? "en"
-        if raw == "zh" {
-            let region = current.region?.identifier ?? Locale.current.region?.identifier ?? ""
-            let traditional = current.script?.identifier == "Hant" || ["TW", "HK", "MO"].contains(region)
-            return traditional ? "zh-Hant" : "zh-Hans"
+        for identifier in Locale.preferredLanguages {
+            let language = Locale(identifier: identifier).language
+            let raw = language.languageCode?.identifier ?? ""
+            if raw == "zh" {
+                let region = language.region?.identifier ?? ""
+                let traditional = language.script?.identifier == "Hant" || ["TW", "HK", "MO"].contains(region)
+                return traditional ? "zh-Hant" : "zh-Hans"
+            }
+            let code = ["no": "nb", "nn": "nb", "iw": "he", "tl": "fil"][raw] ?? raw
+            if Self.supportedLanguages.contains(code) { return code }
         }
-        let code = ["no": "nb", "nn": "nb", "iw": "he", "tl": "fil"][raw] ?? raw
-        return Self.supportedLanguages.contains(code) ? code : "en"
+        return "en"
     }
 
     // MARK: - Exercises
