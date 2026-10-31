@@ -33,6 +33,11 @@ struct ActiveWorkoutView: View {
             }
         }
         .task { note = store.activeWorkout?.note ?? "" }
+        .sheet(item: Binding(get: { store.paywallRequest }, set: { store.paywallRequest = $0 })) { request in
+            PaywallView(source: request.source)
+                .environmentObject(store)
+                .environmentObject(PremiumManager.shared)
+        }
         .sheet(isPresented: $showPicker) {
             ExercisePickerSheet { name in store.addExerciseToActive(name) }
                 .environmentObject(store)

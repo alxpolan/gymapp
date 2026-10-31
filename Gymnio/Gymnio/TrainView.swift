@@ -208,10 +208,12 @@ struct TrainView: View {
     @ViewBuilder
     private var freeLeft: some View {
         if !premium.isPro && !premium.isPaywallSuppressedRegion {
-            let left = max(premium.freeWorkoutLimit - store.completedWorkoutCount, 0)
+            let bySets = premium.freeSetLimit > 0
+            let left = bySets ? max(premium.freeSetLimit - store.freeSetsUsed, 0)
+                              : max(premium.freeWorkoutLimit - store.completedWorkoutCount, 0)
             Button { store.paywallRequest = PaywallRequest(source: "entry_limit") } label: {
                 HStack(spacing: 6) {
-                    Text(String(format: store.t("train.freeLeft"), left))
+                    Text(String(format: store.t(bySets ? "train.freeSetsLeft" : "train.freeLeft"), left))
                         .font(.system(size: 13, weight: .medium))
                         .foregroundColor(.gymTextSecondary)
                     ProBadge()

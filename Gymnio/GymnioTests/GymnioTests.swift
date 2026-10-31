@@ -102,3 +102,16 @@ struct CSVParserTests {
         #expect(rows[1][3] == "warmup")
     }
 }
+
+struct SetLimitTests {
+    @Test func paywallAfterThreeFreeSets() {
+        #expect(!PremiumManager.isSetLimitReached(setsUsed: 2, limit: 3, isPro: false, suppressedRegion: false))
+        #expect(PremiumManager.isSetLimitReached(setsUsed: 3, limit: 3, isPro: false, suppressedRegion: false))
+    }
+
+    @Test func setLimitIgnoresProSuppressedRegionAndDisabledFlag() {
+        #expect(!PremiumManager.isSetLimitReached(setsUsed: 50, limit: 3, isPro: true, suppressedRegion: false))
+        #expect(!PremiumManager.isSetLimitReached(setsUsed: 50, limit: 3, isPro: false, suppressedRegion: true))
+        #expect(!PremiumManager.isSetLimitReached(setsUsed: 50, limit: 0, isPro: false, suppressedRegion: false))
+    }
+}

@@ -65,7 +65,8 @@ struct ContentView: View {
             }
         }
         .animation(.easeInOut(duration: 0.18), value: store.showAddExercise)
-        .sheet(item: $store.paywallRequest) { request in
+        .sheet(item: Binding(get: { store.showActiveWorkout ? nil : store.paywallRequest },
+                             set: { store.paywallRequest = $0 })) { request in
             PaywallView(source: request.source)
                 .environmentObject(store)
                 .environmentObject(PremiumManager.shared)

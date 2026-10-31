@@ -12,6 +12,10 @@ final class PremiumManager: ObservableObject {
     static let entitlementID = "pro"
     static let freeWorkoutLimitFlag = "free_workout_limit"
     static let defaultFreeWorkoutLimit = 2
+    /// Free working sets before the paywall appears (remote flag `free_set_limit`; 0 = use the workout limit instead).
+    /// Default 3: the paywall comes right after the user felt the value of the first workout.
+    static let freeSetLimitFlag = "free_set_limit"
+    static let defaultFreeSetLimit = 3
 
     @Published private(set) var packages: [Package] = []
     @Published private(set) var currentOffering: Offering?
@@ -73,6 +77,18 @@ final class PremiumManager: ObservableObject {
         if let number = raw as? NSNumber { return max(number.intValue, 0) }
         if let text = raw as? String, let value = Int(text) { return max(value, 0) }
         return Self.defaultFreeWorkoutLimit
+    }
+
+    var freeSetLimit: Int {
+        let raw = PostHogSDK.shared.getFeatureFlag(Self.freeSetLimitFlag)
+        if let number = raw as? NSNumber { return max(number.intValue, 0) }
+        if let text = raw as? String, let value = Int(text) { return max(value, 0) }
+        return Self.defaultFreeSetLimit
+    }
+
+    nonisolated static func isSetLimitReached(setsUsed: Int, limit: Int, isPro: Bool, suppressedRegion: Bool) -> Bool {
+        guard !isPro && !suppressedRegion && limit > 0 else { return false }
+        return setsUsed >= limit
     }
 
     var isPaywallSuppressedRegion: Bool {

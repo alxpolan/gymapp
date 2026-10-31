@@ -29456,6 +29456,23 @@
           }
         }
       }
+    },
+    "train.freeSetsLeft": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "%d free sets left"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Noch %d gratis Sätze"
+          }
+        }
+      }
     }
   },
   "version": "1.1"

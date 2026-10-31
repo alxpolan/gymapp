@@ -44,6 +44,7 @@ final class AppStore: ObservableObject {
     private let restSecondsKey  = "@rest_seconds"
     private let activeWorkoutKey = "@active_workout"
     private let routinesKey     = "@routines"
+    private let freeSetsUsedKey = "@free_sets_used"
     private let weeklyGoalKey   = "@weekly_goal"
     private let exerciseMetaKey = "@exercise_meta"
     private let bodyWeightKey   = "@body_weights"
@@ -503,8 +504,18 @@ final class AppStore: ObservableObject {
     /// Trainings that count against the free limit (the one being logged right now does not).
     var completedWorkoutCount: Int { workouts.filter { $0.id != activeWorkout?.id }.count }
 
+    /// Working sets a free user has logged so far (never refunded by deleting).
+    var freeSetsUsed: Int { defaults.integer(forKey: freeSetsUsedKey) }
+
+    private var isFreeSetLimitReached: Bool {
+        let premium = PremiumManager.shared
+        return PremiumManager.isSetLimitReached(setsUsed: freeSetsUsed, limit: premium.freeSetLimit,
+                                                isPro: premium.isPro, suppressedRegion: premium.isPaywallSuppressedRegion)
+    }
+
     private func isFreeLimitReached() -> Bool {
         let premium = PremiumManager.shared
+        if premium.freeSetLimit > 0 { return isFreeSetLimitReached }
         return PremiumManager.isWorkoutLimitReached(workoutCount: completedWorkoutCount, limit: premium.freeWorkoutLimit,
                                                     isPro: premium.isPro, suppressedRegion: premium.isPaywallSuppressedRegion)
     }
@@ -640,7 +651,13 @@ final class AppStore: ObservableObject {
     @discardableResult
     func addEntry(exercise: String, weight: Double, reps: Int, date: Date, workoutId: String? = nil,
                   kind: SetKind? = nil, rpe: Double? = nil, source: String = "detail", presentPaywall: Bool = true) -> Bool {
-        if workoutId == nil {
+        // Free users get a few sets, then the paywall; it never interrupts before they felt the value.
+        if kind != .warmup && isFreeSetLimitReached {
+            paywallRequest = PaywallRequest(source: "entry_limit")
+            PostHogSDK.shared.capture("set_limit_paywall_blocked", properties: ["sets_used": freeSetsUsed])
+            return false
+        }
+        if workoutId == nil && PremiumManager.shared.freeSetLimit == 0 {
             let startsNewDay = !workouts.contains { Calendar.current.isDate($0.start, inSameDayAs: date) }
             if startsNewDay && isFreeLimitReached() {
                 if presentPaywall { paywallRequest = PaywallRequest(source: "entry_limit") }
@@ -651,6 +668,15 @@ final class AppStore: ObservableObject {
         let entry = WorkoutEntry.create(exercise: exercise, weight: weight, reps: reps, date: date, workoutId: workoutId, kind: kind, rpe: rpe)
         storage.saveEntry(entry)
         entries = storage.getAllEntries()
+        if kind != .warmup && !PremiumManager.shared.isPro {
+            defaults.set(freeSetsUsed + 1, forKey: freeSetsUsedKey)
+            // The moment right after the last free set: the user just felt what the app does.
+            let limit = PremiumManager.shared.freeSetLimit
+            if limit > 0 && freeSetsUsed == limit && !PremiumManager.shared.isPaywallSuppressedRegion {
+                paywallRequest = PaywallRequest(source: "first_value")
+                PostHogSDK.shared.capture("first_value_paywall_shown", properties: ["sets": limit])
+            }
+        }
         PostHogSDK.shared.capture("workout_entry_added", properties: [
             "weight": weight,
             "reps": reps,
@@ -784,7 +810,7 @@ final class AppStore: ObservableObject {
         defaults.removeObject(forKey: languageKey)
         defaults.removeObject(forKey: activeWorkoutKey)
         defaults.removeObject(forKey: themeKey)
-        for key in [routinesKey, exerciseMetaKey, bodyWeightKey, exerciseNotesKey, workoutNotesKey, weeklyGoalKey] {
+        for key in [freeSetsUsedKey, routinesKey, exerciseMetaKey, bodyWeightKey, exerciseNotesKey, workoutNotesKey, weeklyGoalKey] {
             defaults.removeObject(forKey: key)
         }
         defaults.set("system", forKey: themeKey)
