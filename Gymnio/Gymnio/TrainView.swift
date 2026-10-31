@@ -251,7 +251,7 @@ struct WorkoutRowCard: View {
                         .foregroundColor(.gymText)
                         .lineLimit(2)
                         .multilineTextAlignment(.leading)
-                    Text("\(workout.setCount) \(store.t("summary.sets").lowercased()) · \(formatWeightValue(store.displayWeight(workout.volumeKg).rounded())) \(store.unitLabel)")
+                    Text("\(workout.setCount) \(store.t("summary.sets").lowercased()) · \(formatWeightValue(store.displayWeight(workout.volumeKg).rounded())) \(store.unitLabel)" + (workout.duration >= 60 ? " · \(formatDuration(workout.duration))" : ""))
                         .gymNumber(13, weight: .medium)
                         .foregroundColor(.gymTextSecondary)
                 }
