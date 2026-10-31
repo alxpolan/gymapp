@@ -22,6 +22,9 @@ final class AppStore: ObservableObject {
     @Published var showOnboarding: Bool = false
     @Published var restSeconds: Int = 90
     @Published var activeWorkout: ActiveWorkout?
+    @Published var showActiveWorkout: Bool = false
+    @Published var reviewPending: Bool = false
+    var lastWorkoutDuration: TimeInterval = 0
     @Published var quickLogRequest: QuickLogRequest?
 
     static let supportedLanguages = [
@@ -238,6 +241,16 @@ final class AppStore: ObservableObject {
         return true
     }
 
+    /// Starts (or resumes) a training and opens the logging screen.
+    func beginWorkout(source: String = "train") {
+        if startWorkout(source: source) { showActiveWorkout = true }
+    }
+
+    /// The sets of this exercise from the most recent earlier training (for the "previous" column).
+    func previousSets(for exercise: String) -> [WorkoutEntry] {
+        workouts.first { $0.id != activeWorkout?.id && !$0.sets(for: exercise).isEmpty }?.sets(for: exercise) ?? []
+    }
+
     func addExerciseToActive(_ name: String) {
         let trimmed = name.trimmingCharacters(in: .whitespaces)
         guard var active = activeWorkout, !trimmed.isEmpty,
@@ -270,8 +283,11 @@ final class AppStore: ObservableObject {
     func finishWorkout() -> Workout? {
         guard let active = activeWorkout else { return nil }
         let finished = workouts.first { $0.id == active.id }
+        lastWorkoutDuration = Date().timeIntervalSince(active.startedAt)
         setActiveWorkout(nil)
         RestTimerManager.shared.cancel()
+        // The right moment to ask for a rating: right after the first finished training.
+        if completedWorkoutCount == 1 && !defaults.bool(forKey: "review_requested_at_10") { reviewPending = true }
         if let finished {
             PostHogSDK.shared.capture("workout_finished", properties: [
                 "sets": finished.setCount,
