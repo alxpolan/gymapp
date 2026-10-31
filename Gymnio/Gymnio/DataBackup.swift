@@ -35,6 +35,10 @@ extension AppStore {
         let scoped = url.startAccessingSecurityScopedResource()
         defer { if scoped { url.stopAccessingSecurityScopedResource() } }
         guard let data = try? Data(contentsOf: url) else { return false }
+        return restoreBackup(data: data)
+    }
+
+    func restoreBackup(data: Data) -> Bool {
         let decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .iso8601
         guard let backup = try? decoder.decode(GymnioBackup.self, from: data) else { return false }

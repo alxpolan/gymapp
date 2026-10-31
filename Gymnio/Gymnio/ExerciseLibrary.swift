@@ -118,6 +118,8 @@ enum ExerciseLibrary {
 
     /// Everything the picker can offer: catalog exercises with video first, then the text-only library.
     static func suggestions() -> [String] {
-        ExerciseCatalog.all.map { $0.displayName } + all.map { $0.name }
+        var seen = Set<String>()
+        func key(_ name: String) -> String { name.lowercased().filter { $0.isLetter || $0.isNumber } }
+        return (ExerciseCatalog.all.map { $0.displayName } + all.map { $0.name }).filter { seen.insert(key($0)).inserted }
     }
 }

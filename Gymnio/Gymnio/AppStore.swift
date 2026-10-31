@@ -44,6 +44,7 @@ final class AppStore: ObservableObject {
     private let restSecondsKey  = "@rest_seconds"
     private let activeWorkoutKey = "@active_workout"
     private let routinesKey     = "@routines"
+    private let workoutRoutinesKey = "@workout_routines"
     private let freeSetsUsedKey = "@free_sets_used"
     private let weeklyGoalKey   = "@weekly_goal"
     private let exerciseMetaKey = "@exercise_meta"
@@ -259,9 +260,9 @@ final class AppStore: ObservableObject {
     /// "80 kg × 5", "12 reps" or "45 s", depending on how the exercise is logged.
     func setText(_ entry: WorkoutEntry) -> String {
         switch exerciseType(for: entry.exercise) {
-        case .weightReps: return "\(formatWeightValue(displayWeight(entry.weight))) \(unitLabel) × \(entry.reps)"
+        case .weightReps: return "\(formatWeightValue(displayWeight(entry.weight, for: entry.exercise))) \(unitLabel(for: entry.exercise)) × \(entry.reps)"
         case .bodyweightReps:
-            return entry.weight > 0 ? "+\(formatWeightValue(displayWeight(entry.weight))) \(unitLabel) × \(entry.reps)" : "\(entry.reps) \(t("common.reps"))"
+            return entry.weight > 0 ? "+\(formatWeightValue(displayWeight(entry.weight, for: entry.exercise))) \(unitLabel(for: entry.exercise)) × \(entry.reps)" : "\(entry.reps) \(t("common.reps"))"
         case .duration: return "\(entry.reps) s"
         }
     }
@@ -269,19 +270,20 @@ final class AppStore: ObservableObject {
     /// Short form without unit for the "previous" column.
     func shortSetText(_ entry: WorkoutEntry) -> String {
         switch exerciseType(for: entry.exercise) {
-        case .weightReps: return "\(formatWeightValue(displayWeight(entry.weight))) × \(entry.reps)"
-        case .bodyweightReps: return entry.weight > 0 ? "+\(formatWeightValue(displayWeight(entry.weight))) × \(entry.reps)" : "\(entry.reps)"
+        case .weightReps: return "\(formatWeightValue(displayWeight(entry.weight, for: entry.exercise))) × \(entry.reps)"
+        case .bodyweightReps: return entry.weight > 0 ? "+\(formatWeightValue(displayWeight(entry.weight, for: entry.exercise))) × \(entry.reps)" : "\(entry.reps)"
         case .duration: return "\(entry.reps) s"
         }
     }
 
     func restDuration(for exercise: String) -> Int { exerciseMeta[exercise]?.restSeconds ?? restSeconds }
 
-    func setExerciseType(_ type: ExerciseType?, rest: Int?, for exercise: String) {
+    func setExerciseType(_ type: ExerciseType?, rest: Int?, unit: String? = nil, for exercise: String) {
         var meta = exerciseMeta[exercise] ?? ExerciseMeta()
         meta.type = type?.rawValue
         meta.restSeconds = rest
-        if meta.muscle == nil && meta.photo == nil && meta.type == nil && meta.restSeconds == nil {
+        meta.unit = unit
+        if meta.muscle == nil && meta.photo == nil && meta.type == nil && meta.restSeconds == nil && meta.unit == nil {
             exerciseMeta.removeValue(forKey: exercise)
         } else { exerciseMeta[exercise] = meta }
         persistMeta()
@@ -305,7 +307,7 @@ final class AppStore: ObservableObject {
             try? FileManager.default.removeItem(at: photosFolder.appendingPathComponent(old))
             meta.photo = nil
         }
-        if meta.muscle == nil && meta.photo == nil && meta.type == nil && meta.restSeconds == nil { exerciseMeta.removeValue(forKey: exercise) } else { exerciseMeta[exercise] = meta }
+        if meta.muscle == nil && meta.photo == nil && meta.type == nil && meta.restSeconds == nil && meta.unit == nil { exerciseMeta.removeValue(forKey: exercise) } else { exerciseMeta[exercise] = meta }
         persistMeta()
     }
 
@@ -449,9 +451,46 @@ final class AppStore: ObservableObject {
 
     func startRoutine(_ routine: Routine) {
         guard startWorkout(source: "routine") else { return }
+        if var active = activeWorkout { active.routineId = routine.id; setActiveWorkout(active) }
         for ex in routine.exercises { addExerciseToActive(ex.name, plannedSets: ex.sets) }
         PostHogSDK.shared.capture("routine_started", properties: ["exercises": routine.exercises.count])
         showActiveWorkout = true
+    }
+
+    /// Moves a routine up (-1) or down (+1) in the list.
+    func moveRoutine(_ routine: Routine, by delta: Int) {
+        guard let idx = routines.firstIndex(where: { $0.id == routine.id }) else { return }
+        let target = idx + delta
+        guard routines.indices.contains(target) else { return }
+        routines.swapAt(idx, target)
+        persistRoutines()
+    }
+
+    private var workoutRoutines: [String: String] {
+        get { defaults.dictionary(forKey: workoutRoutinesKey) as? [String: String] ?? [:] }
+        set { defaults.set(newValue, forKey: workoutRoutinesKey) }
+    }
+
+    /// The routine a finished training was started from (if it still exists).
+    func linkedRoutine(for workoutId: String) -> Routine? {
+        guard let id = workoutRoutines[workoutId] else { return nil }
+        return routines.first { $0.id == id }
+    }
+
+    /// True when the training differs from its routine (other exercises or number of working sets).
+    func routineDiffers(_ routine: Routine, from workout: Workout) -> Bool {
+        let done = workout.exercises.map { RoutineExercise(name: $0, sets: max(workout.sets(for: $0).filter { !$0.isWarmup }.count, 1)) }
+        return done != routine.exercises
+    }
+
+    /// Overwrites the routine with what was actually trained ("save changes to the template").
+    func updateRoutine(_ routine: Routine, from workout: Workout) {
+        guard let idx = routines.firstIndex(where: { $0.id == routine.id }) else { return }
+        routines[idx].exercises = workout.exercises.map {
+            RoutineExercise(name: $0, sets: max(workout.sets(for: $0).filter { !$0.isWarmup }.count, 1))
+        }
+        persistRoutines()
+        PostHogSDK.shared.capture("routine_updated_from_workout")
     }
 
     private func persistRoutines() {
@@ -605,6 +644,11 @@ final class AppStore: ObservableObject {
         guard let active = activeWorkout else { return nil }
         let finished = workouts.first { $0.id == active.id }
         lastWorkoutDuration = Date().timeIntervalSince(active.startedAt)
+        if let routineId = active.routineId {
+            var map = workoutRoutines
+            map[active.id] = routineId
+            workoutRoutines = map
+        }
         if let note = active.note?.trimmingCharacters(in: .whitespacesAndNewlines), !note.isEmpty {
             var notes = workoutNotes
             notes[active.id] = note
@@ -744,6 +788,12 @@ final class AppStore: ObservableObject {
 
     // MARK: - Weight conversion
 
+    /// Unit of one exercise: its own choice, otherwise the global setting.
+    func unit(for exercise: String) -> String { exerciseMeta[exercise]?.unit ?? weightUnit }
+    func unitLabel(for exercise: String) -> String { unit(for: exercise) }
+    func displayWeight(_ kg: Double, for exercise: String) -> Double { unit(for: exercise) == "lbs" ? kg * 2.20462 : kg }
+    func toKg(_ value: Double, for exercise: String) -> Double { unit(for: exercise) == "lbs" ? value / 2.20462 : value }
+
     func displayWeight(_ kg: Double) -> Double {
         weightUnit == "lbs" ? kg * 2.20462 : kg
     }
@@ -810,7 +860,7 @@ final class AppStore: ObservableObject {
         defaults.removeObject(forKey: languageKey)
         defaults.removeObject(forKey: activeWorkoutKey)
         defaults.removeObject(forKey: themeKey)
-        for key in [freeSetsUsedKey, routinesKey, exerciseMetaKey, bodyWeightKey, exerciseNotesKey, workoutNotesKey, weeklyGoalKey] {
+        for key in [workoutRoutinesKey, freeSetsUsedKey, routinesKey, exerciseMetaKey, bodyWeightKey, exerciseNotesKey, workoutNotesKey, weeklyGoalKey] {
             defaults.removeObject(forKey: key)
         }
         defaults.set("system", forKey: themeKey)
@@ -843,6 +893,7 @@ final class AppStore: ObservableObject {
         for plan in days.flatMap({ $0 }) { storage.addExercise(plan.name) }
 
         guard let weekStart = calendar.dateInterval(of: .weekOfYear, for: Date())?.start else { return }
+        var seeded: [WorkoutEntry] = []
         for week in stride(from: 9, through: 0, by: -1) {
             for (slot, offset) in [0, 2, 4].enumerated() {
                 guard let day = calendar.date(byAdding: .day, value: offset - 7 * week, to: weekStart),
@@ -853,18 +904,20 @@ final class AppStore: ObservableObject {
                 for (index, item) in days[slot].enumerated() {
                     let weight = item.base + item.step * Double(9 - week)
                     if index == 0 {
-                        storage.saveEntry(WorkoutEntry.create(exercise: item.name, weight: (weight * 0.5 / 2.5).rounded() * 2.5,
-                                                              reps: 10, date: time, workoutId: workoutId, kind: .warmup))
+                        seeded.append(WorkoutEntry.create(exercise: item.name, weight: (weight * 0.5 / 2.5).rounded() * 2.5,
+                                                          reps: 10, date: time, workoutId: workoutId, kind: .warmup))
                         time = time.addingTimeInterval(150)
                     }
                     for _ in 0..<item.sets {
-                        storage.saveEntry(WorkoutEntry.create(exercise: item.name, weight: weight, reps: item.reps,
-                                                              date: time, workoutId: workoutId))
+                        seeded.append(WorkoutEntry.create(exercise: item.name, weight: weight, reps: item.reps,
+                                                          date: time, workoutId: workoutId))
                         time = time.addingTimeInterval(170)
                     }
                 }
             }
         }
+
+        storage.saveEntries(seeded)
 
         let routines = zip(names, days).enumerated().map { index, pair in
             Routine(id: "demo-routine-\(index)", name: pair.0,

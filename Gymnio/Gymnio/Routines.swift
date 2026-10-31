@@ -38,6 +38,7 @@ struct RoutinesSection: View {
             } else {
                 ForEach(store.routines) { routine in
                     RoutineCard(routine: routine, lastDone: lastDone(routine), suggested: routine.id == suggestedId,
+                                isToday: routine.id == scheduledToday?.id,
                                 onEdit: { editing = routine })
                 }
             }
@@ -53,9 +54,19 @@ struct RoutinesSection: View {
         return store.workingEntries.filter { names.contains($0.exercise) }.map { $0.date }.max()
     }
 
+    /// A routine planned for today that was not trained yet.
+    private var scheduledToday: Routine? {
+        let weekday = Calendar.current.component(.weekday, from: Date())
+        let trainedToday = store.workouts.contains { Calendar.current.isDateInToday($0.start) }
+        guard !trainedToday else { return nil }
+        return store.routines.first { ($0.weekdays ?? []).contains(weekday) }
+    }
+
     /// The routine that has waited longest (never done counts as longest), if it is at least two days.
     private var suggestedId: String? {
-        guard store.routines.count > 1, store.activeWorkout == nil else { return nil }
+        guard store.activeWorkout == nil else { return nil }
+        if let today = scheduledToday { return today.id }
+        guard store.routines.count > 1 else { return nil }
         let candidates = store.routines.map { ($0, lastDone($0) ?? .distantPast) }
         guard let pick = candidates.min(by: { $0.1 < $1.1 }) else { return nil }
         return pick.1 < Date().addingTimeInterval(-2 * 86_400) ? pick.0.id : nil
@@ -100,9 +111,17 @@ struct RoutineCard: View {
     let routine: Routine
     let lastDone: Date?
     let suggested: Bool
+    let isToday: Bool
     let onEdit: () -> Void
     @EnvironmentObject var store: AppStore
     @State private var confirmDelete = false
+
+    private var daysText: String {
+        guard let days = routine.weekdays, !days.isEmpty else { return "" }
+        let symbols = Calendar.current.shortWeekdaySymbols
+        let names = days.sorted().compactMap { symbols.indices.contains($0 - 1) ? symbols[$0 - 1] : nil }
+        return " · " + names.joined(separator: ", ")
+    }
 
     private var lastDoneText: String {
         guard let lastDone else { return store.t("routines.neverDone") }
@@ -118,7 +137,7 @@ struct RoutineCard: View {
                 HStack(alignment: .top) {
                     VStack(alignment: .leading, spacing: 3) {
                         if suggested {
-                            Text(store.t("routines.suggested"))
+                            Text(store.t(isToday ? "routines.today" : "routines.suggested"))
                                 .font(.system(size: 11, weight: .heavy))
                                 .tracking(0.6)
                                 .textCase(.uppercase)
@@ -127,7 +146,7 @@ struct RoutineCard: View {
                         Text(routine.name)
                             .font(.system(size: 18, weight: .bold))
                             .foregroundColor(.gymText)
-                        Text(lastDoneText)
+                        Text(lastDoneText + daysText)
                             .font(.system(size: 12, weight: .medium))
                             .foregroundColor(.gymTextSecondary)
                         Text(routine.exercises.map { $0.name }.joined(separator: " · "))
@@ -144,6 +163,8 @@ struct RoutineCard: View {
                             copy.name = routine.name + " 2"
                             store.saveRoutine(copy, source: "duplicate")
                         } label: { Label(store.t("routines.duplicate"), systemImage: "doc.on.doc") }
+                        Button { store.moveRoutine(routine, by: -1) } label: { Label(store.t("routines.moveUp"), systemImage: "arrow.up") }
+                        Button { store.moveRoutine(routine, by: 1) } label: { Label(store.t("routines.moveDown"), systemImage: "arrow.down") }
                         Button(role: .destructive) { confirmDelete = true } label: {
                             Label(store.t("common.delete"), systemImage: "trash")
                         }
@@ -195,6 +216,18 @@ struct RoutineEditorView: View {
     @EnvironmentObject var store: AppStore
     @Environment(\.dismiss) private var dismiss
     @State private var showPicker = false
+
+    /// Week days starting with the locale's first weekday.
+    private var weekdayOrder: [Int] {
+        let first = Calendar.current.firstWeekday
+        return (0..<7).map { (first - 1 + $0) % 7 + 1 }
+    }
+
+    private func toggleDay(_ day: Int) {
+        var days = routine.weekdays ?? []
+        if let idx = days.firstIndex(of: day) { days.remove(at: idx) } else { days.append(day) }
+        routine.weekdays = days.isEmpty ? nil : days
+    }
 
     private func move(_ name: String, by delta: Int) {
         guard let idx = routine.exercises.firstIndex(where: { $0.name == name }) else { return }
@@ -269,6 +302,23 @@ struct RoutineEditorView: View {
                                 .padding(.vertical, 14)
                                 .flatSurface(RoundedRectangle(cornerRadius: 14, style: .continuous))
                         }
+
+                        SectionLabel(text: store.t("routines.days")).padding(.top, 8)
+                        HStack(spacing: 6) {
+                            ForEach(weekdayOrder, id: \.self) { day in
+                                let on = (routine.weekdays ?? []).contains(day)
+                                Button { toggleDay(day) } label: {
+                                    Text(Calendar.current.veryShortStandaloneWeekdaySymbols[day - 1])
+                                        .font(.system(size: 14, weight: .bold))
+                                        .foregroundColor(on ? .gymOnAccent : .gymText)
+                                        .frame(maxWidth: .infinity)
+                                        .frame(height: 38)
+                                        .background(RoundedRectangle(cornerRadius: 10, style: .continuous)
+                                            .fill(on ? Color.gymAccent : Color.gymSurfaceRaised))
+                                }
+                                .buttonStyle(.plain)
+                            }
+                        }
                     }
                     .padding(.horizontal, 16)
                     .padding(.bottom, 32)
@@ -291,8 +341,32 @@ struct SaveAsRoutineButton: View {
     let workout: Workout
     @EnvironmentObject var store: AppStore
     @State private var saved = false
+    @State private var updated = false
+
+    private var linked: Routine? { store.linkedRoutine(for: workout.id) }
 
     var body: some View {
+        VStack(spacing: 10) {
+            if let linked, store.routineDiffers(linked, from: workout), !updated {
+                Button {
+                    store.updateRoutine(linked, from: workout)
+                    updated = true
+                } label: {
+                    Label(String(format: store.t("routines.update"), linked.name), systemImage: "arrow.triangle.2.circlepath")
+                        .font(.system(size: 15, weight: .bold))
+                        .foregroundColor(.gymAccent)
+                }
+            } else if updated {
+                Label(store.t("routines.updated"), systemImage: "checkmark.circle.fill")
+                    .font(.system(size: 15, weight: .semibold))
+                    .foregroundColor(.gymPositive)
+            }
+            saveAsNew
+        }
+    }
+
+    @ViewBuilder
+    private var saveAsNew: some View {
         if store.canAddRoutine || saved {
             Button {
                 let number = store.routines.count + 1

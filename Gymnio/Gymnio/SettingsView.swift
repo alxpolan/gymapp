@@ -83,6 +83,8 @@ struct SettingsView: View {
 
                 GlassCard { HealthSyncRow() }
 
+                GlassCard { CloudBackupRow() }
+
                 BackupRows()
 
                 GlassCard {

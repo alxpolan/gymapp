@@ -80,6 +80,7 @@ struct ContentView: View {
         .onChangeCompat(of: scenePhase) { phase in
             if phase == .background || phase == .inactive {
                 PostHogSDK.shared.flush()
+                Task { await CloudBackup.backupIfNeeded(store: store) }
             }
             if phase == .active {
                 store.trackSessionStart()

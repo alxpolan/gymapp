@@ -234,7 +234,7 @@ struct ExerciseBlock: View {
             HStack(spacing: 8) {
                 header(store.t("workout.set"), width: 28)
                 header(store.t("workout.previous"), width: nil)
-                if type.usesWeight { header(store.unitLabel.uppercased(), width: 72) }
+                if type.usesWeight { header(store.unitLabel(for: exercise).uppercased(), width: 72) }
                 header(repsHeader, width: 72)
                 Color.clear.frame(width: 38, height: 1)
             }
@@ -269,7 +269,7 @@ struct ExerciseBlock: View {
         .sheet(isPresented: $showHistory) { ExerciseHistorySheet(exercise: exercise).environmentObject(store) }
         .sheet(isPresented: $showEditor) { ExerciseMetaEditor(exercise: exercise).environmentObject(store) }
         .sheet(isPresented: $showPlates) {
-            PlateCalculatorView(initialWeight: Double(drafts.first(where: { $0.entryId == nil && $0.kind == nil })?.weight
+            PlateCalculatorView(exercise: exercise, initialWeight: Double(drafts.first(where: { $0.entryId == nil && $0.kind == nil })?.weight
                 .replacingOccurrences(of: ",", with: ".") ?? "") ?? 0)
                 .environmentObject(store)
         }
@@ -346,7 +346,7 @@ struct ExerciseBlock: View {
     private func loadDrafts() {
         guard drafts.isEmpty else { return }
         drafts = store.entriesForActive(exercise: exercise).map { entry in
-            SetDraft(weight: formatWeightValue(store.displayWeight(entry.weight)), reps: "\(entry.reps)",
+            SetDraft(weight: formatWeightValue(store.displayWeight(entry.weight, for: exercise)), reps: "\(entry.reps)",
                      entryId: entry.id, kind: entry.kind, rpe: entry.rpe)
         }
         drafts.append(nextDraft())
@@ -359,7 +359,7 @@ struct ExerciseBlock: View {
         let index = drafts.filter { $0.kind != .warmup }.count
         if index < previous.count {
             let p = previous[index]
-            return SetDraft(weight: formatWeightValue(store.displayWeight(p.weight)), reps: "\(p.reps)")
+            return SetDraft(weight: formatWeightValue(store.displayWeight(p.weight, for: exercise)), reps: "\(p.reps)")
         }
         if let last = drafts.last(where: { $0.entryId != nil && $0.kind != .warmup }) ?? drafts.last(where: { $0.kind != .warmup }) {
             return SetDraft(weight: last.weight, reps: last.reps)
@@ -391,7 +391,7 @@ struct ExerciseBlock: View {
     private func addWarmups() {
         guard let target = drafts.first(where: { $0.entryId == nil && $0.kind == nil }),
               let weight = Double(target.weight.replacingOccurrences(of: ",", with: ".")), weight > 0 else { return }
-        let step = store.weightUnit == "lbs" ? 5.0 : 2.5
+        let step = store.unit(for: exercise) == "lbs" ? 5.0 : 2.5
         let plan: [(Double, Int)] = [(0.5, 8), (0.7, 5), (0.85, 3)]
         let rows = plan.map { pct, reps -> SetDraft in
             let w = max((weight * pct / step).rounded() * step, step)
@@ -412,7 +412,7 @@ struct ExerciseBlock: View {
         let weightText = drafts[index].weight.replacingOccurrences(of: ",", with: ".")
         let weight = type.usesWeight || !weightText.isEmpty ? (Double(weightText) ?? (type.usesWeight ? -1 : 0)) : 0
         guard weight >= 0, let reps = Int(drafts[index].reps), reps > 0 else { return }
-        let kg = store.toKg(weight)
+        let kg = store.toKg(weight, for: exercise)
         let isRecord = drafts[index].kind != .warmup && beatsRecord(weightKg: kg, reps: reps)
         let saved = store.addEntry(exercise: exercise, weight: kg, reps: reps, date: Date(),
                                    workoutId: store.activeWorkout?.id, kind: drafts[index].kind,
@@ -704,7 +704,7 @@ struct WorkoutSummaryView: View {
                                         .font(.system(size: 16, weight: .semibold))
                                         .foregroundColor(.gymText)
                                     Spacer()
-                                    Text("\(formatWeightValue(store.displayWeight(record.oneRM))) \(store.unitLabel)")
+                                    Text("\(formatWeightValue(store.displayWeight(record.oneRM, for: record.exercise))) \(store.unitLabel(for: record.exercise))")
                                         .gymNumber(15, weight: .bold)
                                         .foregroundColor(.gymAccent)
                                 }
@@ -830,9 +830,14 @@ struct PlateCalculatorView: View {
     @State private var targetText = ""
     @State private var barText = ""
 
-    init(initialWeight: Double) { _target = State(initialValue: initialWeight) }
+    let exercise: String
 
-    private var isLbs: Bool { store.weightUnit == "lbs" }
+    init(exercise: String, initialWeight: Double) {
+        self.exercise = exercise
+        _target = State(initialValue: initialWeight)
+    }
+
+    private var isLbs: Bool { store.unit(for: exercise) == "lbs" }
     private var plates: [Double] { isLbs ? [45, 35, 25, 10, 5, 2.5] : [25, 20, 15, 10, 5, 2.5, 1.25] }
     private var bar: Double { Double(barText.replacingOccurrences(of: ",", with: ".")) ?? (isLbs ? 45 : 20) }
 
@@ -890,7 +895,7 @@ struct PlateCalculatorView: View {
 
     private func labeled(_ title: String, text: Binding<String>) -> some View {
         VStack(alignment: .leading, spacing: 6) {
-            SectionLabel(text: "\(title) (\(store.unitLabel))")
+            SectionLabel(text: "\(title) (\(store.unitLabel(for: exercise)))")
             TextField("0", text: text)
                 .keyboardType(.decimalPad)
                 .gymNumber(20, weight: .bold)

@@ -72,9 +72,9 @@ struct ExerciseDetailView: View {
                         GlassCard {
                             HStack(spacing: 0) {
                                 SummaryItem(value: "\(entries.count)", label: store.t("detail.stats.total"))
-                                SummaryItem(value: "\(formatWeightValue(store.displayWeight(maxWeight))) \(store.unitLabel)", label: store.t("detail.stats.maxWeight"))
+                                SummaryItem(value: "\(formatWeightValue(store.displayWeight(maxWeight, for: exerciseName))) \(store.unitLabel(for: exerciseName))", label: store.t("detail.stats.maxWeight"))
                                 SummaryItem(value: "\(maxReps)", label: store.t("detail.stats.maxReps"))
-                                SummaryItem(value: "\(formatWeightValue(store.displayWeight(bestOneRM))) \(store.unitLabel)", label: store.t("detail.stats.e1rm"))
+                                SummaryItem(value: "\(formatWeightValue(store.displayWeight(bestOneRM, for: exerciseName))) \(store.unitLabel(for: exerciseName))", label: store.t("detail.stats.e1rm"))
                             }
                         }
 
@@ -88,12 +88,12 @@ struct ExerciseDetailView: View {
                     if entries.count >= 3 {
                         let chronological = entries.sorted(by: { WorkoutEntry.chronological($0, $1) })
                         let charts: [(String, String, [ChartDataPoint])] = [
-                            (store.t("detail.chart.weight"), store.unitLabel,
+                            (store.t("detail.chart.weight"), store.unitLabel(for: exerciseName),
                              Analytics.weightChartData(entries: chronological).map(convertWeight)),
                             (store.t("detail.chart.reps"), store.t("detail.stats.count"),
                              Analytics.repsChartData(entries: chronological)),
                             (store.t("detail.chart.volume"),
-                             "\(store.unitLabel) × \(store.t("common.reps"))",
+                             "\(store.unitLabel(for: exerciseName)) × \(store.t("common.reps"))",
                              Analytics.volumeChartData(entries: chronological).map(convertWeight))
                         ]
 
@@ -207,7 +207,7 @@ struct ExerciseDetailView: View {
                                     .font(.system(size: 15))
                                     .foregroundColor(.gymTextSecondary)
                                 Spacer()
-                                Text("\(formatWeightValue(store.displayWeight(row.weight))) \(store.unitLabel)")
+                                Text("\(formatWeightValue(store.displayWeight(row.weight, for: exerciseName))) \(store.unitLabel(for: exerciseName))")
                                     .gymNumber(16, weight: .bold)
                                     .foregroundColor(.gymText)
                             }
@@ -229,12 +229,12 @@ struct ExerciseDetailView: View {
     private func reload() { entries = store.entriesForExercise(exerciseName).sorted(by: { WorkoutEntry.reverseChronological($0, $1) }) }
 
     private func convertWeight(_ pt: ChartDataPoint) -> ChartDataPoint {
-        ChartDataPoint(index: pt.index, value: store.displayWeight(pt.value), label: pt.label)
+        ChartDataPoint(index: pt.index, value: store.displayWeight(pt.value, for: exerciseName), label: pt.label)
     }
 
     private func addEntry() {
         guard let w = weightValue, let r = repsValue, w > 0, r > 0 else { return }
-        if store.addEntry(exercise: exerciseName, weight: store.toKg(w), reps: r, date: selectedDate) {
+        if store.addEntry(exercise: exerciseName, weight: store.toKg(w, for: exerciseName), reps: r, date: selectedDate) {
             RestTimerManager.shared.start(exercise: exerciseName, store: store)
         }
         weightText = ""; repsText = ""; selectedDate = Date()
@@ -377,7 +377,7 @@ struct EntryCard: View {
             HStack {
                 VStack(alignment: .leading, spacing: 4) {
                     HStack(spacing: 4) {
-                        Text("\(formatWeightValue(store.displayWeight(entry.weight))) \(store.unitLabel)")
+                        Text("\(formatWeightValue(store.displayWeight(entry.weight, for: entry.exercise))) \(store.unitLabel(for: entry.exercise))")
                             .font(.system(size: 17, weight: .bold))
                             .foregroundColor(Color.gymText)
                         Text("× \(entry.reps) \(store.t("common.reps"))")

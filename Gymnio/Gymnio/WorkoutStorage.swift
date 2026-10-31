@@ -74,6 +74,13 @@ final class WorkoutStorage {
         return entries
     }
 
+    /// Saves many entries with a single read and write.
+    func saveEntries(_ new: [WorkoutEntry]) {
+        var entries = getAllEntries()
+        entries.append(contentsOf: new)
+        save(entries: entries)
+    }
+
     func saveEntry(_ entry: WorkoutEntry) {
         var entries = getAllEntries()
         entries.append(entry)

@@ -12,7 +12,23 @@ struct CatalogExercise: Identifiable {
 }
 
 enum ExerciseCatalog {
-    static let all: [CatalogExercise] = [
+    /// Every exercise with a demo video: the names listed here plus any other `*.mp4` found in the app bundle,
+    /// so dropping `pull_ups.mp4` into the ExerciseVideos folder is enough to add "Pull Ups".
+    static let all: [CatalogExercise] = {
+        var result = listed
+        var seen = Set(result.map { normalize($0.fileBase) })
+        let urls = (Bundle.main.urls(forResourcesWithExtension: "mp4", subdirectory: "ExerciseVideos") ?? [])
+            + (Bundle.main.urls(forResourcesWithExtension: "mp4", subdirectory: nil) ?? [])
+        for url in urls.sorted(by: { $0.lastPathComponent < $1.lastPathComponent }) {
+            let base = url.deletingPathExtension().lastPathComponent
+            guard seen.insert(normalize(base)).inserted else { continue }
+            let name = base.split(separator: "_").map { $0.prefix(1).uppercased() + $0.dropFirst() }.joined(separator: " ")
+            result.append(CatalogExercise(fileBase: base, displayName: name))
+        }
+        return result
+    }()
+
+    private static let listed: [CatalogExercise] = [
         CatalogExercise(fileBase: "bench_press", displayName: "Bench Press"),
         CatalogExercise(fileBase: "bulgarian_split_squat", displayName: "Bulgarian Split Squat"),
         CatalogExercise(fileBase: "cable_crossover", displayName: "Cable Crossover"),

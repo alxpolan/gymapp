@@ -123,6 +123,8 @@ struct ActiveWorkout: Codable, Equatable {
     var note: String?
     /// Target number of sets per exercise when started from a routine.
     var plannedSets: [String: Int] = [:]
+    /// The routine this training was started from.
+    var routineId: String?
     /// Exercises that form a superset with the exercise right after them.
     var linkedToNext: [String] = []
 
@@ -140,9 +142,10 @@ struct ActiveWorkout: Codable, Equatable {
         note = try c.decodeIfPresent(String.self, forKey: .note)
         plannedSets = try c.decodeIfPresent([String: Int].self, forKey: .plannedSets) ?? [:]
         linkedToNext = try c.decodeIfPresent([String].self, forKey: .linkedToNext) ?? []
+        routineId = try c.decodeIfPresent(String.self, forKey: .routineId)
     }
 
-    enum CodingKeys: String, CodingKey { case id, startedAt, exercises, note, plannedSets, linkedToNext }
+    enum CodingKeys: String, CodingKey { case id, startedAt, exercises, note, plannedSets, linkedToNext, routineId }
 }
 
 // MARK: - Exercise details set by the user
@@ -160,6 +163,8 @@ struct ExerciseMeta: Codable, Equatable {
     var type: String?
     /// Rest timer for this exercise in seconds; nil = global setting.
     var restSeconds: Int?
+    /// "kg" or "lbs" for this exercise only; nil = global setting.
+    var unit: String?
     /// `MuscleGroup.rawValue`; nil = guessed from the name.
     var muscle: String?
     /// File name inside the photos folder.
@@ -179,6 +184,8 @@ struct Routine: Codable, Equatable, Identifiable {
     var name: String
     var exercises: [RoutineExercise]
     var createdAt: Date = Date()
+    /// Planned training days as `Calendar` weekday numbers (1 = Sunday … 7 = Saturday).
+    var weekdays: [Int]? = nil
 }
 
 // MARK: - ExerciseGroup

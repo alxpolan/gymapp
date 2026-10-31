@@ -320,7 +320,7 @@ struct SetEditSheet: View {
                         .foregroundColor(.gymAccent)
                 }
                 HStack(spacing: 12) {
-                    if type.usesWeight { field(store.unitLabel.uppercased(), text: $weight, keyboard: .decimalPad) }
+                    if type.usesWeight { field(store.unitLabel(for: entry.exercise).uppercased(), text: $weight, keyboard: .decimalPad) }
                     field(type == .duration ? store.t("workout.seconds").uppercased() : store.t("detail.reps").uppercased(),
                           text: $reps, keyboard: .numberPad)
                 }
@@ -337,7 +337,7 @@ struct SetEditSheet: View {
             .padding(16)
         }
         .task {
-            weight = formatWeightValue(store.displayWeight(entry.weight))
+            weight = formatWeightValue(store.displayWeight(entry.weight, for: entry.exercise))
             reps = "\(entry.reps)"
         }
     }
@@ -356,7 +356,7 @@ struct SetEditSheet: View {
 
     private func save() {
         var updated = entry
-        if type.usesWeight, let w = Double(weight.replacingOccurrences(of: ",", with: ".")), w >= 0 { updated.weight = store.toKg(w) }
+        if type.usesWeight, let w = Double(weight.replacingOccurrences(of: ",", with: ".")), w >= 0 { updated.weight = store.toKg(w, for: entry.exercise) }
         if let r = Int(reps), r > 0 { updated.reps = r }
         store.updateEntry(updated)
         dismiss()

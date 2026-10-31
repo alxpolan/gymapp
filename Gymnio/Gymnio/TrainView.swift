@@ -33,6 +33,7 @@ struct TrainView: View {
                 ScrollView(showsIndicators: false) {
                     VStack(alignment: .leading, spacing: 16) {
                         header
+                        CloudRestoreBanner()
                         primaryAction
                         RoutinesSection()
 

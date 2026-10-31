@@ -72,6 +72,7 @@ struct ExerciseMetaEditor: View {
     @State private var photo: UIImage?
     @State private var type: ExerciseType = .weightReps
     @State private var rest = -1
+    @State private var unit = ""
     @State private var loaded = false
 
     var body: some View {
@@ -84,7 +85,7 @@ struct ExerciseMetaEditor: View {
                     Button(store.t("common.save")) {
                         store.setExerciseMeta(muscle, photo: photo, for: exercise, removePhoto: photo == nil)
                         store.setExerciseType(type == store.defaultExerciseType(for: exercise) ? nil : type,
-                                              rest: rest < 0 ? nil : rest, for: exercise)
+                                              rest: rest < 0 ? nil : rest, unit: unit.isEmpty ? nil : unit, for: exercise)
                         dismiss()
                     }
                     .font(.system(size: 16, weight: .bold))
@@ -109,6 +110,17 @@ struct ExerciseMetaEditor: View {
                     .pickerStyle(.menu)
                     .tint(.gymAccent)
                 }
+                HStack {
+                    SectionLabel(text: store.t("meta.unit"))
+                    Spacer()
+                    Picker("", selection: $unit) {
+                        Text(store.t("meta.rest.default")).tag("")
+                        Text("kg").tag("kg")
+                        Text("lbs").tag("lbs")
+                    }
+                    .pickerStyle(.segmented)
+                    .frame(maxWidth: 200)
+                }
                 Spacer()
             }
             .padding(16)
@@ -120,6 +132,7 @@ struct ExerciseMetaEditor: View {
             photo = store.photo(for: exercise)
             type = store.exerciseType(for: exercise)
             rest = store.exerciseMeta[exercise]?.restSeconds ?? -1
+            unit = store.exerciseMeta[exercise]?.unit ?? ""
         }
     }
 }
