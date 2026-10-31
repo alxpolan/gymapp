@@ -30,40 +30,50 @@ struct InsightsView: View {
                     }
                     .padding(.bottom, 4)
 
-                    if store.entries.isEmpty {
+                    if store.entries.isEmpty && premium.isPro {
                         emptyState
+                        BodyWeightCard()
                     } else {
-                        overviewCard
-                        weeklyVolumeCard
+                        if store.entries.isEmpty {
+                            teaserIntro
+                        } else {
+                            overviewCard
+                            weeklyVolumeCard
+                        }
                         BodyWeightCard()
 
-                        WeeklyRecapCard()
+                        if !store.entries.isEmpty {
+                            WeeklyRecapCard()
+                            if !premium.isPro { UpgradeCTACard(source: "insights") }
 
-                        if !premium.isPro { UpgradeCTACard(source: "insights") }
-
-                        InsightSectionHeader(title: store.t("insights.coach"), isPro: true)
-                        ProGate(titleKey: "prolock.title", subtitleKey: "prolock.coach", source: "feature_coach") {
-                            CoachFeedSection()
+                            InsightSectionHeader(title: store.t("insights.coach"), isPro: true)
+                            ProGate(titleKey: "prolock.title", subtitleKey: "prolock.coach", source: "feature_coach") {
+                                CoachFeedSection()
+                            }
                         }
 
                         InsightSectionHeader(title: store.t("insights.est1rm"), isPro: true)
                         ProGate(titleKey: "prolock.title", subtitleKey: "prolock.est1rm", source: "feature_est1rm") {
-                            OneRMCard(groups: groups, selected: $selected1RM)
+                            if groups.contains(where: { $0.entries.count >= 2 }) || premium.isPro {
+                                OneRMCard(groups: groups, selected: $selected1RM)
+                            } else {
+                                OneRMCard(groups: ProDemoData.groups(), selected: .constant("Bench Press"))
+                            }
                         }
 
                         InsightSectionHeader(title: store.t("insights.records"), isPro: true)
                         ProGate(titleKey: "prolock.title", subtitleKey: "prolock.records", source: "feature_records") {
-                            RecordsCard(records: records)
+                            RecordsCard(records: records.isEmpty && !premium.isPro ? ProDemoData.records : records)
                         }
 
                         InsightSectionHeader(title: store.t("insights.muscle"), isPro: true)
                         ProGate(titleKey: "prolock.title", subtitleKey: "prolock.muscle", source: "feature_muscle") {
-                            MuscleSplitCard(muscles: muscles)
+                            MuscleSplitCard(muscles: muscles.isEmpty && !premium.isPro ? ProDemoData.muscles : muscles)
                         }
 
                         InsightSectionHeader(title: store.t("insights.trends"), isPro: true)
                         ProGate(titleKey: "prolock.title", subtitleKey: "prolock.trends", source: "feature_trends") {
-                            TrendsCard(trends: trends)
+                            TrendsCard(trends: trends.isEmpty && !premium.isPro ? ProDemoData.trends : trends)
                         }
                     }
                 }
@@ -78,11 +88,26 @@ struct InsightsView: View {
         .onChangeCompat(of: premium.isPro) { _ in reload() }
     }
 
+    /// For free users without data: explains that the blurred cards below show sample numbers.
+    private var teaserIntro: some View {
+        Card(leftAccent: true) {
+            VStack(alignment: .leading, spacing: 6) {
+                Text(store.t("insights.teaser.title"))
+                    .font(.system(size: 17, weight: .bold))
+                    .foregroundColor(.gymText)
+                Text(store.t("insights.teaser.subtitle"))
+                    .font(.system(size: 14))
+                    .foregroundColor(.gymTextSecondary)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+        }
+    }
+
     private var emptyState: some View {
         VStack(spacing: 12) {
-            Image(systemName: "chart.line.uptrend.xyaxis")
-                .font(.system(size: 64))
-                .foregroundColor(scheme == .dark ? Color(hex: "555555") : Color(hex: "cccccc"))
+            Image(systemName: "trophy.fill")
+                .font(.system(size: 56))
+                .foregroundColor(.gymLine)
             Text(store.t("insights.empty"))
                 .font(.system(size: 16))
                 .secondaryText()

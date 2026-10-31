@@ -34,43 +34,42 @@ struct ProGate<Content: View>: View {
             content()
         } else {
             ZStack {
+                // The real (or sample) numbers stay readable enough to want them, but not usable.
                 content()
-                    .frame(maxHeight: 220, alignment: .top)
+                    .frame(maxHeight: 240, alignment: .top)
                     .clipped()
-                    .blur(radius: 9)
-                    .opacity(0.55)
+                    .blur(radius: 5)
+                    .opacity(0.9)
                     .allowsHitTesting(false)
+                    .overlay(
+                        LinearGradient(colors: [Color.gymBackground.opacity(0), Color.gymBackground.opacity(0.92)],
+                                       startPoint: .top, endPoint: .bottom)
+                            .allowsHitTesting(false)
+                    )
 
-                VStack(spacing: 12) {
-                    Image(systemName: "lock.fill")
-                        .font(.system(size: 26, weight: .semibold))
-                        .foregroundStyle(
-                            Color.gymAccent)
-                    Text(store.t(titleKey))
-                        .font(.system(size: 17, weight: .bold))
-                        .foregroundColor(Color.gymText)
-                        .multilineTextAlignment(.center)
+                VStack(spacing: 10) {
+                    Spacer(minLength: 60)
                     Text(store.t(subtitleKey))
-                        .font(.system(size: 13))
-                        .secondaryText()
+                        .font(.system(size: 13, weight: .medium))
+                        .foregroundColor(.gymText)
                         .multilineTextAlignment(.center)
                         .padding(.horizontal, 24)
                     if !premium.isPaywallSuppressedRegion {
                         Button { showPaywall = true } label: {
-                            Text(store.t("pro.unlock"))
-                                .font(.system(size: 15, weight: .semibold))
+                            Label(store.t("pro.unlock"), systemImage: "lock.open.fill")
+                                .font(.system(size: 15, weight: .bold))
                                 .foregroundColor(.gymOnAccent)
-                                .padding(.horizontal, 22)
+                                .padding(.horizontal, 20)
                                 .padding(.vertical, 11)
-                                .background(
-                                    Color.gymAccent,
-                                    in: Capsule())
+                                .background(Color.gymAccent, in: Capsule())
                         }
                         .buttonStyle(.plain)
                     }
                 }
-                .padding(.vertical, 8)
+                .padding(.bottom, 12)
             }
+            .frame(maxHeight: 240)
+            .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
             .sheet(isPresented: $showPaywall) { PaywallView(source: source) }
         }
     }

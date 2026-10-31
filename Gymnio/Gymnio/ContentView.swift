@@ -21,7 +21,7 @@ struct ContentView: View {
                 Tab(store.t("nav.train"), systemImage: "dumbbell.fill", value: 0) { TrainView() }
                 Tab(store.t("nav.history"), systemImage: "calendar", value: 1) { HistoryView() }
                 Tab(store.t("nav.exercises"), systemImage: "list.bullet", value: 2) { NavigationStack { ExercisesView() } }
-                Tab(store.t("nav.progress"), systemImage: "chart.line.uptrend.xyaxis", value: 3) { NavigationStack { InsightsView() } }
+                Tab(store.t("nav.progress"), systemImage: "trophy.fill", value: 3) { NavigationStack { InsightsView() } }
             }
         } else {
             TabView(selection: $selectedTab) {
@@ -35,7 +35,7 @@ struct ContentView: View {
                     .tabItem { Label(store.t("nav.exercises"), systemImage: "list.bullet") }
                     .tag(2)
                 NavigationStack { InsightsView() }
-                    .tabItem { Label(store.t("nav.progress"), systemImage: "chart.line.uptrend.xyaxis") }
+                    .tabItem { Label(store.t("nav.progress"), systemImage: "trophy.fill") }
                     .tag(3)
             }
         }

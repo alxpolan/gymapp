@@ -29422,6 +29422,40 @@
           }
         }
       }
+    },
+    "insights.teaser.title": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Your numbers will appear here"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hier erscheinen deine Zahlen"
+          }
+        }
+      }
+    },
+    "insights.teaser.subtitle": {
+      "extractionState": "manual",
+      "localizations": {
+        "en": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Below is a preview with sample data. Log a workout and these cards fill with your own progress."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unten siehst du eine Vorschau mit Beispieldaten. Sobald du trainierst, füllen sich die Karten mit deinem Fortschritt."
+          }
+        }
+      }
     }
   },
   "version": "1.1"
