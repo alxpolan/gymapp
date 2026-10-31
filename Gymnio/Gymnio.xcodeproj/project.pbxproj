@@ -296,6 +296,12 @@
 				vi,
 				th,
 				ar,
+				he,
+				"zh-Hans",
+				"zh-Hant",
+				ms,
+				fil,
+				bn,
 				Base,
 			);
 			mainGroup = D9FED04D2F72024100B8CB60;

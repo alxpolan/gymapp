@@ -36,7 +36,8 @@ final class AppStore: ObservableObject {
         "tr", "uk", "ru", "pl", "cs", "sk", "hu", "ro", "bg", "el",
         "hr", "sr", "sl", "et", "lv", "lt", "ca",
         "ja", "ko",
-        "hi", "id", "vi", "th", "ar"
+        "hi", "id", "vi", "th", "ar",
+        "he", "zh-Hans", "zh-Hant", "ms", "fil", "bn"
     ]
 
     /// Languages written right to left.
@@ -197,8 +198,14 @@ final class AppStore: ObservableObject {
     }
 
     private var deviceLanguage: String {
-        let raw = Locale.current.language.languageCode?.identifier ?? "en"
-        let code = ["no": "nb", "nn": "nb"][raw] ?? raw
+        let current = Locale.current.language
+        let raw = current.languageCode?.identifier ?? "en"
+        if raw == "zh" {
+            let region = current.region?.identifier ?? Locale.current.region?.identifier ?? ""
+            let traditional = current.script?.identifier == "Hant" || ["TW", "HK", "MO"].contains(region)
+            return traditional ? "zh-Hant" : "zh-Hans"
+        }
+        let code = ["no": "nb", "nn": "nb", "iw": "he", "tl": "fil"][raw] ?? raw
         return Self.supportedLanguages.contains(code) ? code : "en"
     }
 
