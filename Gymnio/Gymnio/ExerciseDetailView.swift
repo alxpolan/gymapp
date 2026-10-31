@@ -66,6 +66,7 @@ struct ExerciseDetailView: View {
                         store.beginWorkout(source: "exercise_detail")
                         store.addExerciseToActive(exerciseName)
                     }
+                    .accessibilityIdentifier("addToWorkoutButton")
 
                     if !entries.isEmpty {
                         GlassCard {

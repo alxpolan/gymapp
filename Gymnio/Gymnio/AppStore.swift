@@ -784,37 +784,88 @@ final class AppStore: ObservableObject {
         defaults.removeObject(forKey: languageKey)
         defaults.removeObject(forKey: activeWorkoutKey)
         defaults.removeObject(forKey: themeKey)
+        for key in [routinesKey, exerciseMetaKey, bodyWeightKey, exerciseNotesKey, workoutNotesKey, weeklyGoalKey] {
+            defaults.removeObject(forKey: key)
+        }
         defaults.set("system", forKey: themeKey)
         if args.contains("-ui_test_force_morning") { forceMorningGreeting = true }
-        var uiTestLang = "en"
         if let langIdx = args.firstIndex(of: "-ui_test_language"), args.indices.contains(langIdx + 1) {
             let lang = args[langIdx + 1]
             if Self.supportedLanguages.contains(lang) {
-                uiTestLang = lang
                 language = lang
                 languageOverride = lang
                 defaults.set(lang, forKey: languageKey)
             }
         }
-        if args.contains("-ui_test_seed_demo_data") { seedDemoDataForUITests(language: uiTestLang) }
+        if args.contains("-ui_test_seed_demo_data") { seedDemoDataForUITests(activeWorkoutDemo: args.contains("-ui_test_active_workout")) }
     }
 
-    private func seedDemoDataForUITests(language: String = "de") {
-        let baseDate = Date()
+    /// Three months of realistic training (push / pull / legs, progressive overload), routines, body weight and,
+    /// with `-ui_test_active_workout`, a training in progress. Exercise names stay English so the demo videos match.
+    private func seedDemoDataForUITests(activeWorkoutDemo: Bool) {
         let calendar = Calendar.current
-        let isDE = language == "de"
-        let demo: [(exercise: String, weights: [Double], reps: [Int])] = [
-            (isDE ? "Bankdrücken" : "Bench Press", [70, 75, 80, 80, 80, 80, 80], [8, 8, 6, 6, 6, 6, 6]),
-            (isDE ? "Kniebeuge"   : "Squat",       [95, 100, 102.5, 105, 107.5, 110], [10, 8, 8, 6, 6, 5]),
-            (isDE ? "Kreuzheben"  : "Deadlift",    [110, 115, 120, 125, 130], [6, 5, 5, 4, 3])
-        ]
-        for item in demo {
-            storage.addExercise(item.exercise)
-            for idx in item.weights.indices {
-                let offset = -(item.weights.count - idx)
-                let date = calendar.date(byAdding: .day, value: offset, to: baseDate) ?? baseDate
-                storage.saveEntry(WorkoutEntry.create(exercise: item.exercise, weight: item.weights[idx], reps: item.reps[idx], date: date))
+        let isDE = (Locale.preferredLanguages.first ?? "en").hasPrefix("de")
+        typealias Plan = (name: String, sets: Int, base: Double, step: Double, reps: Int)
+        let push: [Plan] = [("Bench Press", 4, 70, 1.25, 6), ("Incline Dumbbell Press", 3, 24, 0.5, 10),
+                            ("Dumbbell Fly", 3, 12, 0.25, 12), ("Dips", 3, 0, 0, 10)]
+        let pull: [Plan] = [("Barbell Row", 4, 60, 1.25, 8), ("Lat Pulldown", 3, 55, 1, 10), ("Face Pull", 3, 25, 0.5, 15)]
+        let legs: [Plan] = [("Squat", 4, 90, 2.5, 6), ("Leg Press", 3, 160, 5, 10),
+                            ("Romanian Deadlift", 3, 80, 2.5, 8), ("Standing Calf Raise", 4, 60, 2.5, 12)]
+        let days = [push, pull, legs]
+        let names = isDE ? ["Push", "Pull", "Beine"] : ["Push", "Pull", "Legs"]
+
+        for plan in days.flatMap({ $0 }) { storage.addExercise(plan.name) }
+
+        guard let weekStart = calendar.dateInterval(of: .weekOfYear, for: Date())?.start else { return }
+        for week in stride(from: 9, through: 0, by: -1) {
+            for (slot, offset) in [0, 2, 4].enumerated() {
+                guard let day = calendar.date(byAdding: .day, value: offset - 7 * week, to: weekStart),
+                      let start = calendar.date(bySettingHour: 18, minute: 10, second: 0, of: day),
+                      start < Date().addingTimeInterval(-3_600) else { continue }
+                let workoutId = "demo-\(week)-\(slot)"
+                var time = start
+                for (index, item) in days[slot].enumerated() {
+                    let weight = item.base + item.step * Double(9 - week)
+                    if index == 0 {
+                        storage.saveEntry(WorkoutEntry.create(exercise: item.name, weight: (weight * 0.5 / 2.5).rounded() * 2.5,
+                                                              reps: 10, date: time, workoutId: workoutId, kind: .warmup))
+                        time = time.addingTimeInterval(150)
+                    }
+                    for _ in 0..<item.sets {
+                        storage.saveEntry(WorkoutEntry.create(exercise: item.name, weight: weight, reps: item.reps,
+                                                              date: time, workoutId: workoutId))
+                        time = time.addingTimeInterval(170)
+                    }
+                }
             }
+        }
+
+        let routines = zip(names, days).enumerated().map { index, pair in
+            Routine(id: "demo-routine-\(index)", name: pair.0,
+                    exercises: pair.1.map { RoutineExercise(name: $0.name, sets: $0.sets) })
+        }
+        if let data = try? JSONEncoder().encode(routines) { defaults.set(data, forKey: routinesKey) }
+
+        let weights: [Double] = [82.4, 82.1, 82.0, 81.7, 81.6, 81.2, 81.3, 80.9, 80.8, 80.6, 80.7, 80.4]
+        let bodyWeights = weights.enumerated().compactMap { index, kg -> BodyWeightEntry? in
+            guard let date = calendar.date(byAdding: .day, value: -7 * (weights.count - 1 - index), to: Date()) else { return nil }
+            return BodyWeightEntry(id: "demo-bw-\(index)", date: date, kg: kg)
+        }
+        if let data = try? JSONEncoder().encode(bodyWeights) { defaults.set(data, forKey: bodyWeightKey) }
+        defaults.set(3, forKey: weeklyGoalKey)
+
+        if activeWorkoutDemo {
+            let started = Date().addingTimeInterval(-23 * 60)
+            var active = ActiveWorkout(id: "demo-active", startedAt: started, exercises: ["Bench Press", "Incline Dumbbell Press"])
+            active.plannedSets = ["Bench Press": 4, "Incline Dumbbell Press": 3]
+            if let data = try? JSONEncoder().encode(active) { defaults.set(data, forKey: activeWorkoutKey) }
+            let logged: [(Double, Int, SetKind?)] = [(40, 10, .warmup), (80, 6, nil), (80, 6, nil)]
+            for (offset, set) in logged.enumerated() {
+                storage.saveEntry(WorkoutEntry.create(exercise: "Bench Press", weight: set.0, reps: set.1,
+                                                      date: started.addingTimeInterval(Double(offset) * 170 + 60),
+                                                      workoutId: "demo-active", kind: set.2))
+            }
+            showActiveWorkout = true
         }
     }
 }

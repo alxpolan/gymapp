@@ -1,16 +1,19 @@
 {
   "_config": {
-    "bgColor1": "#000000",
-    "bgColor2": "#1a1a1a",
-    "textColor": "#ffffff",
+    "bgColor1": "#0E0E10",
+    "bgColor2": "#1A1A1D",
+    "textColor": "#F2F0EB",
     "scheme": "Gymnio",
-    "devices": ["iPhone 16 Pro Max", "iPad Pro (12.9-inch) (4th generation)"],
+    "devices": ["iPhone 16 Pro Max", "iPad Pro 12.9-inch (6th generation)"],
     "languages": ["en-US", "de-DE"],
     "appearance": "dark"
   },
-  "01_HomeDashboard": "Home dashboard with stats, progression alerts and charts based on demo workouts",
-  "02_ExercisesOverview": "Exercise overview with latest values and entry count",
-  "03_ExerciseDetail": "Exercise detail with log form, key metrics and history chart",
-  "04_History": "Chronological log of all training entries",
-  "05_AddExerciseModal": "Modal for adding a new exercise"
+  "01_Train": "Start a workout in one tap or pick a routine, with your week at a glance",
+  "02_ActiveWorkout": "Log sets fast with last time's numbers, exercise videos and a rest timer",
+  "03_Summary": "Every workout ends with a summary and the personal records you just set",
+  "04_History": "A calendar of every workout you have done, one tap to see the details",
+  "05_Exercises": "Your exercises with pictures, latest weights and how often you trained them",
+  "06_ExerciseDetail": "See the movement, your best lifts and your progress for every exercise",
+  "07_Progress": "Streaks, weekly volume and body weight in one clear overview",
+  "08_ProgressStats": "Estimated 1RM, records, muscle balance and trends for every lift"
 }

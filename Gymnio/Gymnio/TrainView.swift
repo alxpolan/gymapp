@@ -106,6 +106,7 @@ struct TrainView: View {
         } else {
             VStack(alignment: .leading, spacing: 8) {
                 AccentButton(label: store.t("train.start"), disabled: false) { store.beginWorkout() }
+                    .accessibilityIdentifier("startWorkoutButton")
                 if store.workouts.isEmpty {
                     Text(store.t("train.firstHint"))
                         .font(.system(size: 14))

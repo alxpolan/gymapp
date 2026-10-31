@@ -114,6 +114,7 @@ struct ActiveWorkoutView: View {
                     .padding(.vertical, 11)
                     .background(Capsule().fill(Color.gymAccent))
             }
+            .accessibilityIdentifier("finishWorkoutButton")
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 12)
@@ -750,6 +751,7 @@ struct WorkoutSummaryView: View {
                 if !premium.isPro { UpgradeCTACard(source: "workout_summary") }
 
                 AccentButton(label: store.t("common.done"), disabled: false, action: onDone)
+                    .accessibilityIdentifier("summaryDoneButton")
                     .padding(.top, 4)
                     .padding(.bottom, 32)
             }
