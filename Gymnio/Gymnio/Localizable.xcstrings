@@ -27296,13 +27296,13 @@
         "en": {
           "stringUnit": {
             "state": "translated",
-            "value": "Import data (CSV)"
+            "value": "Import data (Gymnio, Strong, Hevy CSV)"
           }
         },
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Daten importieren (CSV)"
+            "value": "Daten importieren (Gymnio, Strong, Hevy CSV)"
           }
         }
       }

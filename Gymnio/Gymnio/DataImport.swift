@@ -16,9 +16,15 @@ enum DataImport {
         guard let data = try? Data(contentsOf: url),
               let text = String(data: data, encoding: .utf8) else { throw ImportError.unreadable }
 
-        let rows = parse(text)
+        let rows = parse(text.hasPrefix("\u{FEFF}") ? String(text.dropFirst()) : text)
         guard rows.count > 1 else { throw ImportError.noRows }
-        let header = rows[0].map { $0.lowercased() }
+        let header = rows[0].map { $0.trimmingCharacters(in: .whitespaces).lowercased() }
+        if header.contains("exercise_title") && header.contains("start_time") {
+            return try importWorkoutExport(rows: rows, header: header, format: .hevy, store: store)
+        }
+        if header.contains("exercise name") && header.contains("set order") {
+            return try importWorkoutExport(rows: rows, header: header, format: .strong, store: store)
+        }
         guard let dateIdx = header.firstIndex(of: "date"),
               let exerciseIdx = header.firstIndex(of: "exercise"),
               let repsIdx = header.firstIndex(of: "reps"),
@@ -45,6 +51,79 @@ enum DataImport {
             guard !known.contains(id) else { skipped += 1; continue }
             known.insert(id)
             store.importEntry(WorkoutEntry.create(exercise: name, weight: kg, reps: reps, date: date))
+            imported += 1
+        }
+        store.finishImport()
+        return Result(imported: imported, skipped: skipped)
+    }
+
+    // MARK: - Hevy and Strong exports
+
+    private enum Format { case hevy, strong }
+
+    private static let dateFormats = ["yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", "d MMM yyyy, HH:mm", "dd MMM yyyy, HH:mm",
+                                      "MMM d, yyyy, h:mm a", "yyyy-MM-dd'T'HH:mm:ssZ", "yyyy-MM-dd"]
+
+    private static func parseDate(_ text: String) -> Date? {
+        let f = DateFormatter()
+        f.locale = Locale(identifier: "en_US_POSIX")
+        for format in dateFormats {
+            f.dateFormat = format
+            if let date = f.date(from: text.trimmingCharacters(in: .whitespaces)) { return date }
+        }
+        return nil
+    }
+
+    /// Imports whole trainings (with warm-up/drop/failure sets and RPE) from a Hevy or Strong export.
+    private static func importWorkoutExport(rows: [[String]], header: [String], format: Format, store: AppStore) throws -> Result {
+        func column(_ names: [String]) -> Int? { names.compactMap { header.firstIndex(of: $0) }.first }
+        guard let dateIdx = column(format == .hevy ? ["start_time"] : ["date"]),
+              let exerciseIdx = column(format == .hevy ? ["exercise_title"] : ["exercise name"]),
+              let repsIdx = column(["reps"]) else { throw ImportError.unreadable }
+        let weightIdx = column(format == .hevy ? ["weight_kg", "weight_lbs"] : ["weight"])
+        let typeIdx = column(format == .hevy ? ["set_type"] : ["set order"])
+        let secondsIdx = column(format == .hevy ? ["duration_seconds"] : ["seconds"])
+        let rpeIdx = column(["rpe"])
+        let titleIdx = column(format == .hevy ? ["title"] : ["workout name"])
+        let weightIsKg = format == .hevy ? header.contains("weight_kg") || !header.contains("weight_lbs") : store.weightUnit == "kg"
+
+        var known = Set(store.entries.map { Int($0.date.timeIntervalSince1970 / 60) })
+        var workoutIds: [String: String] = [:]
+        var imported = 0, skipped = 0
+
+        func value(_ row: [String], _ idx: Int?) -> String {
+            guard let idx, row.indices.contains(idx) else { return "" }
+            return row[idx].trimmingCharacters(in: .whitespaces)
+        }
+
+        for row in rows.dropFirst() {
+            let rawType = value(row, typeIdx).lowercased()
+            if rawType == "rest timer" { continue }
+            let dateText = value(row, dateIdx)
+            let name = value(row, exerciseIdx)
+            guard let date = parseDate(dateText), !name.isEmpty else { skipped += 1; continue }
+            let minute = Int(date.timeIntervalSince1970 / 60)
+            let workoutKey = dateText + "|" + value(row, titleIdx)
+            if workoutIds[workoutKey] == nil {
+                guard !known.contains(minute) else { skipped += 1; continue }
+                workoutIds[workoutKey] = "imp-" + UUID().uuidString
+                known.insert(minute)
+            }
+            let reps = Int(value(row, repsIdx).replacingOccurrences(of: ",", with: ".").split(separator: ".").first ?? "")
+                ?? Int(value(row, secondsIdx).split(separator: ".").first ?? "") ?? 0
+            let weightValue = Double(value(row, weightIdx).replacingOccurrences(of: ",", with: ".")) ?? 0
+            guard reps > 0, weightValue >= 0 else { skipped += 1; continue }
+            let kg = weightIsKg ? weightValue : weightValue / 2.20462
+            let kind: SetKind?
+            switch rawType {
+            case "warmup", "w": kind = .warmup
+            case "dropset", "d": kind = .drop
+            case "failure", "f": kind = .failure
+            default: kind = nil
+            }
+            let rpe = Double(value(row, rpeIdx).replacingOccurrences(of: ",", with: "."))
+            store.importEntry(WorkoutEntry.create(exercise: name, weight: kg, reps: reps, date: date,
+                                                  workoutId: workoutIds[workoutKey], kind: kind, rpe: (rpe ?? 0) > 0 ? rpe : nil))
             imported += 1
         }
         store.finishImport()

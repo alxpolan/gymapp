@@ -91,3 +91,14 @@ struct BackupTests {
         #expect(back.bodyWeights.first?.kg == 80)
     }
 }
+
+struct CSVParserTests {
+    @Test func parsesQuotedFieldsAndHevyHeader() {
+        let csv = "title,start_time,exercise_title,set_type,weight_kg,reps\n\"Push, day\",\"15 Jan 2024, 18:30\",Bench Press,warmup,40,10\n"
+        let rows = DataImport.parse(csv)
+        #expect(rows.count == 2)
+        #expect(rows[1][0] == "Push, day")
+        #expect(rows[1][1] == "15 Jan 2024, 18:30")
+        #expect(rows[1][3] == "warmup")
+    }
+}
