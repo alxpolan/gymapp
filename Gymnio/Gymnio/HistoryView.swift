@@ -161,6 +161,8 @@ struct WorkoutDetailView: View {
     @Environment(\.dismiss) private var dismiss
     @State private var showDelete = false
     @State private var editing: WorkoutEntry?
+    @State private var showDatePicker = false
+    @State private var newDate = Date()
 
     private var workout: Workout? { store.workouts.first { $0.id == workoutId } }
 
@@ -241,6 +243,16 @@ struct WorkoutDetailView: View {
                         SaveAsRoutineButton(workout: workout)
                             .frame(maxWidth: .infinity)
 
+                        Button {
+                            newDate = workout.start
+                            showDatePicker = true
+                        } label: {
+                            Label(store.t("history.changeDate"), systemImage: "calendar")
+                                .font(.system(size: 15, weight: .semibold))
+                                .foregroundColor(.gymAccent)
+                                .frame(maxWidth: .infinity)
+                        }
+
                         Button(role: .destructive) { showDelete = true } label: {
                             Text(store.t("history.deleteWorkout"))
                                 .font(.system(size: 15, weight: .semibold))
@@ -256,6 +268,20 @@ struct WorkoutDetailView: View {
             }
         }
         .navigationBarTitleDisplayMode(.inline)
+        .sheet(isPresented: $showDatePicker) {
+            VStack(spacing: 16) {
+                DatePicker("", selection: $newDate, in: ...Date(), displayedComponents: [.date, .hourAndMinute])
+                    .datePickerStyle(.graphical)
+                    .labelsHidden()
+                    .environment(\.locale, store.locale)
+                AccentButton(label: store.t("common.save"), disabled: false) {
+                    if let workout { store.moveWorkout(workout, to: newDate) }
+                    showDatePicker = false
+                }
+            }
+            .padding(16)
+            .presentationDetents([.large])
+        }
         .sheet(item: $editing) { entry in
             SetEditSheet(entry: entry).environmentObject(store)
         }

@@ -551,6 +551,18 @@ final class AppStore: ObservableObject {
         showActiveWorkout = true
     }
 
+    /// Moves a whole training to another day/time (the sets keep their spacing).
+    func moveWorkout(_ workout: Workout, to newStart: Date) {
+        let delta = newStart.timeIntervalSince(workout.start)
+        guard abs(delta) > 1 else { return }
+        for var entry in workout.entries {
+            entry.date = entry.date.addingTimeInterval(delta)
+            storage.updateEntry(entry)
+        }
+        entries = storage.getAllEntries()
+        PostHogSDK.shared.capture("workout_date_changed")
+    }
+
     func deleteWorkout(_ workout: Workout) {
         for entry in workout.entries { storage.deleteEntry(id: entry.id) }
         var notes = workoutNotes
