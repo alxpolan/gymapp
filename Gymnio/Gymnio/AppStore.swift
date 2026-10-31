@@ -13,7 +13,6 @@ final class AppStore: ObservableObject {
     @Published var entries: [WorkoutEntry] = []
     @Published var language: String = "en"
     @Published var languageOverride: String = "auto"
-    @Published var homeSettings: HomeViewSettings = HomeViewSettings()
     @Published var themeMode: String = "system"
     @Published var weightUnit: String = "kg"
     @Published var showAddExercise: Bool = false
@@ -35,7 +34,6 @@ final class AppStore: ObservableObject {
     ]
 
     private let languageKey     = "@language_override"
-    private let homeSettingsKey = "homeViewSettings"
     private let themeKey        = "@theme_mode"
     private let weightUnitKey   = "@weight_unit"
     private let restSecondsKey  = "@rest_seconds"
@@ -70,10 +68,6 @@ final class AppStore: ObservableObject {
             language = detected
             languageOverride = detected
             defaults.set(detected, forKey: languageKey)
-        }
-        if let data = defaults.data(forKey: homeSettingsKey),
-           let s = try? JSONDecoder().decode(HomeViewSettings.self, from: data) {
-            homeSettings = s
         }
         activeWorkout = defaults.data(forKey: activeWorkoutKey).flatMap { try? JSONDecoder().decode(ActiveWorkout.self, from: $0) }
         if defaults.object(forKey: restSecondsKey) != nil {
@@ -420,13 +414,6 @@ final class AppStore: ObservableObject {
     /// Locale for dates and numbers, following the in-app language.
     var locale: Locale { Locale(identifier: language) }
 
-    func saveHomeSettings(_ s: HomeViewSettings) {
-        homeSettings = s
-        if let data = try? JSONEncoder().encode(s) {
-            defaults.set(data, forKey: homeSettingsKey)
-        }
-    }
-
     // MARK: - Derived data
 
     func entriesForExercise(_ name: String) -> [WorkoutEntry] {
@@ -475,7 +462,6 @@ final class AppStore: ObservableObject {
         guard args.contains("-ui_testing") else { return }
         storage.resetAll()
         defaults.removeObject(forKey: languageKey)
-        defaults.removeObject(forKey: homeSettingsKey)
         defaults.removeObject(forKey: activeWorkoutKey)
         defaults.removeObject(forKey: themeKey)
         defaults.set("system", forKey: themeKey)

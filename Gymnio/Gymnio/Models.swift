@@ -109,32 +109,6 @@ struct ExerciseGroup: Identifiable {
     var totalVolume: Double { entries.reduce(0) { $0 + $1.weight * Double($1.reps) } }
 }
 
-// MARK: - HomeViewSettings
-
-struct HomeViewSettings: Codable, Equatable {
-    var showProgressionAlert: Bool = true
-    var showStats: Bool = true
-    var showCharts: Bool = true
-    var showTopExercises: Bool = true
-}
-
-// MARK: - WorkoutStats
-
-struct WorkoutStats {
-    var totalWorkouts: Int
-    var uniqueExercises: Int
-    var totalVolumeKg: Double
-    var mostFrequentExercise: String?
-}
-
-// MARK: - ProgressionAlert
-
-struct ProgressionAlert: Identifiable {
-    var id: String { exercise }
-    var exercise: String
-    var currentWeight: Double
-}
-
 // MARK: - ChartDataPoint
 
 struct ChartDataPoint: Identifiable {
