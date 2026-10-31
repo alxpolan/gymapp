@@ -5,6 +5,7 @@ struct ExerciseDetailView: View {
     @EnvironmentObject var store: AppStore
     @Environment(\.colorScheme) var scheme
     @State private var exerciseName: String
+    @State private var showMetaEditor = false
 
     @State private var entries: [WorkoutEntry] = []
     @State private var weightText = ""
@@ -52,6 +53,13 @@ struct ExerciseDetailView: View {
 
                     if let videoURL = ExerciseCatalog.videoURL(for: exerciseName) {
                         ExerciseVideoView(url: videoURL)
+                    } else if let own = store.photo(for: exerciseName) {
+                        Image(uiImage: own)
+                            .resizable()
+                            .scaledToFill()
+                            .frame(height: 220)
+                            .frame(maxWidth: .infinity)
+                            .clipShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
                     }
 
                     AccentButton(label: store.t("detail.addToWorkout"), disabled: false) {
@@ -131,6 +139,9 @@ struct ExerciseDetailView: View {
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Menu {
+                    Button { showMetaEditor = true } label: {
+                        Label(store.t("meta.edit"), systemImage: "photo")
+                    }
                     Button {
                         renameText = exerciseName
                         showRenameAlert = true
@@ -149,6 +160,9 @@ struct ExerciseDetailView: View {
             }
         }
         .onTapGesture { focusedField = nil }
+        .sheet(isPresented: $showMetaEditor) {
+            ExerciseMetaEditor(exercise: exerciseName).environmentObject(store)
+        }
         .onAppear(perform: reload)
         .alert(store.t("detail.delete.title"), isPresented: $showDeleteAlert) {
             Button(store.t("common.delete"), role: .destructive) {

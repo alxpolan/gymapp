@@ -7,6 +7,8 @@ struct AddExerciseView: View {
     @State private var search = ""
     @State private var customName = ""
     @State private var showDuplicate = false
+    @State private var customMuscle: MuscleGroup?
+    @State private var customPhoto: UIImage?
     @FocusState private var isFocused: Bool
 
     private var filtered: [CatalogExercise] {
@@ -95,6 +97,10 @@ struct AddExerciseView: View {
                     )
                     .cornerRadius(12)
 
+                if isCustomValid {
+                    ExerciseMetaFields(muscle: $customMuscle, photo: $customPhoto)
+                }
+
                 if showDuplicate {
                     Text(store.t("add.duplicate"))
                         .font(.system(size: 13))
@@ -125,6 +131,9 @@ struct AddExerciseView: View {
             return
         }
         store.addExercise(trimmed, source: "catalog_or_custom")
+        if rawName == customName, customMuscle != nil || customPhoto != nil {
+            store.setExerciseMeta(customMuscle, photo: customPhoto, for: trimmed)
+        }
         store.showAddExercise = false
     }
 }

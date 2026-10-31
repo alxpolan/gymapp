@@ -35,6 +35,7 @@ struct InsightsView: View {
                     } else {
                         overviewCard
                         weeklyVolumeCard
+                        BodyWeightCard()
 
                         WeeklyRecapCard()
 

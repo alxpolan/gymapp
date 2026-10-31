@@ -24,6 +24,8 @@ final class AppStore: ObservableObject {
     @Published var showActiveWorkout: Bool = false
     @Published var reviewPending: Bool = false
     @Published var routines: [Routine] = []
+    @Published var exerciseMeta: [String: ExerciseMeta] = [:]
+    @Published var bodyWeights: [BodyWeightEntry] = []
     @Published var exerciseNotes: [String: String] = [:]
     var lastWorkoutDuration: TimeInterval = 0
 
@@ -41,6 +43,8 @@ final class AppStore: ObservableObject {
     private let restSecondsKey  = "@rest_seconds"
     private let activeWorkoutKey = "@active_workout"
     private let routinesKey     = "@routines"
+    private let exerciseMetaKey = "@exercise_meta"
+    private let bodyWeightKey   = "@body_weights"
     private let exerciseNotesKey = "@exercise_notes"
     private let workoutNotesKey = "@workout_notes"
     private let onboardingKey   = "@onboarding_done"
@@ -76,6 +80,9 @@ final class AppStore: ObservableObject {
         }
         activeWorkout = defaults.data(forKey: activeWorkoutKey).flatMap { try? JSONDecoder().decode(ActiveWorkout.self, from: $0) }
         routines = defaults.data(forKey: routinesKey).flatMap { try? JSONDecoder().decode([Routine].self, from: $0) } ?? []
+        exerciseMeta = defaults.data(forKey: exerciseMetaKey).flatMap { try? JSONDecoder().decode([String: ExerciseMeta].self, from: $0) } ?? [:]
+        applyMuscleOverrides()
+        bodyWeights = defaults.data(forKey: bodyWeightKey).flatMap { try? JSONDecoder().decode([BodyWeightEntry].self, from: $0) } ?? []
         exerciseNotes = defaults.data(forKey: exerciseNotesKey).flatMap { try? JSONDecoder().decode([String: String].self, from: $0) } ?? [:]
         if defaults.object(forKey: restSecondsKey) != nil {
             restSeconds = defaults.integer(forKey: restSecondsKey)
@@ -200,6 +207,7 @@ final class AppStore: ObservableObject {
     }
 
     func deleteExercise(_ name: String) {
+        if exerciseMeta[name] != nil { setExerciseMeta(nil, photo: nil, for: name, removePhoto: true) }
         storage.deleteExercise(name)
         exercises = storage.getExercises()
         entries   = storage.getAllEntries()
@@ -207,10 +215,136 @@ final class AppStore: ObservableObject {
     }
 
     func renameExercise(_ oldName: String, to newName: String) {
+        if let meta = exerciseMeta.removeValue(forKey: oldName) { exerciseMeta[newName] = meta; persistMeta() }
+        if let note = exerciseNotes.removeValue(forKey: oldName) { setExerciseNote(note, for: newName) }
         storage.renameExercise(oldName, to: newName)
         exercises = storage.getExercises()
         entries   = storage.getAllEntries()
         PostHogSDK.shared.capture("exercise_renamed")
+    }
+
+    // MARK: - Own exercise details (muscle group, photo)
+
+    private var photosFolder: URL {
+        let url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("ExercisePhotos", isDirectory: true)
+        try? FileManager.default.createDirectory(at: url, withIntermediateDirectories: true)
+        return url
+    }
+
+    func muscleGroup(for exercise: String) -> MuscleGroup { MuscleGroup.classify(exercise) }
+
+    func photo(for exercise: String) -> UIImage? {
+        guard let file = exerciseMeta[exercise]?.photo else { return nil }
+        return UIImage(contentsOfFile: photosFolder.appendingPathComponent(file).path)
+    }
+
+    /// Saves the chosen muscle group and/or photo. `removePhoto` deletes the stored picture.
+    func setExerciseMeta(_ muscle: MuscleGroup?, photo: UIImage?, for exercise: String, removePhoto: Bool = false) {
+        var meta = exerciseMeta[exercise] ?? ExerciseMeta()
+        meta.muscle = muscle?.rawValue
+        if let photo, let data = Self.downscaled(photo).jpegData(compressionQuality: 0.8) {
+            if let old = meta.photo { try? FileManager.default.removeItem(at: photosFolder.appendingPathComponent(old)) }
+            let file = UUID().uuidString + ".jpg"
+            try? data.write(to: photosFolder.appendingPathComponent(file))
+            meta.photo = file
+        } else if removePhoto, let old = meta.photo {
+            try? FileManager.default.removeItem(at: photosFolder.appendingPathComponent(old))
+            meta.photo = nil
+        }
+        if meta.muscle == nil && meta.photo == nil { exerciseMeta.removeValue(forKey: exercise) } else { exerciseMeta[exercise] = meta }
+        persistMeta()
+    }
+
+    private func persistMeta() {
+        if let data = try? JSONEncoder().encode(exerciseMeta) { defaults.set(data, forKey: exerciseMetaKey) }
+        applyMuscleOverrides()
+    }
+
+    private func applyMuscleOverrides() {
+        MuscleGroup.overrides = exerciseMeta.reduce(into: [:]) { result, item in
+            if let raw = item.value.muscle, let group = MuscleGroup(rawValue: raw) { result[item.key] = group }
+        }
+    }
+
+    private static func downscaled(_ image: UIImage, maxSide: CGFloat = 640) -> UIImage {
+        let longest = max(image.size.width, image.size.height)
+        guard longest > maxSide else { return image }
+        let scale = maxSide / longest
+        let size = CGSize(width: image.size.width * scale, height: image.size.height * scale)
+        return UIGraphicsImageRenderer(size: size).image { _ in image.draw(in: CGRect(origin: .zero, size: size)) }
+    }
+
+    // MARK: - Body weight
+
+    func addBodyWeight(kg: Double, date: Date = Date(), syncToHealth: Bool = true) {
+        bodyWeights.append(BodyWeightEntry(id: UUID().uuidString, date: date, kg: kg))
+        bodyWeights.sort { $0.date < $1.date }
+        persistBodyWeights()
+        if syncToHealth { HealthManager.shared.saveBodyWeight(kg: kg, date: date) }
+        PostHogSDK.shared.capture("bodyweight_logged")
+    }
+
+    /// Merges body weight from Apple Health (only when sync is on); skips values that are already known.
+    func importBodyWeightFromHealth() {
+        HealthManager.shared.recentBodyWeights { [weak self] samples in
+            guard let self, !samples.isEmpty else { return }
+            let known = Set(self.bodyWeights.map { Int($0.date.timeIntervalSince1970 / 60) })
+            var added = false
+            for sample in samples where !known.contains(Int(sample.date.timeIntervalSince1970 / 60)) {
+                self.bodyWeights.append(BodyWeightEntry(id: UUID().uuidString, date: sample.date, kg: sample.kg))
+                added = true
+            }
+            if added {
+                self.bodyWeights.sort { $0.date < $1.date }
+                self.persistBodyWeights()
+            }
+        }
+    }
+
+    private func persistBodyWeights() {
+        if let data = try? JSONEncoder().encode(bodyWeights) { defaults.set(data, forKey: bodyWeightKey) }
+    }
+
+    // MARK: - Backup
+
+    func makeBackup() -> GymnioBackup {
+        var photos: [String: Data] = [:]
+        for meta in exerciseMeta.values {
+            if let file = meta.photo, let data = try? Data(contentsOf: photosFolder.appendingPathComponent(file)) { photos[file] = data }
+        }
+        return GymnioBackup(exercises: exercises, entries: entries, routines: routines, exerciseNotes: exerciseNotes,
+                            exerciseMeta: exerciseMeta, bodyWeights: bodyWeights, workoutNotes: workoutNotes, photos: photos)
+    }
+
+    /// Adds what is missing; never removes or overwrites existing data.
+    func mergeBackup(_ backup: GymnioBackup) {
+        let knownEntries = Set(entries.map { $0.id })
+        for name in backup.exercises { storage.addExercise(name) }
+        for entry in backup.entries where !knownEntries.contains(entry.id) { storage.saveEntry(entry) }
+        exercises = storage.getExercises()
+        entries = storage.getAllEntries()
+
+        let knownRoutines = Set(routines.map { $0.id })
+        routines.append(contentsOf: backup.routines.filter { !knownRoutines.contains($0.id) })
+        persistRoutines()
+
+        for (name, note) in backup.exerciseNotes where exerciseNotes[name] == nil { setExerciseNote(note, for: name) }
+        for (name, meta) in backup.exerciseMeta where exerciseMeta[name] == nil {
+            if let file = meta.photo, let data = backup.photos[file] {
+                try? data.write(to: photosFolder.appendingPathComponent(file))
+            }
+            exerciseMeta[name] = meta
+        }
+        persistMeta()
+
+        let knownWeights = Set(bodyWeights.map { $0.id })
+        bodyWeights.append(contentsOf: backup.bodyWeights.filter { !knownWeights.contains($0.id) })
+        bodyWeights.sort { $0.date < $1.date }
+        persistBodyWeights()
+
+        var notes = workoutNotes
+        for (id, note) in backup.workoutNotes where notes[id] == nil { notes[id] = note }
+        workoutNotes = notes
     }
 
     // MARK: - Routines
@@ -271,6 +405,21 @@ final class AppStore: ObservableObject {
         let trimmed = text.trimmingCharacters(in: .whitespacesAndNewlines)
         if trimmed.isEmpty { exerciseNotes.removeValue(forKey: exercise) } else { exerciseNotes[exercise] = trimmed }
         if let data = try? JSONEncoder().encode(exerciseNotes) { defaults.set(data, forKey: exerciseNotesKey) }
+    }
+
+    /// Links this exercise with the next one (superset) or unlinks it.
+    func toggleSupersetWithNext(_ exercise: String) {
+        guard var active = activeWorkout, let idx = active.exercises.firstIndex(of: exercise),
+              idx < active.exercises.count - 1 else { return }
+        if active.linkedToNext.contains(exercise) { active.linkedToNext.removeAll { $0 == exercise } } else { active.linkedToNext.append(exercise) }
+        setActiveWorkout(active)
+    }
+
+    func isLinkedToNext(_ exercise: String) -> Bool { activeWorkout?.linkedToNext.contains(exercise) ?? false }
+
+    func isLinkedToPrevious(_ exercise: String) -> Bool {
+        guard let active = activeWorkout, let idx = active.exercises.firstIndex(of: exercise), idx > 0 else { return false }
+        return active.linkedToNext.contains(active.exercises[idx - 1])
     }
 
     func setActiveNote(_ text: String) {
@@ -381,6 +530,7 @@ final class AppStore: ObservableObject {
         }
         setActiveWorkout(nil)
         RestTimerManager.shared.cancel()
+        HealthManager.shared.saveWorkout(start: active.startedAt, end: Date())
         // The right moment to ask for a rating: right after the first finished training.
         if completedWorkoutCount == 1 && !defaults.bool(forKey: "review_requested_at_10") { reviewPending = true }
         if let finished {

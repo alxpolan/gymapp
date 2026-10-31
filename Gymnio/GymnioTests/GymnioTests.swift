@@ -74,3 +74,20 @@ struct SetKindTests {
         #expect(active.plannedSets.isEmpty)
     }
 }
+
+struct BackupTests {
+    @Test func backupSurvivesEncodeDecode() throws {
+        let entry = WorkoutEntry.create(exercise: "Squat", weight: 100, reps: 5, workoutId: "w", kind: .warmup)
+        let backup = GymnioBackup(exercises: ["Squat"], entries: [entry],
+                                  routines: [Routine(id: "r", name: "Legs", exercises: [RoutineExercise(name: "Squat", sets: 3)])],
+                                  exerciseNotes: ["Squat": "Belt"], exerciseMeta: ["Squat": ExerciseMeta(muscle: "legs", photo: nil)],
+                                  bodyWeights: [BodyWeightEntry(id: "b", date: Date(timeIntervalSince1970: 0), kg: 80)],
+                                  workoutNotes: ["w": "Good"], photos: [:])
+        let encoder = JSONEncoder(); encoder.dateEncodingStrategy = .iso8601
+        let decoder = JSONDecoder(); decoder.dateDecodingStrategy = .iso8601
+        let back = try decoder.decode(GymnioBackup.self, from: encoder.encode(backup))
+        #expect(back.entries.first?.kind == .warmup)
+        #expect(back.routines.first?.exercises.first?.sets == 3)
+        #expect(back.bodyWeights.first?.kg == 80)
+    }
+}

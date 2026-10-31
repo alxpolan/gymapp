@@ -119,6 +119,8 @@ struct ActiveWorkout: Codable, Equatable {
     var note: String?
     /// Target number of sets per exercise when started from a routine.
     var plannedSets: [String: Int] = [:]
+    /// Exercises that form a superset with the exercise right after them.
+    var linkedToNext: [String] = []
 
     init(id: String, startedAt: Date, exercises: [String]) {
         self.id = id
@@ -133,9 +135,19 @@ struct ActiveWorkout: Codable, Equatable {
         exercises = try c.decode([String].self, forKey: .exercises)
         note = try c.decodeIfPresent(String.self, forKey: .note)
         plannedSets = try c.decodeIfPresent([String: Int].self, forKey: .plannedSets) ?? [:]
+        linkedToNext = try c.decodeIfPresent([String].self, forKey: .linkedToNext) ?? []
     }
 
-    enum CodingKeys: String, CodingKey { case id, startedAt, exercises, note, plannedSets }
+    enum CodingKeys: String, CodingKey { case id, startedAt, exercises, note, plannedSets, linkedToNext }
+}
+
+// MARK: - Exercise details set by the user
+
+struct ExerciseMeta: Codable, Equatable {
+    /// `MuscleGroup.rawValue`; nil = guessed from the name.
+    var muscle: String?
+    /// File name inside the photos folder.
+    var photo: String?
 }
 
 // MARK: - Routine (reusable workout template)

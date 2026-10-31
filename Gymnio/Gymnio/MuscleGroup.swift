@@ -56,7 +56,11 @@ enum MuscleGroup: String, CaseIterable, Identifiable {
         }
     }
 
+    /// Muscle groups the user chose for their own exercises (set by `AppStore`).
+    static var overrides: [String: MuscleGroup] = [:]
+
     static func classify(_ exercise: String) -> MuscleGroup {
+        if let chosen = overrides[exercise] { return chosen }
         let name = exercise.lowercased()
         for group in [MuscleGroup.legs, .back, .chest, .shoulders, .core, .arms] {
             if group.keywords.contains(where: { name.contains($0) }) {

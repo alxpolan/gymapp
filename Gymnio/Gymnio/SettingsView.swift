@@ -69,25 +69,21 @@ struct SettingsView: View {
 
                 GlassCard {
                     Button {
-                        if premium.isPro {
-                            shareURL = DataExport.writeTempFile(store: store)
-                            showShare = shareURL != nil
-                        } else {
-                            showPaywall = true
-                        }
+                        shareURL = DataExport.writeTempFile(store: store)
+                        showShare = shareURL != nil
                     } label: {
                         SettingsRow(icon: "square.and.arrow.up", iconColor: Color.gymPositive,
                                     label: store.t("settings.export")) {
-                            if premium.isPro {
-                                Image(systemName: "chevron.right")
-                                    .font(.system(size: 13, weight: .semibold)).foregroundColor(.secondary)
-                            } else {
-                                ProBadge()
-                            }
+                            Image(systemName: "chevron.right")
+                                .font(.system(size: 13, weight: .semibold)).foregroundColor(.secondary)
                         }
                     }
                     .buttonStyle(.plain)
                 }
+
+                GlassCard { HealthSyncRow() }
+
+                BackupRows()
 
                 GlassCard {
                     Button { showImporter = true } label: {

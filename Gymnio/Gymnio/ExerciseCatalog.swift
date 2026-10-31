@@ -105,6 +105,7 @@ struct ExerciseThumb: View {
     let name: String
     var size: CGFloat = 52
     @State private var image: UIImage?
+    @EnvironmentObject private var store: AppStore
 
     var body: some View {
         let shape = RoundedRectangle(cornerRadius: size * 0.22, style: .continuous)
@@ -113,7 +114,7 @@ struct ExerciseThumb: View {
             if let image {
                 Image(uiImage: image).resizable().scaledToFill()
             } else {
-                Image(systemName: MuscleGroup.classify(name).systemImage)
+                Image(systemName: store.muscleGroup(for: name).systemImage)
                     .font(.system(size: size * 0.4, weight: .semibold))
                     .foregroundColor(.gymTextSecondary)
             }
@@ -121,6 +122,8 @@ struct ExerciseThumb: View {
         .frame(width: size, height: size)
         .clipShape(shape)
         .overlay(shape.stroke(Color.gymLine.opacity(0.5), lineWidth: 0.5))
-        .task(id: name) { image = await ExerciseThumbCache.shared.image(for: name) }
+        .task(id: "\(name)|\(store.exerciseMeta[name]?.photo ?? "")") {
+            if let own = store.photo(for: name) { image = own } else { image = await ExerciseThumbCache.shared.image(for: name) }
+        }
     }
 }

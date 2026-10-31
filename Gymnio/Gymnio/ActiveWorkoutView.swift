@@ -195,10 +195,22 @@ struct ExerciseBlock: View {
     @State private var showVideo = false
 
     private var previous: [WorkoutEntry] { store.previousSets(for: exercise).filter { !$0.isWarmup } }
+    private var canLinkNext: Bool {
+        guard let list = store.activeWorkout?.exercises, let idx = list.firstIndex(of: exercise) else { return false }
+        return idx < list.count - 1
+    }
+    private var inSuperset: Bool { store.isLinkedToNext(exercise) || store.isLinkedToPrevious(exercise) }
     private var hasVideo: Bool { ExerciseCatalog.videoURL(for: exercise) != nil }
 
     var body: some View {
         VStack(alignment: .leading, spacing: 10) {
+            if inSuperset {
+                Label(store.t("workout.superset"), systemImage: "link")
+                    .font(.system(size: 11, weight: .bold))
+                    .tracking(0.6)
+                    .textCase(.uppercase)
+                    .foregroundColor(.gymAccent)
+            }
             HStack(spacing: 12) {
                 Button { if hasVideo { showVideo = true } } label: {
                     ExerciseThumb(name: exercise, size: 48)
@@ -221,6 +233,12 @@ struct ExerciseBlock: View {
                 Menu {
                     if ExerciseCatalog.videoURL(for: exercise) != nil {
                         Button { showVideo = true } label: { Label(store.t("workout.video"), systemImage: "play.circle") }
+                    }
+                    if canLinkNext {
+                        Button { store.toggleSupersetWithNext(exercise) } label: {
+                            Label(store.t(store.isLinkedToNext(exercise) ? "workout.superset.unlink" : "workout.superset.link"),
+                                  systemImage: "link")
+                        }
                     }
                     Button(role: .destructive) { store.removeExerciseFromActive(exercise) } label: {
                         Label(store.t("workout.removeExercise"), systemImage: "trash")
@@ -265,7 +283,7 @@ struct ExerciseBlock: View {
         }
         .padding(16)
         .frame(maxWidth: .infinity, alignment: .leading)
-        .flatSurface(RoundedRectangle(cornerRadius: 14, style: .continuous))
+        .flatSurface(RoundedRectangle(cornerRadius: 14, style: .continuous), selected: inSuperset)
         .task { loadDrafts() }
         .sheet(isPresented: $showVideo) {
             if let url = ExerciseCatalog.videoURL(for: exercise) {
@@ -342,7 +360,7 @@ struct ExerciseBlock: View {
         guard saved else { return }
         drafts[index].entryId = store.entries.last?.id
         UIImpactFeedbackGenerator(style: .medium).impactOccurred()
-        if drafts[index].kind != .warmup { RestTimerManager.shared.start(exercise: exercise, store: store) }
+        if drafts[index].kind != .warmup && !store.isLinkedToNext(exercise) { RestTimerManager.shared.start(exercise: exercise, store: store) }
         if index == drafts.count - 1 { drafts.append(nextDraft()) }
     }
 }
