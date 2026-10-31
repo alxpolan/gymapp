@@ -18,39 +18,25 @@ struct ContentView: View {
     private var tabs: some View {
         if #available(iOS 18, *) {
             TabView(selection: $selectedTab) {
-                Tab(store.t("nav.home"), systemImage: "house", value: 0) {
-                    HomeView()
-                }
-                Tab(store.t("nav.exercises"), systemImage: "dumbbell", value: 1) {
-                    NavigationStack { ExercisesView() }
-                }
-                Tab(store.t("nav.insights"), systemImage: "chart.line.uptrend.xyaxis", value: 2) {
-                    NavigationStack { InsightsView() }
-                }
-                Tab(store.t("nav.history"), systemImage: SymbolCompat.history, value: 3) {
-                    HistoryView()
-                }
-                Tab(store.t("nav.add"), systemImage: "plus", value: 4, role: .search) {
-                    Color.clear
-                }
+                Tab(store.t("nav.train"), systemImage: "dumbbell.fill", value: 0) { TrainView() }
+                Tab(store.t("nav.history"), systemImage: "calendar", value: 1) { HistoryView() }
+                Tab(store.t("nav.exercises"), systemImage: "list.bullet", value: 2) { NavigationStack { ExercisesView() } }
+                Tab(store.t("nav.progress"), systemImage: "chart.line.uptrend.xyaxis", value: 3) { NavigationStack { InsightsView() } }
             }
         } else {
             TabView(selection: $selectedTab) {
-                HomeView()
-                    .tabItem { Label(store.t("nav.home"), systemImage: "house") }
+                TrainView()
+                    .tabItem { Label(store.t("nav.train"), systemImage: "dumbbell.fill") }
                     .tag(0)
-                NavigationStack { ExercisesView() }
-                    .tabItem { Label(store.t("nav.exercises"), systemImage: "dumbbell") }
-                    .tag(1)
-                NavigationStack { InsightsView() }
-                    .tabItem { Label(store.t("nav.insights"), systemImage: "chart.line.uptrend.xyaxis") }
-                    .tag(2)
                 HistoryView()
-                    .tabItem { Label(store.t("nav.history"), systemImage: SymbolCompat.history) }
+                    .tabItem { Label(store.t("nav.history"), systemImage: "calendar") }
+                    .tag(1)
+                NavigationStack { ExercisesView() }
+                    .tabItem { Label(store.t("nav.exercises"), systemImage: "list.bullet") }
+                    .tag(2)
+                NavigationStack { InsightsView() }
+                    .tabItem { Label(store.t("nav.progress"), systemImage: "chart.line.uptrend.xyaxis") }
                     .tag(3)
-                Color.clear
-                    .tabItem { Label(store.t("nav.add"), systemImage: "plus") }
-                    .tag(4)
             }
         }
     }
@@ -59,17 +45,12 @@ struct ContentView: View {
     var body: some View {
         let stack = ZStack {
             tabs
-            .onChangeCompat(of: selectedTab) { new in
-                if new == 4 {
-                    store.showAddExercise = true
-                    DispatchQueue.main.async { selectedTab = 1 }
+                .fullScreenCover(isPresented: $store.showActiveWorkout) {
+                    ActiveWorkoutView()
+                        .environmentObject(store)
+                        .environmentObject(PremiumManager.shared)
+                        .preferredColorScheme(store.colorScheme)
                 }
-            }
-            .sheet(item: $store.quickLogRequest) { request in
-                QuickLogView(exercise: request.exercise)
-                    .environmentObject(store)
-                    .environmentObject(PremiumManager.shared)
-            }
 
             if store.showAddExercise {
                 Color.black

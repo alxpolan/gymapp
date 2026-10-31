@@ -12,14 +12,18 @@ struct ExercisesView: View {
 
             ScrollView(showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 12) {
-                    ScreenTitle(text: store.t("nav.exercises"))
-                        .padding(.bottom, 4)
+                    HStack {
+                        ScreenTitle(text: store.t("nav.exercises"))
+                        Spacer()
+                        GlassCircleButton(icon: "plus") { store.showAddExercise = true }
+                    }
+                    .padding(.bottom, 4)
 
                     if groups.isEmpty {
                         VStack(spacing: 12) {
-                            Image(systemName: "plus.circle")
-                                .font(.system(size: 64))
-                                .foregroundColor(scheme == .dark ? Color(hex: "555555") : Color(hex: "cccccc"))
+                            Image(systemName: "dumbbell")
+                                .font(.system(size: 48))
+                                .foregroundColor(.gymLine)
                             Text(store.t("exercises.empty"))
                                 .font(.system(size: 16))
                                 .secondaryText()
@@ -110,7 +114,7 @@ struct ExerciseStat: View {
     var body: some View {
         VStack(spacing: 2) {
             Text(value)
-                .font(.system(size: 20, weight: .semibold))
+                .gymNumber(20, weight: .bold)
                 .foregroundColor(Color.gymText)
             Text(label)
                 .font(.system(size: 12))

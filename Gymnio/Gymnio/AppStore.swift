@@ -25,7 +25,6 @@ final class AppStore: ObservableObject {
     @Published var showActiveWorkout: Bool = false
     @Published var reviewPending: Bool = false
     var lastWorkoutDuration: TimeInterval = 0
-    @Published var quickLogRequest: QuickLogRequest?
 
     static let supportedLanguages = [
         "de", "en", "fr", "es", "it", "pt", "nl",
@@ -260,6 +259,19 @@ final class AppStore: ObservableObject {
         }
         active.exercises.append(trimmed)
         setActiveWorkout(active)
+    }
+
+    /// Starts a new training with the same exercises as an earlier one.
+    func repeatWorkout(_ workout: Workout) {
+        guard startWorkout(source: "repeat") else { return }
+        for name in workout.exercises { addExerciseToActive(name) }
+        showActiveWorkout = true
+    }
+
+    func deleteWorkout(_ workout: Workout) {
+        for entry in workout.entries { storage.deleteEntry(id: entry.id) }
+        entries = storage.getAllEntries()
+        PostHogSDK.shared.capture("workout_deleted", properties: ["sets": workout.setCount])
     }
 
     func removeExerciseFromActive(_ name: String) {
@@ -499,13 +511,6 @@ final class AppStore: ObservableObject {
             }
         }
     }
-}
-
-// MARK: - Quick log request
-
-struct QuickLogRequest: Identifiable {
-    let id = UUID()
-    let exercise: String
 }
 
 // MARK: - Paywall request

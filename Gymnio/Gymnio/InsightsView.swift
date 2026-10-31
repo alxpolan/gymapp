@@ -24,7 +24,7 @@ struct InsightsView: View {
             ScrollView(showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 16) {
                     HStack {
-                        ScreenTitle(text: store.t("insights.title"))
+                        ScreenTitle(text: store.t("nav.progress"))
                         Spacer()
                         if premium.isPro { ProBadge() }
                     }

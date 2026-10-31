@@ -124,14 +124,7 @@ struct AddExerciseView: View {
             showDuplicate = true
             return
         }
-        let isFirstExercise = store.entries.isEmpty
         store.addExercise(trimmed, source: "catalog_or_custom")
         store.showAddExercise = false
-        // Right after the very first exercise: go straight to logging the first set.
-        if isFirstExercise {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                store.quickLogRequest = QuickLogRequest(exercise: trimmed)
-            }
-        }
     }
 }

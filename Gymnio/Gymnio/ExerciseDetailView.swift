@@ -54,43 +54,9 @@ struct ExerciseDetailView: View {
                         ExerciseVideoView(url: videoURL)
                     }
 
-                    GlassCard {
-                        VStack(alignment: .leading, spacing: 14) {
-                            Text(store.t("detail.new_entry"))
-                                .font(.system(size: 20, weight: .bold))
-                                .foregroundColor(Color.gymText)
-
-                            HStack(spacing: 12) {
-                                DetailInput(label: "\(store.t("detail.weight")) (\(store.unitLabel))",
-                                            text: $weightText, kb: .decimalPad,
-                                            focused: $focusedField, field: .weight)
-                                DetailInput(label: store.t("detail.reps"),
-                                            text: $repsText, kb: .numberPad,
-                                            focused: $focusedField, field: .reps)
-                            }
-
-                            Button { showDatePicker.toggle(); focusedField = nil } label: {
-                                HStack(spacing: 8) {
-                                    Image(systemName: "calendar").secondaryText()
-                                    Text(fmtShort(selectedDate))
-                                        .font(.system(size: 14))
-                                        .secondaryText()
-                                }
-                            }
-
-                            if showDatePicker {
-                                DatePicker("", selection: $selectedDate, in: ...Date(), displayedComponents: .date)
-                                    .datePickerStyle(.wheel)
-                                    .labelsHidden()
-                                    .frame(maxWidth: .infinity)
-                                Button(store.t("detail.done")) { showDatePicker = false }
-                                    .font(.system(size: 16, weight: .semibold))
-                                    .foregroundColor(Color.tint(scheme))
-                                    .frame(maxWidth: .infinity, alignment: .trailing)
-                            }
-
-                            AccentButton(label: store.t("detail.add"), disabled: !isFilled, action: addEntry)
-                        }
+                    AccentButton(label: store.t("detail.addToWorkout"), disabled: false) {
+                        store.beginWorkout(source: "exercise_detail")
+                        store.addExerciseToActive(exerciseName)
                     }
 
                     if !entries.isEmpty {
