@@ -85,9 +85,9 @@ final class AppStore: ObservableObject {
             languageOverride = stored
         } else {
             let detected = deviceLanguage
+            // Not stored: without a manual choice the app keeps following the device language.
             language = detected
             languageOverride = detected
-            defaults.set(detected, forKey: languageKey)
         }
         activeWorkout = defaults.data(forKey: activeWorkoutKey).flatMap { try? JSONDecoder().decode(ActiveWorkout.self, from: $0) }
         routines = defaults.data(forKey: routinesKey).flatMap { try? JSONDecoder().decode([Routine].self, from: $0) } ?? []
