@@ -35,8 +35,14 @@ final class AppStore: ObservableObject {
         "da", "sv", "nb", "fi", "is",
         "tr", "uk", "ru", "pl", "cs", "sk", "hu", "ro", "bg", "el",
         "hr", "sr", "sl", "et", "lv", "lt", "ca",
-        "ja", "ko"
+        "ja", "ko",
+        "hi", "id", "vi", "th", "ar"
     ]
+
+    /// Languages written right to left.
+    static let rightToLeftLanguages: Set<String> = ["ar", "he", "fa", "ur"]
+
+    var layoutDirection: LayoutDirection { Self.rightToLeftLanguages.contains(language) ? .rightToLeft : .leftToRight }
 
     private let languageKey     = "@language_override"
     private let themeKey        = "@theme_mode"
@@ -805,7 +811,7 @@ final class AppStore: ObservableObject {
     var unitLabel: String { weightUnit }
 
     /// Locale for dates and numbers, following the in-app language.
-    var locale: Locale { Locale(identifier: language) }
+    var locale: Locale { Locale(identifier: language == "ar" ? "ar-u-nu-latn" : language) }
 
     // MARK: - Derived data
 

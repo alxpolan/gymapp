@@ -89,6 +89,7 @@ struct ContentView: View {
         }
         .tint(Color.gymAccent)
         .preferredColorScheme(store.colorScheme)
+        .environment(\.layoutDirection, store.layoutDirection)
 
         if forceTabBar {
             stack.environment(\.horizontalSizeClass, .compact)

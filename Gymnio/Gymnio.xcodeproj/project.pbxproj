@@ -291,6 +291,11 @@
 				lt,
 				is,
 				ca,
+				hi,
+				id,
+				vi,
+				th,
+				ar,
 				Base,
 			);
 			mainGroup = D9FED04D2F72024100B8CB60;
