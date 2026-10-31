@@ -116,3 +116,15 @@ struct SetLimitTests {
         #expect(!PremiumManager.isSetLimitReached(setsUsed: 50, limit: 0, isPro: false, suppressedRegion: false))
     }
 }
+
+struct ProStatusTests {
+    @Test func limitsWaitUntilTheStatusIsKnown() {
+        #expect(!PremiumManager.isSetLimitReached(setsUsed: 50, limit: 3, isPro: false, suppressedRegion: false, statusKnown: false))
+        #expect(!PremiumManager.isWorkoutLimitReached(workoutCount: 50, limit: 2, isPro: false, suppressedRegion: false, statusKnown: false))
+    }
+
+    @Test func knownFreeStatusStillHitsTheLimit() {
+        #expect(PremiumManager.isSetLimitReached(setsUsed: 3, limit: 3, isPro: false, suppressedRegion: false, statusKnown: true))
+        #expect(PremiumManager.isWorkoutLimitReached(workoutCount: 2, limit: 2, isPro: false, suppressedRegion: false, statusKnown: true))
+    }
+}

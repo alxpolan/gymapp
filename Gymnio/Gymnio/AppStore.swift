@@ -566,14 +566,16 @@ final class AppStore: ObservableObject {
     private var isFreeSetLimitReached: Bool {
         let premium = PremiumManager.shared
         return PremiumManager.isSetLimitReached(setsUsed: freeSetsUsed, limit: premium.freeSetLimit,
-                                                isPro: premium.isPro, suppressedRegion: premium.isPaywallSuppressedRegion)
+                                                isPro: premium.isPro, suppressedRegion: premium.isPaywallSuppressedRegion,
+                                                statusKnown: premium.entitlementResolved)
     }
 
     private func isFreeLimitReached() -> Bool {
         let premium = PremiumManager.shared
         if premium.freeSetLimit > 0 { return isFreeSetLimitReached }
         return PremiumManager.isWorkoutLimitReached(workoutCount: completedWorkoutCount, limit: premium.freeWorkoutLimit,
-                                                    isPro: premium.isPro, suppressedRegion: premium.isPaywallSuppressedRegion)
+                                                    isPro: premium.isPro, suppressedRegion: premium.isPaywallSuppressedRegion,
+                                                    statusKnown: premium.entitlementResolved)
     }
 
     /// Starts a training. Returns false (and shows the paywall) when a free user used up the free trainings.
@@ -729,7 +731,7 @@ final class AppStore: ObservableObject {
         let entry = WorkoutEntry.create(exercise: exercise, weight: weight, reps: reps, date: date, workoutId: workoutId, kind: kind, rpe: rpe)
         storage.saveEntry(entry)
         entries = storage.getAllEntries()
-        if kind != .warmup && !PremiumManager.shared.isPro {
+        if kind != .warmup && PremiumManager.shared.entitlementResolved && !PremiumManager.shared.isPro {
             defaults.set(freeSetsUsed + 1, forKey: freeSetsUsedKey)
             // The moment right after the last free set: the user just felt what the app does.
             let limit = PremiumManager.shared.freeSetLimit

@@ -26,8 +26,22 @@ final class PremiumManager: ObservableObject {
     private let uiTestForcePro = ProcessInfo.processInfo.arguments.contains("-ui_test_pro")
     private var streamTask: Task<Void, Never>?
 
+    /// False until RevenueCat has answered (or the last known status proved Pro). Limits and paywalls wait for it.
+    @Published private(set) var entitlementResolved: Bool = false
+
+    private let proCacheKey = "@pro_status_cache"
+
     private init() {
-        if uiTestForcePro { isPro = true }
+        if uiTestForcePro { isPro = true; entitlementResolved = true; return }
+        // Last known status, so a paying user is Pro immediately at launch, also offline.
+        if let cached = UserDefaults.standard.dictionary(forKey: proCacheKey),
+           cached["active"] as? Bool == true {
+            let expires = (cached["expires"] as? Double).map { Date(timeIntervalSince1970: $0) }
+            if expires == nil || expires! > Date() {
+                isPro = true
+                entitlementResolved = true
+            }
+        }
     }
 
     func start() {
@@ -86,8 +100,9 @@ final class PremiumManager: ObservableObject {
         return Self.defaultFreeSetLimit
     }
 
-    nonisolated static func isSetLimitReached(setsUsed: Int, limit: Int, isPro: Bool, suppressedRegion: Bool) -> Bool {
-        guard !isPro && !suppressedRegion && limit > 0 else { return false }
+    nonisolated static func isSetLimitReached(setsUsed: Int, limit: Int, isPro: Bool, suppressedRegion: Bool,
+                                              statusKnown: Bool = true) -> Bool {
+        guard statusKnown && !isPro && !suppressedRegion && limit > 0 else { return false }
         return setsUsed >= limit
     }
 
@@ -131,8 +146,9 @@ final class PremiumManager: ObservableObject {
 
     // MARK: - Purchase / restore
 
-    nonisolated static func isWorkoutLimitReached(workoutCount: Int, limit: Int, isPro: Bool, suppressedRegion: Bool) -> Bool {
-        guard !isPro && !suppressedRegion else { return false }
+    nonisolated static func isWorkoutLimitReached(workoutCount: Int, limit: Int, isPro: Bool, suppressedRegion: Bool,
+                                                  statusKnown: Bool = true) -> Bool {
+        guard statusKnown && !isPro && !suppressedRegion else { return false }
         return workoutCount >= limit
     }
 
@@ -202,7 +218,12 @@ final class PremiumManager: ObservableObject {
     }
 
     private func apply(customerInfo: CustomerInfo) {
-        if uiTestForcePro { isPro = true; return }
-        isPro = customerInfo.entitlements[Self.entitlementID]?.isActive == true
+        if uiTestForcePro { isPro = true; entitlementResolved = true; return }
+        let entitlement = customerInfo.entitlements[Self.entitlementID]
+        isPro = entitlement?.isActive == true
+        entitlementResolved = true
+        var cache: [String: Any] = ["active": isPro]
+        if let expires = entitlement?.expirationDate { cache["expires"] = expires.timeIntervalSince1970 }
+        UserDefaults.standard.set(cache, forKey: proCacheKey)
     }
 }

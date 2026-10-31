@@ -33,7 +33,7 @@ struct ActiveWorkoutView: View {
             }
         }
         .task { note = store.activeWorkout?.note ?? "" }
-        .sheet(item: Binding(get: { store.paywallRequest }, set: { store.paywallRequest = $0 })) { request in
+        .sheet(item: Binding(get: { premium.isPro ? nil : store.paywallRequest }, set: { store.paywallRequest = $0 })) { request in
             PaywallView(source: request.source)
                 .environmentObject(store)
                 .environmentObject(PremiumManager.shared)
