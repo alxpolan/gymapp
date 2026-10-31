@@ -37,13 +37,28 @@ struct RoutinesSection: View {
                 .buttonStyle(.plain)
             } else {
                 ForEach(store.routines) { routine in
-                    RoutineCard(routine: routine, onEdit: { editing = routine })
+                    RoutineCard(routine: routine, lastDone: lastDone(routine), suggested: routine.id == suggestedId,
+                                onEdit: { editing = routine })
                 }
             }
         }
         .sheet(item: $editing) { routine in
             RoutineEditorView(routine: routine).environmentObject(store)
         }
+    }
+
+    /// When any exercise of the routine was last trained.
+    private func lastDone(_ routine: Routine) -> Date? {
+        let names = Set(routine.exercises.map { $0.name })
+        return store.workingEntries.filter { names.contains($0.exercise) }.map { $0.date }.max()
+    }
+
+    /// The routine that has waited longest (never done counts as longest), if it is at least two days.
+    private var suggestedId: String? {
+        guard store.routines.count > 1, store.activeWorkout == nil else { return nil }
+        let candidates = store.routines.map { ($0, lastDone($0) ?? .distantPast) }
+        guard let pick = candidates.min(by: { $0.1 < $1.1 }) else { return nil }
+        return pick.1 < Date().addingTimeInterval(-2 * 86_400) ? pick.0.id : nil
     }
 
     /// One-tap starting points for people who have no routine yet.
@@ -83,18 +98,38 @@ struct RoutinesSection: View {
 
 struct RoutineCard: View {
     let routine: Routine
+    let lastDone: Date?
+    let suggested: Bool
     let onEdit: () -> Void
     @EnvironmentObject var store: AppStore
     @State private var confirmDelete = false
 
+    private var lastDoneText: String {
+        guard let lastDone else { return store.t("routines.neverDone") }
+        let f = RelativeDateTimeFormatter()
+        f.locale = store.locale
+        f.unitsStyle = .full
+        return f.localizedString(for: lastDone, relativeTo: Date())
+    }
+
     var body: some View {
-        Card {
+        Card(leftAccent: suggested) {
             VStack(alignment: .leading, spacing: 12) {
                 HStack(alignment: .top) {
                     VStack(alignment: .leading, spacing: 3) {
+                        if suggested {
+                            Text(store.t("routines.suggested"))
+                                .font(.system(size: 11, weight: .heavy))
+                                .tracking(0.6)
+                                .textCase(.uppercase)
+                                .foregroundColor(.gymAccent)
+                        }
                         Text(routine.name)
                             .font(.system(size: 18, weight: .bold))
                             .foregroundColor(.gymText)
+                        Text(lastDoneText)
+                            .font(.system(size: 12, weight: .medium))
+                            .foregroundColor(.gymTextSecondary)
                         Text(routine.exercises.map { $0.name }.joined(separator: " · "))
                             .font(.system(size: 13))
                             .foregroundColor(.gymTextSecondary)

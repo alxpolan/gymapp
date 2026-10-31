@@ -57,7 +57,7 @@ struct BodyWeightCard: View {
                             .foregroundStyle(Color.gymAccent)
                             .symbolSize(24)
                     }
-                    .chartYScale(domain: .automatic(includesZero: false))
+                    .chartYScale(domain: yRange)
                     .frame(height: 120)
                 }
             }
@@ -72,6 +72,14 @@ struct BodyWeightCard: View {
             }
         }
         .task { store.importBodyWeightFromHealth() }
+    }
+
+    /// Axis range around the data (iOS 16 has no automatic non-zero domain).
+    private var yRange: ClosedRange<Double> {
+        let values = recent.map { store.displayWeight($0.kg) }
+        let low = values.min() ?? 0, high = values.max() ?? 1
+        let pad = max((high - low) * 0.2, 1)
+        return (low - pad)...(high + pad)
     }
 
     /// Difference between the latest value and the first one in the last 30 days.
