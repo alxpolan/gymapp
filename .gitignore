@@ -2,5 +2,11 @@
 website/node_modules
 website/dist
 
+# local screenshot capture worker
+worker/node_modules
+
+# Screenshot captures
+logs/*
+
 # macOS
 .DS_Store

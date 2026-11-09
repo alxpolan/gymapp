@@ -1,0 +1,22 @@
+{
+  "name": "marteso-worker",
+  "version": "1.0.0",
+  "description": "Fastlane worker for Marteso (macOS only)",
+  "main": "src/server.ts",
+  "scripts": {
+    "start": "tsx src/server.ts",
+    "dev": "tsx watch src/server.ts",
+    "capture:local": "tsx src/local-capture.ts"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "sharp": "^0.34.5"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.12.0",
+    "tsx": "^4.19.2",
+    "typescript": "^6.0.3"
+  }
+}
