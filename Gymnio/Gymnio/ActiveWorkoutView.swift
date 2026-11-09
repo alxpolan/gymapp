@@ -9,6 +9,10 @@ func formatDuration(_ seconds: TimeInterval) -> String {
     return h > 0 ? String(format: "%d:%02d:%02d", h, m, s) : String(format: "%d:%02d", m, s)
 }
 
+private extension Notification.Name {
+    static let commitOpenWorkoutDrafts = Notification.Name("ActiveWorkoutView.commitOpenDrafts")
+}
+
 // MARK: - Active workout
 
 struct ActiveWorkoutView: View {
@@ -126,6 +130,9 @@ struct ActiveWorkoutView: View {
     }
 
     private func finish() {
+        // A set with weight/reps typed in but never checked off still counts as logged intent;
+        // commit it before deciding the workout is empty, so Finish never surprises the user with Discard.
+        NotificationCenter.default.post(name: .commitOpenWorkoutDrafts, object: nil)
         let sets = store.workouts.first { $0.id == store.activeWorkout?.id }?.entries.count ?? 0
         if sets == 0 {
             showDiscard = true
@@ -273,6 +280,7 @@ struct ExerciseBlock: View {
                 .replacingOccurrences(of: ",", with: ".") ?? "") ?? 0)
                 .environmentObject(store)
         }
+        .onReceive(NotificationCenter.default.publisher(for: .commitOpenWorkoutDrafts)) { _ in commitOpenDrafts() }
     }
 
     private var repsHeader: String {
@@ -430,6 +438,13 @@ struct ExerciseBlock: View {
             RestTimerManager.shared.start(exercise: exercise, store: store)
         }
         if index == drafts.count - 1 { drafts.append(nextDraft()) }
+    }
+
+    /// Checks off every row that has a valid weight/reps typed in but wasn't tapped as done yet.
+    private func commitOpenDrafts() {
+        for index in drafts.indices where drafts[index].entryId == nil {
+            toggle(index)
+        }
     }
 
     /// True when this set is better than anything logged for the exercise before this training.
@@ -678,10 +693,13 @@ struct WorkoutSummaryView: View {
         ScrollView(showsIndicators: false) {
             VStack(alignment: .leading, spacing: 16) {
                 Text(store.t("summary.title"))
-                    .font(.system(size: 30, weight: .heavy))
-                    .tracking(-0.5)
-                    .foregroundColor(.gymText)
+                    .font(.system(size: 13, weight: .bold))
+                    .tracking(0.6)
+                    .textCase(.uppercase)
+                    .foregroundColor(.gymAccent)
                     .padding(.top, 24)
+
+                EditableWorkoutTitle(workout: workout, font: .system(size: 28, weight: .heavy))
 
                 Card {
                     HStack(alignment: .top, spacing: 12) {
