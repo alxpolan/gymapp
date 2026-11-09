@@ -110,6 +110,48 @@ enum ExerciseLibrary {
         LibraryExercise(name: "Woodchopper", muscle: .core, type: .weightReps),
         LibraryExercise(name: "Hollow Hold", muscle: .core, type: .duration),
         LibraryExercise(name: "Dragon Flag", muscle: .core, type: .bodyweightReps),
+
+        // Kettlebell
+        LibraryExercise(name: "Kettlebell Swing", muscle: .legs, type: .weightReps),
+        LibraryExercise(name: "Kettlebell Goblet Squat", muscle: .legs, type: .weightReps),
+        LibraryExercise(name: "Kettlebell Deadlift", muscle: .legs, type: .weightReps),
+        LibraryExercise(name: "Kettlebell Lunge", muscle: .legs, type: .weightReps),
+        LibraryExercise(name: "Kettlebell Clean", muscle: .back, type: .weightReps),
+        LibraryExercise(name: "Kettlebell Row", muscle: .back, type: .weightReps),
+        LibraryExercise(name: "Kettlebell Snatch", muscle: .shoulders, type: .weightReps),
+        LibraryExercise(name: "Kettlebell Clean and Press", muscle: .shoulders, type: .weightReps),
+        LibraryExercise(name: "Kettlebell Overhead Press", muscle: .shoulders, type: .weightReps),
+        LibraryExercise(name: "Kettlebell Thruster", muscle: .shoulders, type: .weightReps),
+        LibraryExercise(name: "Kettlebell Halo", muscle: .shoulders, type: .weightReps),
+        LibraryExercise(name: "Kettlebell Turkish Get-Up", muscle: .core, type: .weightReps),
+        LibraryExercise(name: "Kettlebell Windmill", muscle: .core, type: .weightReps),
+        LibraryExercise(name: "Kettlebell Russian Twist", muscle: .core, type: .weightReps),
+        LibraryExercise(name: "Kettlebell Farmer's Carry", muscle: .back, type: .duration),
+        LibraryExercise(name: "Kettlebell Suitcase Carry", muscle: .core, type: .duration),
+
+        // Resistance band
+        LibraryExercise(name: "Band Pull-Apart", muscle: .shoulders, type: .bodyweightReps),
+        LibraryExercise(name: "Band Face Pull", muscle: .back, type: .bodyweightReps),
+        LibraryExercise(name: "Band Row", muscle: .back, type: .bodyweightReps),
+        LibraryExercise(name: "Band Lat Pulldown", muscle: .back, type: .bodyweightReps),
+        LibraryExercise(name: "Band Squat", muscle: .legs, type: .bodyweightReps),
+        LibraryExercise(name: "Band Deadlift", muscle: .legs, type: .bodyweightReps),
+        LibraryExercise(name: "Band Lateral Walk", muscle: .legs, type: .bodyweightReps),
+        LibraryExercise(name: "Band Hip Thrust", muscle: .legs, type: .bodyweightReps),
+        LibraryExercise(name: "Band Glute Kickback", muscle: .legs, type: .bodyweightReps),
+        LibraryExercise(name: "Band Chest Press", muscle: .chest, type: .bodyweightReps),
+        LibraryExercise(name: "Band Overhead Press", muscle: .shoulders, type: .bodyweightReps),
+        LibraryExercise(name: "Band Bicep Curl", muscle: .arms, type: .bodyweightReps),
+        LibraryExercise(name: "Band Tricep Pushdown", muscle: .arms, type: .bodyweightReps),
+
+        // Cable (additional)
+        LibraryExercise(name: "Cable Pullover", muscle: .back, type: .weightReps),
+        LibraryExercise(name: "Single-Arm Cable Row", muscle: .back, type: .weightReps),
+        LibraryExercise(name: "Cable Pull-Through", muscle: .legs, type: .weightReps),
+        LibraryExercise(name: "Cable Hip Abduction", muscle: .legs, type: .weightReps),
+        LibraryExercise(name: "Cable Chest Press", muscle: .chest, type: .weightReps),
+        LibraryExercise(name: "Cable Woodchopper", muscle: .core, type: .weightReps),
+        LibraryExercise(name: "Cable Overhead Tricep Extension", muscle: .arms, type: .weightReps),
     ]
 
     private static let byName: [String: LibraryExercise] = Dictionary(all.map { ($0.name.lowercased(), $0) }, uniquingKeysWith: { a, _ in a })
