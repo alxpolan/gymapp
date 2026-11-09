@@ -238,12 +238,6 @@ struct SettingsView: View {
         .sheet(isPresented: $showShare) {
             if let shareURL {
                 ShareSheet(items: [shareURL], isPresented: $showShare)
-            } else {
-                VStack(spacing: 12) {
-                    Text("DEBUG: shareURL nil").font(.title)
-                    Text("entries=\(store.entries.count)")
-                    Text("error=\(DataExport.debugLastError ?? "none")")
-                }
             }
         }
     }

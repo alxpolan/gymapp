@@ -19,18 +19,14 @@ enum DataExport {
         return lines.joined(separator: "\n")
     }
 
-    static var debugLastError: String?
-
     static func writeTempFile(store: AppStore) -> URL? {
         let content = csv(store: store)
         let name = "gymnio-export.csv"
         let url = FileManager.default.temporaryDirectory.appendingPathComponent(name)
         do {
             try content.data(using: .utf8)?.write(to: url, options: .atomic)
-            debugLastError = nil
             return url
         } catch {
-            debugLastError = "\(error)"
             return nil
         }
     }
@@ -43,60 +39,21 @@ enum DataExport {
     }
 }
 
-private func shareDebugLog(_ msg: String) {
-    let url = FileManager.default.temporaryDirectory.appendingPathComponent("share_debug.log")
-    let line = "\(Date()) \(msg)\n"
-    guard let data = line.data(using: .utf8) else { return }
-    if let fh = try? FileHandle(forWritingTo: url) {
-        fh.seekToEndOfFile()
-        fh.write(data)
-        try? fh.close()
-    } else {
-        try? data.write(to: url)
-    }
-}
-
 private final class ActivityHostController: UIViewController {
     var items: [Any] = []
     var onComplete: (() -> Void)?
     private var didPresent = false
-    private let debugLabel = UILabel()
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        shareDebugLog("viewDidLoad")
-        view.backgroundColor = .red
-        debugLabel.text = "viewDidLoad"
-        debugLabel.frame = CGRect(x: 20, y: 100, width: 350, height: 40)
-        debugLabel.textColor = .white
-        view.addSubview(debugLabel)
-    }
-
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        shareDebugLog("viewWillAppear, parent=\(String(describing: parent)), presentingVC=\(String(describing: presentingViewController))")
-    }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        shareDebugLog("viewDidAppear, didPresent=\(didPresent)")
         guard !didPresent else { return }
         didPresent = true
-        view.backgroundColor = .green
-        debugLabel.text = "viewDidAppear, presenting..."
         let activityVC = UIActivityViewController(activityItems: items, applicationActivities: nil)
         activityVC.popoverPresentationController?.sourceView = view
-        activityVC.completionWithItemsHandler = { [weak self] activityType, completed, _, error in
-            shareDebugLog("completionWithItemsHandler activityType=\(String(describing: activityType)) completed=\(completed) error=\(String(describing: error))")
+        activityVC.completionWithItemsHandler = { [weak self] _, _, _, _ in
             self?.onComplete?()
         }
-        shareDebugLog("about to call present()")
-        present(activityVC, animated: false) { [weak self] in
-            shareDebugLog("present completion handler fired")
-            self?.view.backgroundColor = .blue
-            self?.debugLabel.text = "present completion fired"
-        }
-        shareDebugLog("present() call returned (synchronously)")
+        present(activityVC, animated: true)
     }
 }
 
