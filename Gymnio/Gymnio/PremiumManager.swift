@@ -45,6 +45,8 @@ final class PremiumManager: ObservableObject {
     }
 
     func start() {
+        if uiTestForcePro { return }
+
         streamTask = Task { [weak self] in
             guard let self else { return }
             for await info in Purchases.shared.customerInfoStream {
