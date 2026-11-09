@@ -250,9 +250,13 @@ struct WorkoutRowCard: View {
                     HStack(spacing: 6) {
                         ForEach(Array(workout.exercises.prefix(4)), id: \.self) { ExerciseThumb(name: $0, size: 34) }
                     }
-                    Text(workout.exercises.joined(separator: " · "))
+                    Text(store.title(for: workout))
                         .font(.system(size: 16, weight: .semibold))
                         .foregroundColor(.gymText)
+                        .lineLimit(1)
+                    Text(workout.exercises.joined(separator: " · "))
+                        .font(.system(size: 13, weight: .medium))
+                        .foregroundColor(.gymTextSecondary)
                         .lineLimit(2)
                         .multilineTextAlignment(.leading)
                     Text("\(workout.setCount) \(store.t("summary.sets").lowercased()) · \(formatWeightValue(store.displayWeight(workout.volumeKg).rounded())) \(store.unitLabel)" + (workout.duration >= 60 ? " · \(formatDuration(workout.duration))" : ""))

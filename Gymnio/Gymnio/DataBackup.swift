@@ -13,6 +13,8 @@ struct GymnioBackup: Codable {
     var exerciseMeta: [String: ExerciseMeta]
     var bodyWeights: [BodyWeightEntry]
     var workoutNotes: [String: String]
+    /// User-renamed workout titles; absent on backups written before this feature existed.
+    var workoutTitles: [String: String]?
     /// Own exercise photos by file name.
     var photos: [String: Data]
 }

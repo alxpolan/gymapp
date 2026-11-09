@@ -58,6 +58,7 @@ final class AppStore: ObservableObject {
     private let bodyWeightKey   = "@body_weights"
     private let exerciseNotesKey = "@exercise_notes"
     private let workoutNotesKey = "@workout_notes"
+    private let workoutTitlesKey = "@workout_titles"
     private let onboardingKey   = "@onboarding_done"
     private let goalKey         = "@onboarding_goal"
     private let firstOpenKey    = "@first_open_at"
@@ -184,6 +185,11 @@ final class AppStore: ObservableObject {
         // Not translated in this language yet: fall back to English, then the key.
         let english = Bundle.main.path(forResource: "en", ofType: "lproj").flatMap(Bundle.init) ?? .main
         return NSLocalizedString(key, bundle: english, value: key, comment: "")
+    }
+
+    /// `t(_:)` with positional `%1$@`/`%2$@` substitution, for strings assembled from parts (e.g. auto-generated workout titles).
+    func t(_ key: String, _ args: String...) -> String {
+        String(format: t(key), arguments: args)
     }
 
     func setLanguageOverride(_ lang: String) {
@@ -386,7 +392,8 @@ final class AppStore: ObservableObject {
             if let file = meta.photo, let data = try? Data(contentsOf: photosFolder.appendingPathComponent(file)) { photos[file] = data }
         }
         return GymnioBackup(exercises: exercises, entries: entries, routines: routines, exerciseNotes: exerciseNotes,
-                            exerciseMeta: exerciseMeta, bodyWeights: bodyWeights, workoutNotes: workoutNotes, photos: photos)
+                            exerciseMeta: exerciseMeta, bodyWeights: bodyWeights, workoutNotes: workoutNotes,
+                            workoutTitles: workoutTitles, photos: photos)
     }
 
     /// Adds what is missing; never removes or overwrites existing data.
@@ -418,6 +425,10 @@ final class AppStore: ObservableObject {
         var notes = workoutNotes
         for (id, note) in backup.workoutNotes where notes[id] == nil { notes[id] = note }
         workoutNotes = notes
+
+        var titles = workoutTitles
+        for (id, title) in backup.workoutTitles ?? [:] where titles[id] == nil { titles[id] = title }
+        workoutTitles = titles
     }
 
     func setWeeklyGoal(_ goal: Int) {
@@ -551,6 +562,28 @@ final class AppStore: ObservableObject {
 
     func note(for workoutId: String) -> String? { workoutNotes[workoutId] }
 
+    /// Renamed titles survive here; the default (unrenamed) title is always regenerated from the workout itself.
+    var workoutTitles: [String: String] {
+        get { defaults.data(forKey: workoutTitlesKey).flatMap { try? JSONDecoder().decode([String: String].self, from: $0) } ?? [:] }
+        set { if let data = try? JSONEncoder().encode(newValue) { defaults.set(data, forKey: workoutTitlesKey) } }
+    }
+
+    /// The workout's title: the user's rename if there is one, otherwise a generated "Morning Weight Training"-style name.
+    func title(for workout: Workout) -> String {
+        workoutTitles[workout.id] ?? WorkoutTitle.generate(for: workout, store: self)
+    }
+
+    func renameWorkout(_ workout: Workout, to title: String) {
+        let trimmed = title.trimmingCharacters(in: .whitespacesAndNewlines)
+        var titles = workoutTitles
+        if trimmed.isEmpty || trimmed == WorkoutTitle.generate(for: workout, store: self) {
+            titles.removeValue(forKey: workout.id)
+        } else {
+            titles[workout.id] = trimmed
+        }
+        workoutTitles = titles
+    }
+
     // MARK: - Entries
 
     // MARK: - Workouts
@@ -637,6 +670,9 @@ final class AppStore: ObservableObject {
         var notes = workoutNotes
         notes.removeValue(forKey: workout.id)
         workoutNotes = notes
+        var titles = workoutTitles
+        titles.removeValue(forKey: workout.id)
+        workoutTitles = titles
         entries = storage.getAllEntries()
         PostHogSDK.shared.capture("workout_deleted", properties: ["sets": workout.setCount])
     }

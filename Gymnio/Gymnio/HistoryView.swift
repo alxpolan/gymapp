@@ -180,10 +180,12 @@ struct WorkoutDetailView: View {
             if let workout {
                 ScrollView(showsIndicators: false) {
                     VStack(alignment: .leading, spacing: 16) {
-                        Text(titleText)
-                            .font(.system(size: 26, weight: .heavy))
-                            .tracking(-0.4)
-                            .foregroundColor(.gymText)
+                        VStack(alignment: .leading, spacing: 4) {
+                            EditableWorkoutTitle(workout: workout, font: .system(size: 26, weight: .heavy))
+                            Text(titleText)
+                                .font(.system(size: 14, weight: .medium))
+                                .foregroundColor(.gymTextSecondary)
+                        }
 
                         Card {
                             HStack(alignment: .top, spacing: 12) {
