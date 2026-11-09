@@ -31,7 +31,9 @@ final class GymnioUITests: XCTestCase {
     private let uiTimeout: TimeInterval = 30
 
     private func launch(activeWorkout: Bool = false) {
-        app.launchArguments += ["-ui_testing", "-ui_test_seed_demo_data", "-ui_test_pro"]
+        // iPad shows a sidebar instead of a tab bar; force the compact tab bar so
+        // openTab works on every device (no-op on iPhone, already compact).
+        app.launchArguments += ["-ui_testing", "-ui_test_seed_demo_data", "-ui_test_pro", "-ui_test_force_tab_bar"]
         if activeWorkout { app.launchArguments += ["-ui_test_active_workout"] }
         app.launch()
     }
