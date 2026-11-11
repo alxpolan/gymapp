@@ -562,6 +562,16 @@ final class AppStore: ObservableObject {
 
     func note(for workoutId: String) -> String? { workoutNotes[workoutId] }
 
+    /// Offers the paywall at most once a day, right when a finished workout set personal records.
+    func offerPostWorkoutPaywallIfNeeded(records: Int) {
+        guard records > 0, !PremiumManager.shared.isPro, !PremiumManager.shared.isPaywallSuppressedRegion else { return }
+        let key = "@pr_paywall_last_shown"
+        if let last = defaults.object(forKey: key) as? Date, Calendar.current.isDateInToday(last) { return }
+        defaults.set(Date(), forKey: key)
+        paywallRequest = PaywallRequest(source: "pr_moment")
+        PostHogSDK.shared.capture("pr_paywall_offered", properties: ["records": records])
+    }
+
     /// Renamed titles survive here; the default (unrenamed) title is always regenerated from the workout itself.
     var workoutTitles: [String: String] {
         get { defaults.data(forKey: workoutTitlesKey).flatMap { try? JSONDecoder().decode([String: String].self, from: $0) } ?? [:] }
@@ -918,6 +928,7 @@ final class AppStore: ObservableObject {
         for key in [workoutRoutinesKey, freeSetsUsedKey, routinesKey, exerciseMetaKey, bodyWeightKey, exerciseNotesKey, workoutNotesKey, weeklyGoalKey] {
             defaults.removeObject(forKey: key)
         }
+        defaults.removeObject(forKey: "@pr_paywall_last_shown")
         defaults.set("system", forKey: themeKey)
         if args.contains("-ui_test_force_morning") { forceMorningGreeting = true }
         if let langIdx = args.firstIndex(of: "-ui_test_language"), args.indices.contains(langIdx + 1) {

@@ -808,6 +808,12 @@ struct WorkoutSummaryView: View {
             }
             .padding(.horizontal, 16)
         }
+        .task {
+            // Let the PR celebration land first, then make the offer once a day at most.
+            try? await Task.sleep(nanoseconds: 1_500_000_000)
+            guard !Task.isCancelled else { return }
+            store.offerPostWorkoutPaywallIfNeeded(records: records.count)
+        }
     }
 
     private func enableReminders() {
