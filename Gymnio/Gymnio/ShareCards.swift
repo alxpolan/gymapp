@@ -92,6 +92,14 @@ struct RecordShareButton: View {
                 .simultaneousGesture(TapGesture().onEnded {
                     PostHogSDK.shared.capture("record_share_tapped", properties: ["exercise": entry.exercise])
                 })
+            } else {
+                // Placeholder: an empty Group may never run .task, leaving the
+                // button invisible forever. Swaps for the ShareLink once ready.
+                Image(systemName: "square.and.arrow.up")
+                    .font(.system(size: 17))
+                    .foregroundColor(.gymAccent)
+                    .padding(8)
+                    .opacity(0.4)
             }
         }
         .task(id: entry.id) {

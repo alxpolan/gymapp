@@ -164,6 +164,20 @@ enum AdvancedAnalytics {
             .sorted { $0.latestOneRepMax > $1.latestOneRepMax }
     }
 
+    /// Exercises trained regularly lately whose estimated strength is flat.
+    static func plateauedExercises(groups: [ExerciseGroup], now: Date = Date(),
+                                   windowDays: Int = 42, minSessions: Int = 4) -> [ProgressTrend] {
+        let calendar = Calendar.current
+        let cutoff = calendar.date(byAdding: .day, value: -windowDays, to: now) ?? now
+        return progressTrends(groups: groups).filter { trend in
+            guard trend.category == .steady,
+                  let group = groups.first(where: { $0.exercise == trend.exercise }) else { return false }
+            let recentDays = Set(group.entries.filter { $0.date >= cutoff }
+                .map { calendar.startOfDay(for: $0.date) })
+            return recentDays.count >= minSessions
+        }
+    }
+
     // MARK: - Muscle-group distribution
 
     static func muscleDistribution(groups: [ExerciseGroup]) -> [MuscleVolume] {

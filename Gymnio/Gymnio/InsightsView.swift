@@ -32,6 +32,7 @@ struct InsightsView: View {
                         } else {
                             overviewCard
                             weeklyVolumeCard
+                            YearHeatmapCard(entries: store.workingEntries)
                         }
                         BodyWeightCard()
 
@@ -42,6 +43,9 @@ struct InsightsView: View {
                             InsightSectionHeader(title: store.t("insights.coach"), isPro: true)
                             ProGate(titleKey: "prolock.title", subtitleKey: "prolock.coach", source: "feature_coach") {
                                 CoachFeedSection()
+                                if !plateauedTrends.isEmpty {
+                                    PlateauCard(trends: plateauedTrends)
+                                }
                             }
                         }
 
@@ -67,6 +71,21 @@ struct InsightsView: View {
                         InsightSectionHeader(title: store.t("insights.trends"), isPro: true)
                         ProGate(titleKey: "prolock.title", subtitleKey: "prolock.trends", source: "feature_trends") {
                             TrendsCard(trends: trends.isEmpty && !premium.isPro ? ProDemoData.trends : trends)
+                        }
+
+                        InsightSectionHeader(title: store.t("insights.trophy.title"), isPro: true)
+                        ProGate(titleKey: "prolock.title", subtitleKey: "prolock.trophy", source: "feature_trophy") {
+                            VStack(spacing: 10) {
+                                TrophyShelfCard(
+                                    records: records.isEmpty && !premium.isPro ? ProDemoData.records : records,
+                                    entries: store.workingEntries)
+                                MonthRecapShareButton(entries: store.workingEntries)
+                            }
+                        }
+
+                        InsightSectionHeader(title: store.t("insights.strength.title"), isPro: true)
+                        ProGate(titleKey: "prolock.title", subtitleKey: "prolock.strength", source: "feature_strength") {
+                            StrengthScoreCard(groups: groups)
                         }
                     }
                 }
@@ -159,6 +178,10 @@ struct InsightsView: View {
     }
 
     // MARK: - Data
+
+    private var plateauedTrends: [ProgressTrend] {
+        AdvancedAnalytics.plateauedExercises(groups: groups)
+    }
 
     private func reload() {
         store.reload()
