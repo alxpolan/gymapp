@@ -30,7 +30,8 @@ struct ProGate<Content: View>: View {
     @State private var showPaywall = false
 
     var body: some View {
-        if premium.isPro {
+        // Where nobody can pay, nobody is locked out either.
+        if premium.isPro || premium.isPaywallSuppressedRegion {
             content()
         } else {
             ZStack {
