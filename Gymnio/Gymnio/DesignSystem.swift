@@ -31,6 +31,22 @@ extension Color {
 // used for the primary action, the selected state and records. Numbers are the hero. Cards are flat with a
 // hairline, no gradients and no blur. Liquid Glass is left to system bars and floating controls.
 
+/// Opaque tab bar for UI tests/screenshots only: the Simulator cannot render
+/// Liquid Glass blur, so scrolled content shows through razor-sharp and reads
+/// as ghosting artifacts in captures. Production keeps the glass bar.
+enum TabBarStyling {
+    static func configureOpaqueTabBar() {
+        let bg = UIColor { traits in
+            traits.userInterfaceStyle == .dark ? UIColor(Color(hex: "1A1A1D")) : UIColor(Color(hex: "FFFFFF"))
+        }
+        let appearance = UITabBarAppearance()
+        appearance.configureWithOpaqueBackground()
+        appearance.backgroundColor = bg
+        UITabBar.appearance().standardAppearance = appearance
+        UITabBar.appearance().scrollEdgeAppearance = appearance
+    }
+}
+
 extension Color {
     static let gymBackground    = Color.dynamic(light: "F4F1EA", dark: "0E0E10")
     static let gymSurface       = Color.dynamic(light: "FFFFFF", dark: "1A1A1D")

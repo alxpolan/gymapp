@@ -13,6 +13,9 @@ struct GymnioApp: App {
 
     init() {
         let isUITesting = ProcessInfo.processInfo.arguments.contains("-ui_testing")
+        if isUITesting {
+            TabBarStyling.configureOpaqueTabBar()
+        }
 
         if !isUITesting {
             let config = PostHogConfig(projectToken: posthogProjectToken, host: posthogHost)
