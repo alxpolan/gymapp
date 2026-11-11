@@ -9,10 +9,6 @@ func formatDuration(_ seconds: TimeInterval) -> String {
     return h > 0 ? String(format: "%d:%02d:%02d", h, m, s) : String(format: "%d:%02d", m, s)
 }
 
-private extension Notification.Name {
-    static let commitOpenWorkoutDrafts = Notification.Name("ActiveWorkoutView.commitOpenDrafts")
-}
-
 // MARK: - Active workout
 
 struct ActiveWorkoutView: View {
@@ -24,6 +20,7 @@ struct ActiveWorkoutView: View {
     @State private var showDiscard = false
     @State private var summary: Workout?
     @State private var note = ""
+    @State private var commitCenter = DraftCommitCenter()
 
     private var exercises: [String] { store.activeWorkout?.exercises ?? [] }
 
@@ -67,7 +64,7 @@ struct ActiveWorkoutView: View {
                         EmptyWorkoutPrompt(onPick: { store.addExerciseToActive($0) }, onBrowse: { showPicker = true })
                     } else {
                         ForEach(exercises, id: \.self) { name in
-                            ExerciseBlock(exercise: name)
+                            ExerciseBlock(exercise: name, commitCenter: commitCenter)
                         }
                         Button { showPicker = true } label: {
                             Label(store.t("workout.addExercise"), systemImage: "plus")
@@ -131,8 +128,9 @@ struct ActiveWorkoutView: View {
 
     private func finish() {
         // A set with weight/reps typed in but never checked off still counts as logged intent;
-        // commit it before deciding the workout is empty, so Finish never surprises the user with Discard.
-        NotificationCenter.default.post(name: .commitOpenWorkoutDrafts, object: nil)
+        // commit it synchronously before counting, so Finish never surprises the user with Discard
+        // and no entry can slip in after the active workout is cleared.
+        for exercise in exercises { commitCenter.committers[exercise]?() }
         let sets = store.workouts.first { $0.id == store.activeWorkout?.id }?.entries.count ?? 0
         if sets == 0 {
             showDiscard = true
@@ -202,10 +200,23 @@ private struct SetDraft: Identifiable {
     var kind: SetKind?
     var rpe: Double?
     var isRecord = false
+    /// True once the user changed anything in this row. Prefilled suggestions
+    /// (copies of last time's sets) must not count as logged intent on their own.
+    var userEdited = false
+}
+
+/// Runs every exercise's draft commit synchronously, in order. Replaces the
+/// previous NotificationCenter broadcast, whose delivery could land after
+/// `finish()` had already counted sets and cleared the active workout — that
+/// committed late entries with a nil workoutId, showing up as a phantom
+/// same-day workout with just the top weights.
+final class DraftCommitCenter {
+    var committers: [String: () -> Void] = [:]
 }
 
 struct ExerciseBlock: View {
     let exercise: String
+    let commitCenter: DraftCommitCenter
     @EnvironmentObject var store: AppStore
     @State private var drafts: [SetDraft] = []
     @State private var showVideo = false
@@ -250,7 +261,7 @@ struct ExerciseBlock: View {
                 SetRow(label: setLabel(index),
                        previousText: previousText(index),
                        type: type,
-                       draft: $drafts[index],
+                       draft: draftBinding(index),
                        onToggle: { toggle(index) },
                        onRemove: { removeDraft(index) })
             }
@@ -267,7 +278,11 @@ struct ExerciseBlock: View {
         .padding(16)
         .frame(maxWidth: .infinity, alignment: .leading)
         .flatSurface(RoundedRectangle(cornerRadius: 14, style: .continuous), selected: inSuperset)
-        .task { loadDrafts() }
+        .task {
+            loadDrafts()
+            commitCenter.committers[exercise] = commitOpenDrafts
+        }
+        .onDisappear { commitCenter.committers.removeValue(forKey: exercise) }
         .sheet(isPresented: $showVideo) {
             if let url = ExerciseCatalog.videoURL(for: exercise) {
                 ExerciseVideoView(url: url).padding(16)
@@ -280,7 +295,6 @@ struct ExerciseBlock: View {
                 .replacingOccurrences(of: ",", with: ".") ?? "") ?? 0)
                 .environmentObject(store)
         }
-        .onReceive(NotificationCenter.default.publisher(for: .commitOpenWorkoutDrafts)) { _ in commitOpenDrafts() }
     }
 
     private var repsHeader: String {
@@ -440,9 +454,23 @@ struct ExerciseBlock: View {
         if index == drafts.count - 1 { drafts.append(nextDraft()) }
     }
 
-    /// Checks off every row that has a valid weight/reps typed in but wasn't tapped as done yet.
+    /// Binding that marks the row user-edited on any change, so Finish can tell
+    /// typed rows apart from untouched prefilled suggestions.
+    private func draftBinding(_ index: Int) -> Binding<SetDraft> {
+        Binding(
+            get: { drafts[index] },
+            set: {
+                var updated = $0
+                updated.userEdited = true
+                drafts[index] = updated
+            }
+        )
+    }
+
+    /// Checks off every row the user typed weight/reps into but never tapped as done.
+    /// Untouched prefilled rows stay out, so an unfinished workout still offers Discard.
     private func commitOpenDrafts() {
-        for index in drafts.indices where drafts[index].entryId == nil {
+        for index in drafts.indices where drafts[index].entryId == nil && drafts[index].userEdited {
             toggle(index)
         }
     }
