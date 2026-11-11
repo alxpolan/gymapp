@@ -23,13 +23,6 @@ struct InsightsView: View {
 
             ScrollView(showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 16) {
-                    HStack {
-                        ScreenTitle(text: store.t("nav.progress"))
-                        Spacer()
-                        if premium.isPro { ProBadge() }
-                    }
-                    .padding(.bottom, 4)
-
                     if store.entries.isEmpty && premium.isPro {
                         emptyState
                         BodyWeightCard()
@@ -78,11 +71,17 @@ struct InsightsView: View {
                     }
                 }
                 .padding(.horizontal, 16)
-                .padding(.top, 40)
+                .padding(.top, 8)
                 .padding(.bottom, 32)
             }
         }
-        .navigationBarHidden(true)
+        .navigationTitle(store.t("nav.progress"))
+        .navigationBarTitleDisplayMode(.large)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                if premium.isPro { ProBadge() }
+            }
+        }
         .onAppear(perform: reload)
         .onChangeCompat(of: store.entries.count) { _ in reload() }
         .onChangeCompat(of: premium.isPro) { _ in reload() }

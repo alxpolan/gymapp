@@ -37,7 +37,6 @@ struct HistoryView: View {
                 Color.gymBackground.ignoresSafeArea()
                 ScrollView(showsIndicators: false) {
                     VStack(alignment: .leading, spacing: 16) {
-                        ScreenTitle(text: store.t("nav.history"))
                         calendarCard
 
                         if visibleWorkouts.isEmpty {
@@ -56,11 +55,12 @@ struct HistoryView: View {
                         }
                     }
                     .padding(.horizontal, 16)
-                    .padding(.top, 24)
+                    .padding(.top, 8)
                     .padding(.bottom, 32)
                 }
             }
-            .navigationBarHidden(true)
+            .navigationTitle(store.t("nav.history"))
+            .navigationBarTitleDisplayMode(.large)
             .navigationDestination(for: String.self) { id in WorkoutDetailView(workoutId: id) }
         }
     }

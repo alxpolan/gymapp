@@ -19,20 +19,12 @@ struct TrainView: View {
         return c
     }
 
-    private var dateText: String {
-        let f = DateFormatter()
-        f.locale = store.locale
-        f.setLocalizedDateFormatFromTemplate("EEEE d MMMM")
-        return f.string(from: Date())
-    }
-
     var body: some View {
         NavigationStack(path: $navPath) {
             ZStack {
                 Color.gymBackground.ignoresSafeArea()
                 ScrollView(showsIndicators: false) {
                     VStack(alignment: .leading, spacing: 16) {
-                        header
                         CloudRestoreBanner()
                         primaryAction
                         RoutinesSection()
@@ -47,11 +39,19 @@ struct TrainView: View {
                         freeLeft
                     }
                     .padding(.horizontal, 16)
-                    .padding(.top, 24)
+                    .padding(.top, 8)
                     .padding(.bottom, 32)
                 }
             }
-            .navigationBarHidden(true)
+            .navigationTitle(store.t("nav.train"))
+            .navigationBarTitleDisplayMode(.large)
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    Button { navPath.append(NavDest.settings) } label: {
+                        Image(systemName: "gearshape.fill")
+                    }
+                }
+            }
             .navigationDestination(for: NavDest.self) { _ in SettingsView() }
             .navigationDestination(for: String.self) { id in WorkoutDetailView(workoutId: id) }
         }
@@ -61,21 +61,6 @@ struct TrainView: View {
             store.reviewPending = false
             UserDefaults.standard.set(true, forKey: "review_requested_at_10")
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.6) { requestReview() }
-        }
-    }
-
-    // MARK: Header
-
-    private var header: some View {
-        HStack(alignment: .top) {
-            VStack(alignment: .leading, spacing: 2) {
-                ScreenTitle(text: store.t("nav.train"))
-                Text(dateText)
-                    .font(.system(size: 14, weight: .medium))
-                    .foregroundColor(.gymTextSecondary)
-            }
-            Spacer()
-            GlassCircleButton(icon: "gearshape.fill") { navPath.append(NavDest.settings) }
         }
     }
 

@@ -107,18 +107,6 @@ struct Card<Content: View>: View {
 /// Old name, kept so existing screens compile while they are rebuilt.
 typealias GlassCard<Content: View> = Card<Content>
 
-// MARK: - Screen Title
-
-struct ScreenTitle: View {
-    let text: String
-    var body: some View {
-        Text(text)
-            .font(.system(size: 32, weight: .heavy))
-            .tracking(-0.5)
-            .foregroundColor(.gymText)
-    }
-}
-
 // MARK: - Secondary Text
 
 struct SecondaryText: ViewModifier {

@@ -12,13 +12,6 @@ struct ExercisesView: View {
 
             ScrollView(showsIndicators: false) {
                 VStack(alignment: .leading, spacing: 12) {
-                    HStack {
-                        ScreenTitle(text: store.t("nav.exercises"))
-                        Spacer()
-                        GlassCircleButton(icon: "plus") { store.showAddExercise = true }
-                    }
-                    .padding(.bottom, 4)
-
                     if groups.isEmpty {
                         VStack(spacing: 12) {
                             Image(systemName: "dumbbell")
@@ -46,11 +39,19 @@ struct ExercisesView: View {
                     }
                 }
                 .padding(.horizontal, 16)
-                .padding(.top, 40)
+                .padding(.top, 8)
                 .padding(.bottom, 32)
             }
         }
-        .navigationBarHidden(true)
+        .navigationTitle(store.t("nav.exercises"))
+        .navigationBarTitleDisplayMode(.large)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button { store.showAddExercise = true } label: {
+                    Image(systemName: "plus")
+                }
+            }
+        }
         .onAppear(perform: reload)
         .onChangeCompat(of: store.exercises) { _ in reload() }
     }
