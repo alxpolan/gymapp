@@ -12,6 +12,7 @@ final class RestTimerManager: ObservableObject {
 
     private let notificationID = "rest_timer_end"
     private var endTask: Task<Void, Never>?
+    private let swapper = ActivitySwapper()
     private var lastExercise = ""
     /// When the running countdown ends (nil = no rest running). Drives the in-app rest bar.
     @Published private(set) var endDate: Date?
@@ -28,10 +29,14 @@ final class RestTimerManager: ObservableObject {
         scheduleNotification(seconds: seconds, store: store)
 
         if #available(iOS 16.2, *) {
-            // End a previous activity first, then request the new one in the same task so they cannot race.
-            Task {
-                await endAll()
-                startActivity(exercise: exercise, start: start, end: end, store: store)
+            // Serialized replacement: newer requests overwrite pending ones and
+            // every runner ends stale activities before requesting, so rapid sets
+            // converge on exactly one Live Activity instead of one per set.
+            Task { [self] in
+                await swapper.submit {
+                    await self.endAll()
+                    self.startActivity(exercise: exercise, start: start, end: end, store: store)
+                }
             }
         }
         PostHogSDK.shared.capture("rest_timer_started", properties: ["seconds": seconds])
@@ -48,7 +53,7 @@ final class RestTimerManager: ObservableObject {
         reset()
         endDate = nil
         if #available(iOS 16.2, *) {
-            Task { await endAll() }
+            Task { [self] in await swapper.submit { await self.endAll() } }
         }
     }
 
@@ -113,5 +118,28 @@ final class RestTimerManager: ObservableObject {
         for activity in Activity<RestTimerAttributes>.activities {
             await activity.end(nil, dismissalPolicy: .immediate)
         }
+    }
+}
+
+/// Serializes Live Activity replacement. Newer requests overwrite pending ones
+/// and a single drainer runs them one at a time, so no stale end-call can kill
+/// the winner after the fact and rapid starts converge on one activity.
+private actor ActivitySwapper {
+    private var pending: (() async -> Void)?
+    private var draining = false
+
+    func submit(_ work: @escaping () async -> Void) {
+        pending = work
+        guard !draining else { return }
+        draining = true
+        Task { await drain() }
+    }
+
+    private func drain() async {
+        while let work = pending {
+            pending = nil
+            await work()
+        }
+        draining = false
     }
 }
