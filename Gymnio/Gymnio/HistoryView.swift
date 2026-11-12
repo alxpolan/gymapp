@@ -163,6 +163,9 @@ struct WorkoutDetailView: View {
     @State private var editing: WorkoutEntry?
     @State private var showDatePicker = false
     @State private var newDate = Date()
+    @State private var showRenameAlert = false
+    @State private var renameText = ""
+    @State private var routineSaved = false
 
     private var workout: Workout? { store.workouts.first { $0.id == workoutId } }
 
@@ -181,7 +184,11 @@ struct WorkoutDetailView: View {
                 ScrollView(showsIndicators: false) {
                     VStack(alignment: .leading, spacing: 16) {
                         VStack(alignment: .leading, spacing: 4) {
-                            EditableWorkoutTitle(workout: workout, font: .system(size: 26, weight: .heavy))
+                            Text(store.title(for: workout))
+                                .font(.system(size: 26, weight: .heavy))
+                                .foregroundColor(.gymText)
+                                .lineLimit(1)
+                                .truncationMode(.tail)
                             Text(titleText)
                                 .font(.system(size: 14, weight: .medium))
                                 .foregroundColor(.gymTextSecondary)
@@ -194,6 +201,10 @@ struct WorkoutDetailView: View {
                                 StatNumber(value: "\(formatWeightValue(store.displayWeight(workout.volumeKg).rounded())) \(store.unitLabel)",
                                            label: store.t("summary.volume"))
                             }
+                        }
+
+                        AccentButton(label: store.t("detail.repeat"), disabled: false) {
+                            store.repeatWorkout(workout)
                         }
 
                         if let note = store.note(for: workout.id) {
@@ -237,39 +248,62 @@ struct WorkoutDetailView: View {
                             }
                         }
 
-                        AccentButton(label: store.t("detail.repeat"), disabled: false) {
-                            store.repeatWorkout(workout)
+                    }
+                    .padding(.horizontal, 16)
+                    .padding(.top, 12)
+                    .padding(.bottom, 32)
+                }
+            }
+        }
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                if let workout {
+                    Menu {
+                        Button {
+                            renameText = store.title(for: workout)
+                            showRenameAlert = true
+                        } label: {
+                            Label(store.t("history.rename.title"), systemImage: "pencil")
                         }
-                        .padding(.top, 4)
-
-                        SaveAsRoutineButton(workout: workout)
-                            .frame(maxWidth: .infinity)
-
+                        if let linked = store.linkedRoutine(for: workout.id), store.routineDiffers(linked, from: workout) {
+                            Button {
+                                store.updateRoutine(linked, from: workout)
+                            } label: {
+                                Label(String(format: store.t("routines.update"), linked.name), systemImage: "arrow.triangle.2.circlepath")
+                            }
+                        } else if store.canAddRoutine && !routineSaved {
+                            Button {
+                                let number = store.routines.count + 1
+                                let routine = store.routine(from: workout, name: String(format: store.t("routines.defaultName"), number))
+                                routineSaved = store.saveRoutine(routine, source: "workout")
+                            } label: {
+                                Label(store.t("routines.saveFromWorkout"), systemImage: "square.and.arrow.down")
+                            }
+                        }
                         Button {
                             newDate = workout.start
                             showDatePicker = true
                         } label: {
                             Label(store.t("history.changeDate"), systemImage: "calendar")
-                                .font(.system(size: 15, weight: .semibold))
-                                .foregroundColor(.gymAccent)
-                                .frame(maxWidth: .infinity)
                         }
-
                         Button(role: .destructive) { showDelete = true } label: {
-                            Text(store.t("history.deleteWorkout"))
-                                .font(.system(size: 15, weight: .semibold))
-                                .foregroundColor(.gymDestructive)
-                                .frame(maxWidth: .infinity)
-                                .padding(.vertical, 8)
+                            Label(store.t("history.deleteWorkout"), systemImage: "trash")
                         }
-                        .padding(.bottom, 32)
+                    } label: {
+                        Image(systemName: "ellipsis.circle")
+                            .font(.system(size: 17))
                     }
-                    .padding(.horizontal, 16)
-                    .padding(.top, 12)
                 }
             }
         }
-        .navigationBarTitleDisplayMode(.inline)
+        .alert(store.t("history.rename.title"), isPresented: $showRenameAlert) {
+            TextField(store.t("history.rename.placeholder"), text: $renameText)
+            Button(store.t("common.cancel"), role: .cancel) {}
+            Button(store.t("common.save")) {
+                if let workout { store.renameWorkout(workout, to: renameText) }
+            }
+        }
         .sheet(isPresented: $showDatePicker) {
             VStack(spacing: 16) {
                 DatePicker("", selection: $newDate, in: ...Date(), displayedComponents: [.date, .hourAndMinute])
