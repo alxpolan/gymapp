@@ -944,16 +944,32 @@ final class AppStore: ObservableObject {
 
     /// Three months of realistic training (push / pull / legs, progressive overload), routines, body weight and,
     /// with `-ui_test_active_workout`, a training in progress. Exercise names stay English so the demo videos match.
+    ///
+    /// Numbers are authored directly in whichever unit the device shows (kg or lbs) so screenshots never display
+    /// a raw unit conversion (e.g. "62.83 lbs" from a 28.5 kg plan); `toKg` converts only right before storage,
+    /// since `WorkoutEntry`/`BodyWeightEntry` always persist kg. `weightUnit` isn't populated yet at this point
+    /// in app startup (this runs before `loadAll()`), so the unit is derived the same way `loadAll()` does.
     private func seedDemoDataForUITests(activeWorkoutDemo: Bool) {
         let calendar = Calendar.current
         let isDE = (Locale.preferredLanguages.first ?? "en").hasPrefix("de")
+        let isLbs = (defaults.string(forKey: weightUnitKey) ?? (Locale.current.measurementSystem == .us ? "lbs" : "kg")) == "lbs"
+        let toKg: (Double) -> Double = { isLbs ? $0 / 2.20462 : $0 }
         typealias Plan = (name: String, sets: Int, base: Double, step: Double, reps: Int)
-        let push: [Plan] = [("Bench Press", 4, 70, 1.25, 6), ("Incline Dumbbell Press", 3, 24, 0.5, 10),
-                            ("Dumbbell Fly", 3, 12, 0.25, 12), ("Dips", 3, 0, 0, 10)]
-        let pull: [Plan] = [("Barbell Row", 4, 60, 1.25, 8), ("Lat Pulldown", 3, 55, 1, 10), ("Face Pull", 3, 25, 0.5, 15)]
-        let legs: [Plan] = [("Squat", 4, 90, 2.5, 6), ("Leg Press", 3, 160, 5, 10),
-                            ("Romanian Deadlift", 3, 80, 2.5, 8), ("Standing Calf Raise", 4, 60, 2.5, 12)]
+        let push: [Plan] = isLbs
+            ? [("Bench Press", 4, 135, 5, 6), ("Incline Dumbbell Press", 3, 50, 2.5, 10),
+               ("Dumbbell Fly", 3, 20, 2.5, 12), ("Dips", 3, 0, 0, 10)]
+            : [("Bench Press", 4, 70, 1.25, 6), ("Incline Dumbbell Press", 3, 24, 0.5, 10),
+               ("Dumbbell Fly", 3, 12, 0.25, 12), ("Dips", 3, 0, 0, 10)]
+        let pull: [Plan] = isLbs
+            ? [("Barbell Row", 4, 115, 5, 8), ("Lat Pulldown", 3, 100, 5, 10), ("Face Pull", 3, 35, 2.5, 15)]
+            : [("Barbell Row", 4, 60, 1.25, 8), ("Lat Pulldown", 3, 55, 1, 10), ("Face Pull", 3, 25, 0.5, 15)]
+        let legs: [Plan] = isLbs
+            ? [("Squat", 4, 185, 10, 6), ("Leg Press", 3, 315, 10, 10),
+               ("Romanian Deadlift", 3, 155, 10, 8), ("Standing Calf Raise", 4, 115, 10, 12)]
+            : [("Squat", 4, 90, 2.5, 6), ("Leg Press", 3, 160, 5, 10),
+               ("Romanian Deadlift", 3, 80, 2.5, 8), ("Standing Calf Raise", 4, 60, 2.5, 12)]
         let days = [push, pull, legs]
+        let roundingStep: Double = isLbs ? 5 : 2.5
         let names = isDE ? ["Push", "Pull", "Beine"] : ["Push", "Pull", "Legs"]
 
         for plan in days.flatMap({ $0 }) { storage.addExercise(plan.name) }
@@ -970,12 +986,13 @@ final class AppStore: ObservableObject {
                 for (index, item) in days[slot].enumerated() {
                     let weight = item.base + item.step * Double(9 - week)
                     if index == 0 {
-                        seeded.append(WorkoutEntry.create(exercise: item.name, weight: (weight * 0.5 / 2.5).rounded() * 2.5,
+                        let warmupWeight = (weight * 0.5 / roundingStep).rounded() * roundingStep
+                        seeded.append(WorkoutEntry.create(exercise: item.name, weight: toKg(warmupWeight),
                                                           reps: 10, date: time, workoutId: workoutId, kind: .warmup))
                         time = time.addingTimeInterval(150)
                     }
                     for _ in 0..<item.sets {
-                        seeded.append(WorkoutEntry.create(exercise: item.name, weight: weight, reps: item.reps,
+                        seeded.append(WorkoutEntry.create(exercise: item.name, weight: toKg(weight), reps: item.reps,
                                                           date: time, workoutId: workoutId))
                         time = time.addingTimeInterval(170)
                     }
@@ -991,10 +1008,12 @@ final class AppStore: ObservableObject {
         }
         if let data = try? JSONEncoder().encode(routines) { defaults.set(data, forKey: routinesKey) }
 
-        let weights: [Double] = [82.4, 82.1, 82.0, 81.7, 81.6, 81.2, 81.3, 80.9, 80.8, 80.6, 80.7, 80.4]
-        let bodyWeights = weights.enumerated().compactMap { index, kg -> BodyWeightEntry? in
+        let weights: [Double] = isLbs
+            ? [182, 181, 181, 180, 180, 179, 179, 179, 178, 178, 178, 177]
+            : [82.4, 82.1, 82.0, 81.7, 81.6, 81.2, 81.3, 80.9, 80.8, 80.6, 80.7, 80.4]
+        let bodyWeights = weights.enumerated().compactMap { index, value -> BodyWeightEntry? in
             guard let date = calendar.date(byAdding: .day, value: -7 * (weights.count - 1 - index), to: Date()) else { return nil }
-            return BodyWeightEntry(id: "demo-bw-\(index)", date: date, kg: kg)
+            return BodyWeightEntry(id: "demo-bw-\(index)", date: date, kg: toKg(value))
         }
         if let data = try? JSONEncoder().encode(bodyWeights) { defaults.set(data, forKey: bodyWeightKey) }
         defaults.set(3, forKey: weeklyGoalKey)
@@ -1004,9 +1023,11 @@ final class AppStore: ObservableObject {
             var active = ActiveWorkout(id: "demo-active", startedAt: started, exercises: ["Bench Press", "Incline Dumbbell Press"])
             active.plannedSets = ["Bench Press": 4, "Incline Dumbbell Press": 3]
             if let data = try? JSONEncoder().encode(active) { defaults.set(data, forKey: activeWorkoutKey) }
-            let logged: [(Double, Int, SetKind?)] = [(40, 10, .warmup), (80, 6, nil), (80, 6, nil)]
+            let logged: [(Double, Int, SetKind?)] = isLbs
+                ? [(90, 10, .warmup), (180, 6, nil), (180, 6, nil)]
+                : [(40, 10, .warmup), (80, 6, nil), (80, 6, nil)]
             for (offset, set) in logged.enumerated() {
-                storage.saveEntry(WorkoutEntry.create(exercise: "Bench Press", weight: set.0, reps: set.1,
+                storage.saveEntry(WorkoutEntry.create(exercise: "Bench Press", weight: toKg(set.0), reps: set.1,
                                                       date: started.addingTimeInterval(Double(offset) * 170 + 60),
                                                       workoutId: "demo-active", kind: set.2))
             }
