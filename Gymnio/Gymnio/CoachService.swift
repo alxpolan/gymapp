@@ -170,7 +170,21 @@ final class CoachService {
 
     private func recentSets(_ entries: [WorkoutEntry], limit: Int, store: AppStore) -> [[String: Any]] {
         entries.sorted(by: { WorkoutEntry.chronological($0, $1) }).suffix(limit).map { entry in
-            ["d": daysAgo(entry.date), "w": round1(store.displayWeight(entry.weight)), "r": entry.reps]
+            ["d": daysAgo(entry.date), "w": round1(store.displayWeight(entry.weight)), "r": entry.reps, "warmup": entry.isWarmup]
+        }
+    }
+
+    /// Per-session summary (working sets only), newest first: how many sets and the heaviest weight that day.
+    /// A short session (fewer sets than usual, e.g. cut off by time) must read as that, not as a strength drop —
+    /// a flat list of the last N sets can't tell the two apart, since a rushed session's last set is just lighter,
+    /// not representative of the user's actual current level.
+    private func sessionSummaries(_ entries: [WorkoutEntry], limit: Int, store: AppStore) -> [[String: Any]] {
+        Workout.group(entries).prefix(limit).map { session in
+            let working = session.workingEntries
+            let top = working.map { $0.weight }.max() ?? 0
+            let topReps = working.first { $0.weight == top }?.reps ?? 0
+            return ["d": daysAgo(session.start), "sets": working.count,
+                    "topWeight": round1(store.displayWeight(top)), "topReps": topReps]
         }
     }
 
@@ -231,6 +245,10 @@ final class CoachService {
     }
 
     private func nextSetData(store: AppStore, group: ExerciseGroup) -> [String: Any] {
-        ["exercise": group.exercise, "recent": recentSets(group.entries, limit: 12, store: store)]
+        [
+            "exercise": group.exercise,
+            "recent": recentSets(group.entries, limit: 12, store: store),
+            "sessions": sessionSummaries(group.entries, limit: 6, store: store)
+        ]
     }
 }
