@@ -716,14 +716,19 @@ struct WorkoutSummaryView: View {
     @State private var remindersOn = false
 
     /// Exercises where this training beat the best estimated 1RM from earlier trainings.
-    private var records: [(exercise: String, oneRM: Double)] {
+    /// Carries the actual best set (not just the estimated 1RM) so the UI can show a weight the user really lifted.
+    private var records: [(exercise: String, oneRM: Double, weight: Double, reps: Int)] {
         let earlier = store.workingEntries.filter { $0.workoutId != workout.id && $0.date < workout.start }
         return workout.exercises.compactMap { name in
             let before = earlier.filter { $0.exercise == name }
                 .map { AdvancedAnalytics.estimatedOneRepMax(weight: $0.weight, reps: $0.reps) }.max() ?? 0
-            let now = workout.sets(for: name).filter { !$0.isWarmup }
-                .map { AdvancedAnalytics.estimatedOneRepMax(weight: $0.weight, reps: $0.reps) }.max() ?? 0
-            return before > 0 && now > before ? (name, now) : nil
+            let sets = workout.sets(for: name).filter { !$0.isWarmup }
+            guard let best = sets.max(by: {
+                AdvancedAnalytics.estimatedOneRepMax(weight: $0.weight, reps: $0.reps)
+                    < AdvancedAnalytics.estimatedOneRepMax(weight: $1.weight, reps: $1.reps)
+            }) else { return nil }
+            let now = AdvancedAnalytics.estimatedOneRepMax(weight: best.weight, reps: best.reps)
+            return before > 0 && now > before ? (name, now, best.weight, best.reps) : nil
         }
     }
 
@@ -754,15 +759,20 @@ struct WorkoutSummaryView: View {
                     Card(leftAccent: true) {
                         VStack(alignment: .leading, spacing: 10) {
                             ForEach(records, id: \.exercise) { record in
-                                HStack {
+                                HStack(alignment: .top) {
                                     RecordBadge()
                                     Text(record.exercise)
                                         .font(.system(size: 16, weight: .semibold))
                                         .foregroundColor(.gymText)
                                     Spacer()
-                                    Text("\(formatWeightValue(store.displayWeight(record.oneRM, for: record.exercise))) \(store.unitLabel(for: record.exercise))")
-                                        .gymNumber(15, weight: .bold)
-                                        .foregroundColor(.gymAccent)
+                                    VStack(alignment: .trailing, spacing: 2) {
+                                        Text("\(formatWeightValue(store.displayWeight(record.weight, for: record.exercise))) \(store.unitLabel(for: record.exercise)) × \(record.reps)")
+                                            .gymNumber(15, weight: .bold)
+                                            .foregroundColor(.gymAccent)
+                                        Text("\(store.t("insights.records.e1rm")) \(formatWeightValue(store.displayWeight(record.oneRM, for: record.exercise))) \(store.unitLabel(for: record.exercise))")
+                                            .font(.system(size: 10))
+                                            .foregroundColor(.gymTextSecondary)
+                                    }
                                 }
                             }
                         }
