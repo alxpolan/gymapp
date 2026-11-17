@@ -367,9 +367,17 @@ struct ExerciseBlock: View {
 
     private func loadDrafts() {
         guard drafts.isEmpty else { return }
+        // Recompute each logged set's PR badge the same way `toggle` did when it was checked off,
+        // so leaving and reopening the workout doesn't make an earlier PR badge vanish.
+        let activeId = store.activeWorkout?.id
+        let earlier = store.workingEntries.filter { $0.exercise == exercise && $0.workoutId != activeId }
+        let hasEarlier = !earlier.isEmpty
+        var runningBest = earlier.map { score($0.weight, $0.reps) }.max() ?? 0
         drafts = store.entriesForActive(exercise: exercise).map { entry in
-            SetDraft(weight: formatWeightValue(store.displayWeight(entry.weight, for: exercise)), reps: "\(entry.reps)",
-                     entryId: entry.id, kind: entry.kind, rpe: entry.rpe)
+            let isRecord = hasEarlier && entry.kind != .warmup && score(entry.weight, entry.reps) > runningBest
+            if isRecord { runningBest = score(entry.weight, entry.reps) }
+            return SetDraft(weight: formatWeightValue(store.displayWeight(entry.weight, for: exercise)), reps: "\(entry.reps)",
+                             entryId: entry.id, kind: entry.kind, rpe: entry.rpe, isRecord: isRecord)
         }
         drafts.append(nextDraft())
         let planned = store.activeWorkout?.plannedSets[exercise] ?? 0
@@ -475,14 +483,16 @@ struct ExerciseBlock: View {
         }
     }
 
+    /// Comparable strength for one set: estimated 1RM for weighted exercises, reps (with weight as tiebreaker) otherwise.
+    private func score(_ w: Double, _ r: Int) -> Double {
+        type == .weightReps ? AdvancedAnalytics.estimatedOneRepMax(weight: w, reps: r) : Double(r) + w * 1000
+    }
+
     /// True when this set is better than anything logged for the exercise before this training.
     private func beatsRecord(weightKg: Double, reps: Int) -> Bool {
         let activeId = store.activeWorkout?.id
         let earlier = store.workingEntries.filter { $0.exercise == exercise && $0.workoutId != activeId }
         guard !earlier.isEmpty else { return false }
-        func score(_ w: Double, _ r: Int) -> Double {
-            type == .weightReps ? AdvancedAnalytics.estimatedOneRepMax(weight: w, reps: r) : Double(r) + w * 1000
-        }
         let best = earlier.map { score($0.weight, $0.reps) }.max() ?? 0
         let sameWorkout = store.entriesForActive(exercise: exercise).filter { !$0.isWarmup }.map { score($0.weight, $0.reps) }.max() ?? 0
         let candidate = score(weightKg, reps)
