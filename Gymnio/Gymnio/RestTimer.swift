@@ -14,6 +14,7 @@ final class RestTimerManager: ObservableObject {
     private var endTask: Task<Void, Never>?
     private let swapper = ActivitySwapper()
     private var lastExercise = ""
+    private var activeStart: Date?
     /// When the running countdown ends (nil = no rest running). Drives the in-app rest bar.
     @Published private(set) var endDate: Date?
 
@@ -25,6 +26,7 @@ final class RestTimerManager: ObservableObject {
 
         let start = Date()
         let end = start.addingTimeInterval(TimeInterval(seconds))
+        activeStart = start
         endDate = end
         scheduleNotification(seconds: seconds, store: store)
 
@@ -42,16 +44,30 @@ final class RestTimerManager: ObservableObject {
         PostHogSDK.shared.capture("rest_timer_started", properties: ["seconds": seconds])
     }
 
-    /// Adds or removes seconds from the running countdown.
+    /// Adds or removes seconds from the running countdown. Updates the existing Live Activity in
+    /// place instead of ending and re-requesting one — the exercise hasn't changed, and ending an
+    /// activity the system just showed can leave it on screen a little longer, so rapid +15/-15
+    /// taps used to pile up extra activities instead of adjusting the one already running.
     func adjust(by delta: Int, store: AppStore) {
-        guard let endDate else { return }
+        guard let endDate, let activeStart else { return }
         let remaining = Int(endDate.timeIntervalSinceNow.rounded()) + delta
-        if remaining <= 0 { cancel() } else { start(exercise: lastExercise, store: store, seconds: remaining) }
+        guard remaining > 0 else { cancel(); return }
+        endTask?.cancel()
+        UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [notificationID])
+
+        let newEnd = Date().addingTimeInterval(TimeInterval(remaining))
+        self.endDate = newEnd
+        scheduleNotification(seconds: remaining, store: store)
+
+        if #available(iOS 16.2, *) {
+            Task { [self] in await swapper.submit { await self.updateActivity(start: activeStart, end: newEnd) } }
+        }
     }
 
     func cancel() {
         reset()
         endDate = nil
+        activeStart = nil
         if #available(iOS 16.2, *) {
             Task { [self] in await swapper.submit { await self.endAll() } }
         }
@@ -110,6 +126,23 @@ final class RestTimerManager: ObservableObject {
             }
         } catch {
             PostHogSDK.shared.capture("rest_timer_activity_failed", properties: ["error": error.localizedDescription])
+        }
+    }
+
+    /// Adjusts the running activity's countdown without ending and re-requesting it.
+    @available(iOS 16.2, *)
+    private func updateActivity(start: Date, end: Date) async {
+        guard let activity = Activity<RestTimerAttributes>.activities.first else { return }
+        var state = activity.content.state
+        state.startDate = start
+        state.endDate = end
+        await activity.update(ActivityContent(state: state, staleDate: end))
+        endTask?.cancel()
+        let delay = end.timeIntervalSinceNow + 8
+        endTask = Task {
+            try? await Task.sleep(nanoseconds: UInt64(max(delay, 0) * 1_000_000_000))
+            guard !Task.isCancelled else { return }
+            await activity.end(nil, dismissalPolicy: .immediate)
         }
     }
 
