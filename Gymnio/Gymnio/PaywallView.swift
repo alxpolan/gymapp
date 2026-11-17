@@ -8,12 +8,14 @@ import PostHog
 struct PaywallView: View {
     let source: String
 
+    @EnvironmentObject var store: AppStore
     @EnvironmentObject var premium: PremiumManager
     @Environment(\.dismiss) private var dismiss
 
     @State private var appearDate = Date()
     @State private var offering: Offering?
     @State private var offeringLoaded = false
+    @State private var purchased = false
 
     var body: some View {
         Group {
@@ -34,7 +36,10 @@ struct PaywallView: View {
                 )
             }
         }
-        .onPurchaseCompleted { _, _ in dismiss() }
+        .onPurchaseCompleted { _, _ in
+            purchased = true
+            dismiss()
+        }
         .task {
             offering = await premium.offering(for: source)
             offeringLoaded = true
@@ -49,6 +54,13 @@ struct PaywallView: View {
                 "source": source,
                 "time_on_paywall_ms": Int(Date().timeIntervalSince(appearDate) * 1000)
             ])
+            if purchased {
+                store.resumePendingActionAfterPurchase()
+            } else {
+                // User backed out without buying — don't let a stale pending routine
+                // resume later from an unrelated paywall.
+                store.pendingRoutine = nil
+            }
         }
     }
 }

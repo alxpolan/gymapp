@@ -18,6 +18,8 @@ final class AppStore: ObservableObject {
     @Published var showAddExercise: Bool = false
     @Published var forceMorningGreeting: Bool = false
     @Published var paywallRequest: PaywallRequest?
+    /// Routine the user tried to start right before hitting the paywall; resumed after purchase.
+    var pendingRoutine: Routine?
     @Published var showOnboarding: Bool = false
     @Published var restSeconds: Int = 90
     @Published var activeWorkout: ActiveWorkout?
@@ -478,11 +480,22 @@ final class AppStore: ObservableObject {
     }
 
     func startRoutine(_ routine: Routine) {
-        guard startWorkout(source: "routine") else { return }
+        guard startWorkout(source: "routine") else {
+            pendingRoutine = routine
+            return
+        }
+        pendingRoutine = nil
         if var active = activeWorkout { active.routineId = routine.id; setActiveWorkout(active) }
         for ex in routine.exercises { addExerciseToActive(ex.name, plannedSets: ex.sets) }
         PostHogSDK.shared.capture("routine_started", properties: ["exercises": routine.exercises.count])
         showActiveWorkout = true
+    }
+
+    /// Resumes a routine start that was interrupted by the paywall, once the user has purchased.
+    func resumePendingActionAfterPurchase() {
+        guard let routine = pendingRoutine else { return }
+        pendingRoutine = nil
+        startRoutine(routine)
     }
 
     /// Moves a routine up (-1) or down (+1) in the list.
