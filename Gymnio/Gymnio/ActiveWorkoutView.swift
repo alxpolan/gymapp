@@ -283,6 +283,11 @@ struct ExerciseBlock: View {
             commitCenter.committers[exercise] = commitOpenDrafts
         }
         .onDisappear { commitCenter.committers.removeValue(forKey: exercise) }
+        .onReceive(NotificationCenter.default.publisher(for: .liveActivitySetLogged)) { note in
+            guard (note.userInfo?["exercise"] as? String) == exercise else { return }
+            drafts = []
+            loadDrafts()
+        }
         .sheet(isPresented: $showVideo) {
             if let url = ExerciseCatalog.videoURL(for: exercise) {
                 ExerciseVideoView(url: url).padding(16)

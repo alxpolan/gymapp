@@ -85,6 +85,7 @@ struct ContentView: View {
             if phase == .active {
                 store.trackSessionStart()
                 RestTimerManager.shared.endExpired()
+                store.consumePendingLiveActivitySets()
             }
         }
         .tint(Color.gymAccent)

@@ -24,6 +24,7 @@ struct RestTimerLiveActivity: Widget {
                             .font(.system(size: 15, weight: .medium))
                             .lineLimit(1)
                         RestProgress(context: context)
+                        LogSetButton(context: context)
                     }
                 }
             } compactLeading: {
@@ -61,6 +62,7 @@ struct RestTimerLockScreenView: View {
                 RestCountdown(context: context, size: 34)
             }
             RestProgress(context: context)
+            LogSetButton(context: context)
         }
         .padding(16)
     }
@@ -86,6 +88,32 @@ struct RestCountdown: View {
             }
         }
         .foregroundColor(.white)
+    }
+}
+
+/// The interactive "log this set" row. Hidden when the app couldn't suggest a weight — e.g. a
+/// brand-new exercise — since there's nothing to log without opening the app. Interactive Live
+/// Activity buttons need iOS 17; on 16.2–16.x the rest timer still works, just without this row.
+struct LogSetButton: View {
+    let context: ActivityViewContext<RestTimerAttributes>
+
+    var body: some View {
+        if #available(iOS 17.0, *),
+           let weightKg = context.state.nextSetWeightKg, let reps = context.state.nextSetReps,
+           !(context.isStale || context.state.endDate <= Date()) {
+            Button(intent: LogSetFromActivityIntent(exercise: context.attributes.exerciseName, weightKg: weightKg, reps: reps)) {
+                HStack {
+                    Image(systemName: "checkmark.circle.fill")
+                    Text(context.attributes.logLabel)
+                    if let display = context.state.nextSetDisplay {
+                        Text(display).opacity(0.8)
+                    }
+                    Spacer()
+                }
+                .font(.system(size: 14, weight: .semibold))
+            }
+            .tint(Color(red: 0.31, green: 0.80, blue: 0.77))
+        }
     }
 }
 

@@ -31,13 +31,14 @@ final class RestTimerManager: ObservableObject {
         scheduleNotification(seconds: seconds, store: store)
 
         if #available(iOS 16.2, *) {
+            let suggestion = store.suggestedNextSet(for: exercise)
             // Serialized replacement: newer requests overwrite pending ones and
             // every runner ends stale activities before requesting, so rapid sets
             // converge on exactly one Live Activity instead of one per set.
             Task { [self] in
                 await swapper.submit {
                     await self.endAll()
-                    self.startActivity(exercise: exercise, start: start, end: end, store: store)
+                    self.startActivity(exercise: exercise, start: start, end: end, suggestion: suggestion, store: store)
                 }
             }
         }
@@ -106,14 +107,21 @@ final class RestTimerManager: ObservableObject {
     // MARK: - Live Activity
 
     @available(iOS 16.2, *)
-    private func startActivity(exercise: String, start: Date, end: Date, store: AppStore) {
+    private func startActivity(exercise: String, start: Date, end: Date,
+                                suggestion: (weightKg: Double, reps: Int)?, store: AppStore) {
         guard ActivityAuthorizationInfo().areActivitiesEnabled else { return }
         let attributes = RestTimerAttributes(
             exerciseName: exercise,
             restLabel: store.t("liveactivity.rest"),
-            overLabel: store.t("liveactivity.rest.over")
+            overLabel: store.t("liveactivity.rest.over"),
+            logLabel: store.t("liveactivity.log")
         )
-        let state = RestTimerAttributes.ContentState(startDate: start, endDate: end)
+        var state = RestTimerAttributes.ContentState(startDate: start, endDate: end)
+        if let suggestion {
+            state.nextSetWeightKg = suggestion.weightKg
+            state.nextSetReps = suggestion.reps
+            state.nextSetDisplay = store.shortSetText(exercise: exercise, weightKg: suggestion.weightKg, reps: suggestion.reps)
+        }
         let content = ActivityContent(state: state, staleDate: end)
         do {
             let activity = try Activity.request(attributes: attributes, content: content, pushType: nil)
@@ -144,6 +152,17 @@ final class RestTimerManager: ObservableObject {
             guard !Task.isCancelled else { return }
             await activity.end(nil, dismissalPolicy: .immediate)
         }
+    }
+
+    /// Mirrors the in-app rest bar to a countdown the extension already restarted on the Live
+    /// Activity directly (via its App Intent), so reopening the app doesn't show a stale/missing bar.
+    @available(iOS 16.2, *)
+    func syncFromRunningActivity(exercise: String) {
+        guard let activity = Activity<RestTimerAttributes>.activities.first,
+              activity.content.state.endDate > Date() else { return }
+        lastExercise = exercise
+        activeStart = activity.content.state.startDate
+        endDate = activity.content.state.endDate
     }
 
     @available(iOS 16.2, *)

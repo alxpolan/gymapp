@@ -301,6 +301,26 @@ final class AppStore: ObservableObject {
         }
     }
 
+    /// Same formatting as `shortSetText(_:)`, for a set that isn't logged yet (e.g. the Live Activity's suggestion).
+    func shortSetText(exercise: String, weightKg: Double, reps: Int) -> String {
+        shortSetText(WorkoutEntry.create(exercise: exercise, weight: weightKg, reps: reps))
+    }
+
+    /// Suggests weight/reps for the set after the one just logged, the same way the active-workout
+    /// screen prefills a row: the matching set from last time, or a repeat of the last set once
+    /// history runs out. Nil when nothing is known yet (duration exercises, or a brand-new exercise).
+    func suggestedNextSet(for exercise: String) -> (weightKg: Double, reps: Int)? {
+        guard exerciseType(for: exercise) != .duration else { return nil }
+        let done = entriesForActive(exercise: exercise).filter { !$0.isWarmup }
+        let previous = previousSets(for: exercise)
+        if done.count < previous.count {
+            let p = previous[done.count]
+            return (p.weight, p.reps)
+        }
+        if let last = done.last { return (last.weight, last.reps) }
+        return nil
+    }
+
     func restDuration(for exercise: String) -> Int { exerciseMeta[exercise]?.restSeconds ?? restSeconds }
 
     func setExerciseType(_ type: ExerciseType?, rest: Int?, unit: String? = nil, for exercise: String) {
@@ -824,6 +844,22 @@ final class AppStore: ObservableObject {
         PostHogSDK.shared.capture("workout_entry_edited")
     }
 
+    /// Applies sets logged from the Live Activity's button while the app wasn't running, through the
+    /// normal addEntry path (paywall/free-limit checks included). Notifies any open ExerciseBlock so
+    /// it redraws with the new row instead of silently going stale.
+    func consumePendingLiveActivitySets() {
+        let pending = PendingLiveActivityStore.drain()
+        guard !pending.isEmpty else { return }
+        for item in pending {
+            guard addEntry(exercise: item.exercise, weight: item.weightKg, reps: item.reps, date: Date(),
+                            workoutId: activeWorkout?.id, source: "live_activity", presentPaywall: false) else { continue }
+            NotificationCenter.default.post(name: .liveActivitySetLogged, object: nil, userInfo: ["exercise": item.exercise])
+        }
+        if #available(iOS 16.2, *), let last = pending.last {
+            RestTimerManager.shared.syncFromRunningActivity(exercise: last.exercise)
+        }
+    }
+
     func deleteEntry(id: String) {
         storage.deleteEntry(id: id)
         entries = storage.getAllEntries()
@@ -1054,4 +1090,11 @@ final class AppStore: ObservableObject {
 struct PaywallRequest: Identifiable {
     let id = UUID()
     let source: String
+}
+
+extension Notification.Name {
+    /// Best-effort: lets an already-open ExerciseBlock redraw when a set logged from the Live
+    /// Activity lands. If nothing is listening (the usual case, since the view normally reloads
+    /// fresh on foreground), the entry is already saved regardless — this just skips a stale redraw.
+    static let liveActivitySetLogged = Notification.Name("liveActivitySetLogged")
 }
