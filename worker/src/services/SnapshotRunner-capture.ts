@@ -390,7 +390,10 @@ export class SnapshotRunner extends SnapshotRunnerBase {
   ): Promise<void> {
     const xcResults = fs.readdirSync(testLogsDir).filter((n) => n.endsWith(".xcresult"));
     const collected: string[] = [];
-    const LANG_PREFIX_RE = /^[a-z]{2}(?:[-_][A-Za-z]{2})?__/;
+    // 2-letter language, optionally followed by a 2-letter region (de-DE) or a 4-letter
+    // script subtag (zh-Hans, zh-Hant) — the old {2}-only variant silently dropped every
+    // zh-Hans/zh-Hant screenshot since nothing matched, with no warning to show for it.
+    const LANG_PREFIX_RE = /^[a-z]{2}(?:[-_][A-Za-z]{2,4})?__/;
 
     for (const xcName of xcResults) {
       const xcPath = path.join(testLogsDir, xcName);

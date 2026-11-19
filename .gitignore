@@ -4,9 +4,11 @@ website/dist
 
 # local screenshot capture worker
 worker/node_modules
+worker/.env
 
 # Screenshot captures
 logs/*
+worker/logs/*
 
 # macOS
 .DS_Store
