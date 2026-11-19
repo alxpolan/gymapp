@@ -5,7 +5,7 @@
     "textColor": "#F2F0EB",
     "scheme": "Gymnio",
     "devices": ["iPhone 16 Pro Max", "iPad Pro 12.9-inch (6th generation)"],
-    "languages": ["en-US", "de-DE"],
+    "languages": ["en-US", "de-DE", "es-ES", "fr-FR", "it", "pt-BR", "ja", "ko", "zh-Hans", "ru", "ar-SA", "tr"],
     "appearance": "dark"
   },
   "01_Train": "Start a workout in one tap or pick a routine, with your week at a glance",
